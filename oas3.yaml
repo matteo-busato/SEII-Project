@@ -16,47 +16,103 @@ paths:
       summary: View all artists
       responses:
         '200':
-          description: 'Collection of books'
+          description: 'Collection of artists'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Book'
+                  $ref: '#/components/schemas/Artist'
+  
+  /artists/{artist-name}:
+    get:
+      description: >-
+        Gets the artist specified.
+      summary: View an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'information about an artist'
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Artist'
 
   /events:
     get:
       description: >-
-        Gets the list of books.
-      summary: View all books
+        Gets the list of events.
+      summary: View all events
       responses:
         '200':
-          description: 'Collection of books'
+          description: 'Collection of events'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Book'
-  /merch:
-    post:
+                  $ref: '#/components/schemas/Event'
+                  
+  /artists/{artist-name}/events:
+    get:
       description: >-
-        Creates a new booklending.
-      summary: Borrow a book
+        Gets the list of events of an {artist-name}.
+      summary: View all events of an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
       responses:
-        '201':
-          description: 'Booklending created. Link in the Location header'
-          headers:
-            'Location':
+        '200':
+          description: 'Collection of events of an artist'
+          content:
+            application/json:
               schema:
-                type: string
-              description: Link to the newly created booklending.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Booklending'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /merch:
+    get:
+      description: >-
+        Gets the list of merch.
+      summary: View all events
+      responses:
+        '200':
+          description: 'Collection of merch'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Merch'
           
+  /artists/{artist-name}/merch:
+    get:
+      description: >-
+        Gets the list of merch of an {artist-name}.
+      summary: View all merch of an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Collection of merch of an artist'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Merch'
+                  
 components:
   schemas:
     Student:
@@ -71,36 +127,75 @@ components:
         email:
           type: string
           description: 'Email address of the user'
-    Book:
+    Artist:
+      type: object
+      required:
+        - name
+        - email
+        - bio
+      properties:
+        name:
+          type: string
+          description: 'Name of the artist'
+        email:
+          type: string
+          description: 'Email of the artist'
+        bio:
+          type: string
+          description: 'bio of the artist'
+      example:
+        name: "system of a down"
+        email: "fuckthesystem@ofAdown.com"
+        bio: "gruppo USA/Armenia che fanno musica metal pazzerella"
+        
+    Event:
       type: object
       required:
         - title
-        - author
-        - ISBN
-        - status
+        - date
+        - place
+        - artist
       properties:
         title:
           type: string
-          description: 'Title of the book'
-        deadline:
+          description: 'Title of the event'
+        date:
           type: string
-          description: 'Author of the book'
-        ISBN:
+          description: 'date of the event'
+        place:
           type: string
-          description: 'ISBN of the book'
-        status:
+          description: 'place of the event'
+        artist:
           type: string
-          enum: [available, lended]
-          description: 'Tells whether the book is currently available or not'
-    Booklending:
+          description: 'owner of the event'
+      example:
+        title: ""
+        date: ""
+        place: ""
+        artist: ""
+        
+    Merch:
       type: object
       required:
-      - student
-      - book
+        - title
+        - info
+        - cost
+        - artist
       properties:
-        user:
+        title:
           type: string
-          description: 'Link to the user'
-        book:
-          type: integer
-          description: 'Link to the book'
+          description: 'Title of the merch'
+        info:
+          type: string
+          description: 'info of the merch'
+        cost:
+          type: float
+          description: 'cost of the merch'
+        artist:
+          type: string
+          description: 'owner of the merch'
+      example:
+        title: ""
+        info: ""
+        cost: ""
+        artist: ""
