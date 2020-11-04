@@ -82,7 +82,7 @@ paths:
     get:
       description: >-
         Gets the list of merch.
-      summary: View all events
+      summary: View all merch
       responses:
         '200':
           description: 'Collection of merch'
