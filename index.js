@@ -15,6 +15,21 @@ router.get('/test', function (req, res) {
     res.json({ message: 'API is working correctly!' });
 });
 
+var artists = [{name:"gianni",email:"gitd@com.it",bio:"cioa"},
+                {name:"piero pelù",email:"assodicoppe@com.it",bio:"miciomiao"}];
+
+router.route('/artists')
+        .get(function (req, res) {
+                res.json(artists);
+});
+
+router.route('/artists/:artist-name')
+    .get(function(req,res){
+        var name = req.params.name;
+        console.log(artists[name]);
+            res.json(artists[name]);
+    });
+
 //####################################### SET ROUTER #################
 // register our router on /
 app.use('/', router);
