@@ -1,8 +1,13 @@
 
+const { json } = require('body-parser');
 var express = require('express');
 
 // instantiate express
 const app = express();
+
+app.use(express.json());
+
+const insertMusic = require('./insertMusic/insertMusic.js');
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -18,6 +23,10 @@ router.get('/test', function (req, res) {
 //####################################### SET ROUTER #################
 // register our router on /
 app.use('/', router);
+
+app.post('/api/addNewAlbum', insertMusic.addNewAlbum);
+app.delete('/api/deleteAlbum', insertMusic.deleteAlbum);
+app.post('/api/changeAlbumData', insertMusic.changeAlbumData);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
