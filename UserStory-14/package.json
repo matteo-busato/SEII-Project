@@ -1,0 +1,24 @@
+{
+  "name": "seii-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matteo-busato/SEII-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matteo-busato/SEII-Project/issues"
+  },
+  "homepage": "https://github.com/matteo-busato/SEII-Project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "save": "^2.4.0"
+  },
+  "devDependencies": {}
+}
