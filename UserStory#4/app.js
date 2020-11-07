@@ -10,7 +10,7 @@ const events = [{title:"debutalbum",id:"001",date:"10/10/21",description:"none",
 const merch = [{ title:"coolshirt", id:"1234", description:"a cool t-shirt", cost:12.0, owner:"beatles"}];
 
 //return all the artists
-// URI : api/artists
+// URI : api/v1/artists
 const getArtists = (req,res) => {
     if (0) {
         res.status(400).json({ error: 'error on retrying artists' });
@@ -20,7 +20,7 @@ const getArtists = (req,res) => {
 }
 
 //return all the albums
-// URI : api/albums
+// URI : api/v1/albums
 const getAlbums = (req,res) => {
     if (0) {
         res.status(400).json({ error: 'error on retrying albums' });
@@ -30,7 +30,7 @@ const getAlbums = (req,res) => {
 }
 
 //return all the merch
-// URI : api/merch
+// URI : api/v1/merch
 const getMerchs = (req,res) => {
     if (0) {
         res.status(400).json({ error: 'error on retrying merch' });
@@ -40,7 +40,7 @@ const getMerchs = (req,res) => {
 }
 
 //return all the events
-// URI : api/events
+// URI : api/v1/events
 const getEvents = (req,res) => {
     if (0) {
         res.status(400).json({ error: 'error on retrying events' });
@@ -50,23 +50,66 @@ const getEvents = (req,res) => {
 }
 
 //return the selected artist
-// URI : api/artists/{artist-name}
+// URI : api/v1/artists/:name
 const getArtist = (req,res) => {
     var found = false;
     var name = req.params.name;
+    var data = [];
     for (let i=0; i < artists.length && !found; ++i) {
         if (artists[i].name == name){
             found = true;
-            res.status(200).json(artists[i]);
+            data.push(artists[i]);
         }
     }
-    if(!found){
+    if(found){
+        var books = [];
+        var five = 0;
+        for (let i=0; i < albums.length && five<5; ++i) {  //prendo i primi 5 album
+            if (albums[i].owner == name){
+                books.push(albums[i]);
+                five++;
+            }
+        }
+        var d = {
+            "albums": books
+        }
+        data.push(d);
+        var merchandise = [];
+        five = 0;
+
+        for (let i=0; i < merch.length && five<5; ++i) {  //prendo i primi 5 merch
+            if (merch[i].owner == name){
+                merchandise.push(merch[i]);
+                five++;
+            }
+        }
+        d = {
+            "merch": merchandise
+        }
+        data.push(d);
+
+        var concerts = [];
+        five = 0;
+        for (let i=0; i < events.length && five<5; ++i) {  //prendo i primi 5 album
+            if (events[i].owner == name){
+                concerts.push(events[i]);
+                five++;
+            }
+        }
+        d = {
+            "events": concerts
+        }
+        data.push(d);
+        
+        res.status(200).json(data);
+    }else{
         res.status(400).json({ error: 'no artist with name : ' + name });
     }
+
 }
 
 //return the selected album
-// URI : api/albums/{ismn}
+// URI : api/v1/albums/:ismn
 const getAlbum = (req,res) => {
     var found = false;
     var ismn = req.params.ismn;
@@ -82,7 +125,7 @@ const getAlbum = (req,res) => {
 }
 
 //return the selected merch
-// URI : api/merch/{ID}
+// URI : api/v1/merch/:id
 const getMerch = (req,res) => {
     var found = false;
     var id = req.params.id;
@@ -98,7 +141,7 @@ const getMerch = (req,res) => {
 }
 
 //return the selected event
-// URI : api/events/{ID}
+// URI : api/v1/events/:id
 const getEvent = (req,res) => {
     var found = false;
     var id = req.params.id;
@@ -114,13 +157,13 @@ const getEvent = (req,res) => {
 }
 
 //return all the albums of a selected artists
-// URI : api/artists/{artist-name}/albums
-const getArtistAlbum = (req, res) => {
-    var name = req.params.name;
-    var selectedAlbum = [];
+// URI : api/v1/artists/:name/albums
+const getArtistAlbums = (req, res) => {
+    let name = req.params.name;
+    let selectedAlbum = [];
     for (let i=0; i < albums.length; ++i) {
         if (albums[i].owner == name){
-            selectedAlbum.append[albums[i]];
+            selectedAlbum.push(albums[i]);
         }
     }
     if(selectedAlbum.length > 0)
@@ -129,6 +172,84 @@ const getArtistAlbum = (req, res) => {
         res.status(400).json({ error: 'no albums from artist with name : ' + name });
 }
 
+//return all the merch of a selected artists
+// URI : api/v1/artists/:name/merch
+const getArtistMerch = (req, res) => {
+    let name = req.params.name;
+    let selectedMerch = [];
+    for (let i=0; i < merch.length; ++i) {
+        if (merch[i].owner == name){
+            selectedMerch.push(merch[i]);
+        }
+    }
+    if(selectedMerch.length > 0)
+        res.status(200).json(selectedMerch);
+    else
+        res.status(400).json({ error: 'no merch from artist with name : ' + name });
+}
+
+//return all the events of a selected artists
+// URI : api/v1/artists/:name/events
+const getArtistEvents = (req, res) => {
+    let name = req.params.name;
+    let selectedEvents = [];
+    for (let i=0; i < events.length; ++i) {
+        if (events[i].owner == name){
+            selectedEvents.push(events[i]);
+        }
+    }
+    if(selectedEvents.length > 0)
+        res.status(200).json(selectedEvents);
+    else
+        res.status(400).json({ error: 'no events from artist with name : ' + name });
+}
+
+//return  the ismn album of a selected artist
+// URI : api/v1/artists/:name/albums/:ismn
+const getArtistAlbumIsmn = (req, res) => {
+    let name = req.params.name;
+    let ismn = req.params.ismn;
+    let found = false;
+    for (let i=0; i < albums.length && !found; ++i) {
+        if (albums[i].owner == name && albums[i].ismn == ismn){
+            res.status(200).json(album[i]);
+            found = true;
+        }
+    }
+    if(!found)
+        res.status(400).json({ error: 'no albums with ismn : ' + ismn + ' from artist with name : ' + name });
+}
+// return the id merch of a selected artist
+// URI : /api/v1/artists/:name/merch/:id
+const getArtistMerchId = (req, res) => {
+    let name = req.params.name;
+    let id = req.params.id;
+    let found = false;
+    for (let i=0; i < merch.length && !found; ++i) {
+        if (merch[i].owner == name && merch[i].id == id){
+            res.status(200).json(merch[i]);
+            found = true;
+        }
+    }
+    if(!found)
+        res.status(400).json({ error: 'no merch with id : ' + id + ' from artist with name : ' + name });
+}
+
+// return the id event of a selected artist
+// URI : /api/v1/artists/:name/events/:id
+const getArtistEventId = (req, res) => {
+    let name = req.params.name;
+    let id = req.params.id;
+    let found = false;
+    for (let i=0; i < events.length && !found; ++i) {
+        if (events[i].owner == name && events[i].id == id){
+            res.status(200).json(events[i]);
+            found = true;
+        }
+    }
+    if(!found)
+        res.status(400).json({ error: 'no event with id : ' + id + ' from artist with name : ' + name });
+}
 
 module.exports = {
     getArtists,
@@ -139,5 +260,10 @@ module.exports = {
     getAlbum,
     getMerch,
     getEvent,
-    getArtistAlbum
+    getArtistAlbums,
+    getArtistMerch,
+    getArtistEvents,
+    getArtistAlbumIsmn,
+    getArtistMerchId,
+    getArtistEventId
 };
