@@ -23,12 +23,28 @@ app.use('/', router);
 
 
 //############# insertMusic part ################
-const insertMusic = require('./insertMusic/insertMusic.js');
+
+//get instance of path, required to serve html pages (?)
+const path = require('path');
+
+const insertMusic = require('./lib/insertMusic.js');
+
+app.get('/v1/profile/:name/albums/addNewAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
+});
+app.get('/v1/profile/:name/albums/:ismn/changeAlbumData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeAlbumData.html'));
+});
+app.get('/v1/profile/:name/albums/:ismn/deleteAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
+});
 
 app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
 app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
 app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
-
+app.get('/api/v1/artists/:name/albums/:ismn', (req, res) => {
+    console.log("new get from html page");
+});
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {

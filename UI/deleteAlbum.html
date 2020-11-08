@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>EasyMusic - Delete an Album</title>
+</head>
+
+<body style="background-color: gray;" onload="getURLparams()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">EasyMusic</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Artists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Events</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
+        <h2>Delete an Album</h2>
+        <p>With this powerful tool you can delete one album from your discography.</p>
+        <div class="row justify-content-center">
+            <div class="col-8 border rounded p-3">
+                <form>
+                    <div class="form-group">
+                        <label>Title</label for="title">
+                        <input type="text" name="title" id="title" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label for="year">
+                        <input type="text" name="year" id="year" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Tracklist</label for="tracklist">
+                        <input type="text" name="tracklist" id="tracklist" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label for="genre">
+                        <input type="text" name="genre" id="genre" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost</label for="cost">
+                        <input type="text" name="cost" id="cost" class="form-control" readonly>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="imSure">
+                        <label class="form-check-label" for="imSure">I am sure I want to delete this album</label>
+                    </div>
+                    <button class="btn btn-primary my-2">Delete this album</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getURLparams() {
+            var host = window.location.host;
+            var path = window.location.pathname.split("/");
+            var artist = path[3];
+            var ismn = path[5];
+            getAlbumData(host, artist, ismn);
+        }
+
+        function getAlbumData(host, artist, ismn) {
+            var album;
+            var xhttp = new XMLHttpRequest();
+            var url = host + "/api/v1/artists/" + artist + "/albums/" + ismn;
+            xhttp.open("GET", url, true);
+            xhttp.responseText = "json";
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonAlbum = this.response;
+                    album = JSON.parse(jsonAlbum);
+                    document.getElementById("title").value = album.title;
+                    document.getElementById("year").value = album.year;
+                    document.getElementById("tracklist").value = album.tracklist;
+                    document.getElementById("genre").value = album.genre;
+                    document.getElementById("cost").value = album.cost;
+                }
+            }
+            xhttp.send();
+        }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
