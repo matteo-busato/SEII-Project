@@ -3,38 +3,23 @@ const merchList = [{title: 'T-shirt',id: "00",description: "none",qty: "100",cos
                    {title: 'Sticker',id: "22",description: "none",qty: "250",cost: "1.10",owner: "beatles"}
 ];
 
-//return all products of merch  
-//URI : /api/v1/merch                
-const getMerch = (req,res) => {
-    if (0) {
-        res.status(400).json({ error: 'error on retrying merch' });
+//add new product
+//URI : /api/v1/artists/:name/merch/addNewProduct
+const addNewProduct = (req, res) => {
+    let reqName = req.params.name;
+
+    // verify identity of artits
+    let found = false;
+    merchList.forEach(element => {
+        if (element.owner == reqName) {
+            found = true;
+        }
+    });
+    if (!found) {
+        res.status(400).json({ error: 'artist name does not match owner' });
         return;
     }
-    res.status(200).json(merchList);
-}
 
-//return single product 
-//URI : /api/v1/merch/{id}
-const getProduct = (req, res) => {
-    var found = false;
-    var id = req.params.id;
-    let index = 0;
-        for (index; index < merchList.length && !found; index++) {
-            if (merchList[index].id == id) {
-                res.status(201).json(merchList[index]);
-                found = true;
-                index = index - 1;
-            }
-        }
-        if (!found) {
-            res.status(400).json({ error: 'this product is not present in the db' });
-            return;
-        }
-};
-
-//add new product 
-//URI : /api/v1/addNewProduct
-const addNewProduct = (req, res) => {
     let product = {
         title: req.body.title,
         id: parseInt(req.body.id),
@@ -48,7 +33,7 @@ const addNewProduct = (req, res) => {
         res.status(400).json({ error: 'error on the data of the given product' });
         return;
     } else {
-        let found = false;
+        found = false;
         merchList.forEach(element => {
             if (element.id == product.id) {
                 found = true;
@@ -64,11 +49,25 @@ const addNewProduct = (req, res) => {
     }
 };
 
-//delete product 
-//URI : /api/v1/deleteProduct/{id}
+//delete product
+//URI : /api/v1/artists/:name/merch/deleteProduct/:id
 const deleteProduct = (req, res) => {
-    var found = false;
-    var id = req.params.id;
+    let reqName = req.params.name;
+
+    // verify identity of artits
+    let found = false;
+    merchList.forEach(element => {
+        if (element.owner == reqName) {
+            found = true;
+        }
+    });
+    if (!found) {
+        res.status(400).json({ error: 'artist name does not match owner' });
+        return;
+    }
+
+    found = false;
+    let id = req.params.id;
     let index = 0;
         for (index; index < merchList.length && !found; index++) {
             if (merchList[index].id == id) {
@@ -84,58 +83,57 @@ const deleteProduct = (req, res) => {
         res.status(201).json({ message: 'the product has been correctly deleted from the db' });
 };
 
-
 //change the product data
-//URI : /api/v1/changeProductData
+//URI : /api/v1/artists/:name/merch/changeProductData/:id
 const changeProductData = (req, res) => {
-    let oldData = {
-        title: req.body.oldTitle,
-        id: parseInt(req.body.oldId),
-        description: req.body.oldDescription,
-        qty: parseInt(req.body.oldQty),
-        cost: parseFloat(req.body.oldCost),
-        owner: req.body.oldOwner
-    };
-    let check = checkDataValidity(oldData);
-    if (!check) {
-        res.status(400).json({ error: 'error on the old data of the given product' });
+    let reqName = req.params.name;
+
+    // verify identity of artits
+    let found = false;
+    merchList.forEach(element => {
+        if (element.owner == reqName) {
+            found = true;
+        }
+    });
+    if (!found) {
+        res.status(400).json({ error: 'artist name does not match owner' });
         return;
-    } else {
+    }
+
         let newData = {
-            title: req.body.newTitle,
-            id: parseInt(req.body.newId),
-            description: req.body.newDescription,
-            qty: parseInt(req.body.newQty),
-            cost: parseFloat(req.body.newCost),
-            owner: req.body.newOwner
+            title: req.body.title,
+            id: parseInt(req.body.id),
+            description: req.body.description,
+            qty: parseInt(req.body.qty),
+            cost: parseFloat(req.body.cost),
+            owner: req.body.owner
         };
         let check = checkDataValidity(newData);
         if (!check) {
             res.status(400).json({ error: 'error on the new data of the given product' });
             return;
         } else {
-            let found = false;
+            found = false;
+            let id = req.params.id;
             let index = 0;
-            for (index; index < merchList.length && !found; index++) {
-                var element = merchList[index];
-                if (element.id == oldData.id) {
-                    found = true;
-                    index = index - 1;
+                for (index; index < merchList.length && !found; index++) {
+                    if (merchList[index].id == id && merchList[index].owner == newData.owner) {
+                        found = true;
+                        index = index - 1;
+                    }
                 }
-            }
             if (!found) {
                 res.status(400).json({ error: 'this product is not present in the db' });
                 return;
             }
             merchList[index].title = newData.title;
-            merchList[index].id = newData.id;
+            //merchList[index].id = newData.id; //id must be the same
             merchList[index].description = newData.description;
             merchList[index].qty = newData.qty;
             merchList[index].cost = newData.cost;
-            merchList[index].owner = newData.owner;
+            //merchList[index].owner = newData.owner; //owner must be the same
             res.status(201).json({ message: 'the product data has been correctly changed in the db' });
         }
-    }
 };
 
 const checkDataValidity = (product) => {
@@ -161,8 +159,6 @@ const checkDataValidity = (product) => {
 }
 
 module.exports = {
-    getMerch,
-    getProduct,
     addNewProduct,
     deleteProduct,
     changeProductData
