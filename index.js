@@ -1,6 +1,7 @@
 const { json } = require('body-parser');
 var express = require('express');
-const manageBio = require('./manageBio/manageBio.js');
+const manageInfo = require('./manageInfo/manageInfo.js');
+const manageBio = require('./manageInfo/manageInfo.js');
 
 // instantiate express
 const app = express();
@@ -24,12 +25,11 @@ app.use('/', router);
 
 
 //############# insertMusic part ################
-const insertMusic = require('./manageBio/manageBio.js');
+const insertMusic = require('./manageInfo/manageInfo.js');
 
-app.post('/api/v1/artists/:name/bio', manageBio.addBio);
-app.put('/api/v1/artists/:name/bio', manageBio.changeBio);
-app.delete('/api/v1/artists/:name/bio', manageBio.deleteBio);
-// app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
+app.post('/api/v1/artists/:name', manageInfo.addInfo);
+app.put('/api/v1/artists/:name', manageInfo.changeInfo);
+app.delete('/api/v1/artists/:name', manageInfo.deleteInfo);
 
 
 // handle invalid requests and internal error
