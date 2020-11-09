@@ -1,9 +1,10 @@
-const { json } = require('body-parser');
+var bodyparser = require('body-parser');
 var express = require('express');
 
 // instantiate express
 const app = express();
-app.use(express.json());
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -19,8 +20,18 @@ router.get('/test', function (req, res) {
 
 //################## SET ROUTER #################
 // register our router on /
+app.use(express.static('UI'));
 app.use('/', router);
 
+//################## SET STATIC PAGES ###########
+app.get('/register', (req, res) => {
+    
+    res.sendFile('UI/register.html', {root:'./'}, (err) => {
+        res.end();
+        console.log(err);
+        if(err) throw(err);
+    });
+});
 
 //############# registration part ################
 const registration = require('./register/register.js');

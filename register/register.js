@@ -1,3 +1,7 @@
+/*
+MODULE FOR USER STORY #3 - Registrazione
+*/
+
 var users = [
     { 
         name: "John",
@@ -21,6 +25,11 @@ function checkEmail(email){
         return false;
 }
 
+/*
+ ### Register a user ###
+        request: json with name, email, password of the new user
+        response: json with an error message or a success message
+*/
 const postRegister = (req, res) => {
     console.log(req.body);
     let data = {
@@ -61,7 +70,6 @@ const postRegister = (req, res) => {
 
     res.status(201).json({ message : "User registered successfully" });
     console.log(users);
-
 };
 
 module.exports = {
