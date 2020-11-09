@@ -4,7 +4,8 @@ const artist =
         name: 'Beatles',
         password: '',
         bio: '',
-        genre: ''
+        genre: '',
+        email: ""
     };
 
 const addInfo = (req, res) => {
@@ -12,7 +13,8 @@ const addInfo = (req, res) => {
         name: req.body.name,
         password: req.body.password,
         bio: req.body.bio,
-        genre: req.body.genre
+        genre: req.body.genre,
+        email: req.body.email
     };
     let check = checkDataValidity(bodyArtist);
     if (!check) {
@@ -20,7 +22,7 @@ const addInfo = (req, res) => {
         return;
     } else {
         if(artist.name == bodyArtist.name) {
-            let emptyBio = true, emptyPassword = true, emptyGenre = true;
+            let emptyBio = true, emptyPassword = true, emptyGenre = true, emptyEmail = true;
             if(artist.bio == ''){
                 artist.bio = bodyArtist.bio;
             }
@@ -38,12 +40,18 @@ const addInfo = (req, res) => {
             }  
             else{
                 emptyPassword = false;
-            }         
-            if(!emptyBio || !emptyGenre || !emptyPassword){
-                res.status(201).json({ message: 'some informations need to be modified' }) 
+            } 
+            if(artist.email == ''){
+                artist.email = bodyArtist.email;
+            }  
+            else{
+                emptyEmail = false;
+            }        
+            if(!emptyBio || !emptyGenre || !emptyPassword || !emptyEmail){
+                res.status(300).json({ message: 'some informations need to be modified' }) 
             }
             else{
-                res.status(201).json({ message: 'artist infos correctly inserted in the db'});
+                res.status(200).json({ message: 'artist infos correctly inserted in the db'});
             }
         }   
         else{
@@ -61,6 +69,7 @@ const deleteInfo = (req, res) => {
     artist.bio = '';
     artist.password = '';
     artist.genre = '';
+    artist.email = "";
     res.status(201).json({ message: `the infos of ${name} has been correctly deleted from the db `});
 };
 
@@ -69,7 +78,8 @@ const changeInfo = (req, res) => {
         name: req.body.name,
         password: req.body.password,
         bio: req.body.bio,
-        genre: req.body.genre
+        genre: req.body.genre,
+        email: req.body.email
     };
     let check = checkDataValidity(newArtistInfo);
     if (!check) {
@@ -84,7 +94,9 @@ const changeInfo = (req, res) => {
                 artist.emptyGenre = newArtistInfo.genre;
             if(artist.bio != newArtistInfo.bio)
                 artist.bio = newArtistInfo.bio;
-                res.status(201).json({ message: `the infos of ${artist.name} has been correctly modified`});
+            if(artist.email != newArtistInfo.email)
+                artist.email = newArtistInfo.email;
+            res.status(200).json({ message: `the infos of ${artist.name} has been correctly modified`});
         }
         else{
             res.status(400).json({ error: 'no artist with the given name'});
@@ -98,10 +110,13 @@ const checkDataValidity = (bodyArtist) => {
     }
 
     if (!bodyArtist.bio || typeof artist.bio != 'string') {
+        return false; 
+    }
+    
+    if (!bodyArtist.genre || typeof artist.genre != 'string') {
         return false;
     }
-
-    if (!bodyArtist.genre || typeof artist.genre != 'string') {
+    if (!bodyArtist.email || typeof artist.email != 'string') {
         return false;
     }
     return true;

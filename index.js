@@ -1,7 +1,5 @@
 const { json } = require('body-parser');
 var express = require('express');
-const manageInfo = require('./manageInfo/manageInfo.js');
-const manageBio = require('./manageInfo/manageInfo.js');
 
 // instantiate express
 const app = express();
@@ -24,8 +22,9 @@ router.get('/test', function (req, res) {
 app.use('/', router);
 
 
-//############# insertMusic part ################
-const insertMusic = require('./manageInfo/manageInfo.js');
+//############# manageInfo part ################
+
+const manageInfo = require('./manageInfo/manageInfo.js');
 
 app.post('/api/v1/artists/:name', manageInfo.addInfo);
 app.put('/api/v1/artists/:name', manageInfo.changeInfo);
