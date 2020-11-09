@@ -4,7 +4,7 @@ const merchList = [{title: 'T-shirt',id: "00",description: "none",qty: "100",cos
 ];
 
 //add new product
-//URI : /api/v1/artists/:name/merch/addNewProduct
+//URI : /api/v1/artists/:name/merch
 const addNewProduct = (req, res) => {
     let reqName = req.params.name;
 
@@ -50,7 +50,7 @@ const addNewProduct = (req, res) => {
 };
 
 //delete product
-//URI : /api/v1/artists/:name/merch/deleteProduct/:id
+//URI : /api/v1/artists/:name/merch/:id
 const deleteProduct = (req, res) => {
     let reqName = req.params.name;
 
@@ -84,7 +84,7 @@ const deleteProduct = (req, res) => {
 };
 
 //change the product data
-//URI : /api/v1/artists/:name/merch/changeProductData/:id
+//URI : /api/v1/artists/:name/merch/:id
 const changeProductData = (req, res) => {
     let reqName = req.params.name;
 

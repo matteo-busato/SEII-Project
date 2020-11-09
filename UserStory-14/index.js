@@ -23,9 +23,9 @@ router.get('/test', function (req, res) {
 // register our router on /
 app.use('/', router);
 
-app.post('/api/v1/artists/:name/merch/addNewProduct', manageMerch.addNewProduct);
-app.delete('/api/v1/artists/:name/merch/deleteProduct/:id', manageMerch.deleteProduct);
-app.put('/api/v1/artists/:name/merch/changeProductData/:id', manageMerch.changeProductData);
+app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
+app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
+app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
