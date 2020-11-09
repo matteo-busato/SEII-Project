@@ -9,14 +9,13 @@ servers:
   - url: http://localhost:8000/api/v1
     description: Localhost
 paths:
-
   /artists:
     get:
       description: >-
         Gets the list of artists.
       summary: View all artists
       responses:
-        '200':  
+        '200':
           description: 'Collection of artists'
           content:
             application/json:
@@ -25,36 +24,26 @@ paths:
                 items:
                   $ref: '#/components/schemas/Artist'
   
-  /albums:
+  /artists/{artist-name}:
     get:
       description: >-
-        Gets the list of albums.
-      summary: View all albums
+        Gets the artist specified.
+      summary: View an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
       responses:
         '200':
-          description: 'Collection of albums'
+          description: 'information about an artist'
           content:
             application/json:
               schema:
-                type: array
+                type: object
                 items:
-                  $ref: '#/components/schemas/Album'
-                  
-  /merch:
-    get:
-      description: >-
-        Gets the list of merch.
-      summary: View all merch
-      responses:
-        '200':
-          description: 'Collection of merch'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Merch'
-                  
+                  $ref: '#/components/schemas/Artist'
+
   /events:
     get:
       description: >-
@@ -69,91 +58,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  
-  /artists/:name:
-    get:
-      description: >-
-        Gets the artist specified.
-      summary: View an artist
-      parameters:
-        - in: path
-          name: name
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'information about an artist with 5 albums, 5 merch and 5 events'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Artist'
                   
-  /albums/:ismn:
+  /artists/{artist-name}/events:
     get:
       description: >-
-        Gets the album specified.
-      summary: View an album
-      parameters:
-        - in: path
-          name: ismn
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'get all the information about the album selected by ismn'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Album'
-                  
-  /merch/:id:
-    get:
-      description: >-
-        Gets the merch specified.
-      summary: View a merch
-      parameters:
-        - in: path
-          name: id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'get all the information about a merch selected by id'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Merch'
-                  
-  /events/:id:
-    get:
-      description: >-
-        Gets the event specified.
-      summary: View a event
-      parameters:
-        - in: path
-          name: id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'get all the information about a event selected by id'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Event'
-  
-  /artists/:name/albums:
-    get:
-      description: >-
-        Gets the list of albums of an artist :name.
+        Gets the list of events of an {artist-name}.
       summary: View all events of an artist
       parameters:
         - in: path
@@ -162,18 +71,32 @@ paths:
           type: string
       responses:
         '200':
-          description: 'Collection of albums of an artist'
+          description: 'Collection of events of an artist'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Album'
-  
-  /artists/:name/merch:
+                  $ref: '#/components/schemas/Event'
+  /merch:
     get:
       description: >-
-        Gets the list of merch of an artist :name.
+        Gets the list of merch.
+      summary: View all merch
+      responses:
+        '200':
+          description: 'Collection of merch'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Merch'
+          
+  /artists/{artist-name}/merch:
+    get:
+      description: >-
+        Gets the list of merch of an {artist-name}.
       summary: View all merch of an artist
       parameters:
         - in: path
@@ -190,100 +113,20 @@ paths:
                 items:
                   $ref: '#/components/schemas/Merch'
                   
-  /artists/:name/events:
-    get:
-      description: >-
-        Gets the list of events of an artist :name.
-      summary: View all events of an artist
-      parameters:
-        - in: path
-          name: name
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Collection of events of an artist'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Event'
-  
-  /artists/:name/albums/:ismn:
-    get:
-      description: >-
-        Gets an album by its :ismn of an artist :name.
-      summary: View :ismn album of artist :name
-      parameters:
-        - in: path
-          name: name
-          required: true
-          type: string
-        - in: path
-          name: ismn
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'album :ismn of the artist :name'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Album'        
-   
-  /artists/:name/merch/:id:
-    get:
-      description: >-
-        Gets a merch by its :id of an artist :name.
-      summary: View :id merch of artist :name
-      parameters:
-        - in: path
-          name: name
-          required: true
-          type: string
-        - in: path
-          name: id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'merch :ismn of the artist :name'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Merch'  
-  
-  /artists/:name/events/:id:
-    get:
-      description: >-
-        Gets a event by its :id of an artist :name.
-      summary: View :id event of artist :name
-      parameters:
-        - in: path
-          name: name
-          required: true
-          type: string
-        - in: path
-          name: id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'event :ismn of the artist :name'
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Event'
-                  
 components:
   schemas:
+    Student:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: integer
+          description: 'ID of the user'
+        email:
+          type: string
+          description: 'Email address of the user'
     Artist:
       type: object
       required:
@@ -302,122 +145,57 @@ components:
           description: 'bio of the artist'
       example:
         name: "system of a down"
-        email: "SOAD@ofAdown.com"
-        bio: "gruppo statunitense metal"
-        
-    Album:
-      type: object
-      required:
-        - title
-        - ISMN
-        - year
-        - genre
-        - tracklist
-        - cost
-        - owner
-      properties:
-        title:
-          type: string
-          description: 'title of the album'
-        ISMN:
-          type: string
-          description: 'ISMN code of the album'
-        year:
-          type: int
-          description: 'year of the album'
-        genre:
-          type: string
-          description: 'type of music album'
-        tracklist:
-          type: array
-          description: 'the tracklist of the album'
-        cost:
-          type: float
-          description: 'the cost of the album'
-        owner:
-          type: string
-          description: 'the owner of the album'
-      example:
-        title: "tri ripetae"
-        ISMN: "20304020uk32"
-        year: 1995
-        genre: "electronic/ambient"
-        tracklist: {"track1":"track1","track2":"track2"}
-        cost: 10.0
-        owner: "Autechre"
+        email: "fuckthesystem@ofAdown.com"
+        bio: "gruppo USA/Armenia che fanno musica metal pazzerella"
         
     Event:
       type: object
       required:
         - title
-        - ID
         - date
         - place
-        - description
-        - cost
-        - owner
+        - artist
       properties:
         title:
           type: string
           description: 'Title of the event'
-        ID:
-          type: string
-          description: 'ID of the event'
         date:
           type: string
           description: 'date of the event'
         place:
           type: string
           description: 'place of the event'
-        description:
-          type: string
-          description: 'description of the event'
-        cost:
-          type: float
-          description: 'cost of the event'
-        owner:
+        artist:
           type: string
           description: 'owner of the event'
       example:
-        title: "release Party"
-        date: "10/10/21"
-        place: "Turin"
-        description: "reseal party for the new Autechre's album 'Sign'"
-        cost: 35.0
-        owner: "Autechre"
+        title: ""
+        date: ""
+        place: ""
+        artist: ""
         
     Merch:
       type: object
       required:
         - title
-        - ID
-        - description
-        - qty
+        - info
         - cost
-        - owner
+        - artist
       properties:
         title:
           type: string
           description: 'Title of the merch'
-        ID:
-          type: string
-          description: 'ID of the merch'
-        description:
+        info:
           type: string
           description: 'info of the merch'
-        qty:
-          type: int
-          description: 'number of available objects'
         cost:
           type: float
           description: 'cost of the merch'
-        owner:
+        artist:
           type: string
           description: 'owner of the merch'
       example:
-        title: "Sign album"
-        ID: "432452"
-        description: "new Autechre's album"
-        qty: 500
-        cost: 10.0
-        owner: "Autechre"
+        title: ""
+        info: ""
+        cost: ""
+        artist: ""
