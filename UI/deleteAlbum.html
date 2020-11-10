@@ -13,7 +13,7 @@
     <title>EasyMusic - Delete an Album</title>
 </head>
 
-<body style="background-color: gray;" onload="getURLparams()">
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">EasyMusic</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -37,8 +37,8 @@
     </nav>
 
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
-        <h2>Delete an Album</h2>
-        <p>With this powerful tool you can delete one album from your discography.</p>
+        <h2 class="text-center">Delete an Album</h2>
+        <p class="text-center">With this powerful tool you can delete one album from your discography.</p>
         <div class="row justify-content-center">
             <div class="col-8 border rounded p-3">
                 <form>
@@ -66,25 +66,28 @@
                         <input type="checkbox" class="form-check-input" id="imSure">
                         <label class="form-check-label" for="imSure">I am sure I want to delete this album</label>
                     </div>
-                    <button class="btn btn-primary my-2">Delete this album</button>
+                    <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete this album</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
+        var artist;
+        var ismn;
+        var url;
+
         function getURLparams() {
-            var host = window.location.host;
             var path = window.location.pathname.split("/");
-            var artist = path[3];
-            var ismn = path[5];
-            getAlbumData(host, artist, ismn);
+            artist = path[3];
+            ismn = path[5];
+            getAlbumData(artist, ismn);
         }
 
-        function getAlbumData(host, artist, ismn) {
+        function getAlbumData(artist, ismn) {
             var album;
             var xhttp = new XMLHttpRequest();
-            var url = host + "/api/v1/artists/" + artist + "/albums/" + ismn;
+            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
             xhttp.open("GET", url, true);
             xhttp.responseText = "json";
             xhttp.onreadystatechange = function () {
@@ -96,6 +99,20 @@
                     document.getElementById("tracklist").value = album.tracklist;
                     document.getElementById("genre").value = album.genre;
                     document.getElementById("cost").value = album.cost;
+                }
+            }
+            xhttp.send();
+        }
+
+        function sendDelete() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", url, true);
+            xhttp.responseText = "json";
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+                    alert("album succesfully deleted");
+                } else if (this.readyState == 4 && this.status == 400) {
+                    alert("this album is not present in the database");
                 }
             }
             xhttp.send();

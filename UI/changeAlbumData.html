@@ -13,7 +13,7 @@
     <title>EasyMusic - Change Album Data</title>
 </head>
 
-<body style="background-color: gray;">
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">EasyMusic</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -38,8 +38,8 @@
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
         <div class="row">
             <div class="col">
-                <h2>Change Album Data</h2>
-                <p>With this powerful tool you can change the data of one of your albums.</p>
+                <h2 class="text-center">Change Album Data</h2>
+                <p class="text-center">With this powerful tool you can change the data of one of your albums.</p>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -98,11 +98,68 @@
                         <input type="text" name="newCost" id="newCost" class="form-control"
                             placeholder="Insert new cost...">
                     </div>
-                    <button class="btn btn-primary">Submit new data</button>
+                    <button type="button" class="btn btn-primary" onclick="sendChange()">Submit new data</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        var artist;
+        var ismn;
+        var url;
+
+        function getURLparams() {
+            var path = window.location.pathname.split("/");
+            artist = path[3];
+            ismn = path[5];
+            getAlbumData(artist, ismn);
+        }
+
+        function getAlbumData(artist, ismn) {
+            var album;
+            var xhttp = new XMLHttpRequest();
+            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
+            xhttp.open("GET", url, true);
+            xhttp.responseText = "json";
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonAlbum = this.response;
+                    album = JSON.parse(jsonAlbum);
+                    document.getElementById("oldTitle").value = album.title;
+                    document.getElementById("oldYear").value = album.year;
+                    document.getElementById("oldTracklist").value = album.tracklist;
+                    document.getElementById("oldGenre").value = album.genre;
+                    document.getElementById("oldCost").value = album.cost;
+                }
+            }
+            xhttp.send();
+        }
+
+        function sendChange() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("PUT", url, true);
+            xhttp.responseText = "json";
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            var album = {
+                title: document.getElementById("newTitle").value,
+                year: document.getElementById("newYear").value,
+                tracklist: document.getElementById("newTracklist").value.split(','),
+                genre: document.getElementById("newGenre").value,
+                cost: document.getElementById("newCost").value
+            }
+            album = JSON.stringify(album);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+                    alert("album data changed correctly");
+                    getAlbumData(artist, ismn);
+                } else if (this.readyState == 4 && this.status == 400) {
+                    alert("error");
+                }
+            }
+            xhttp.send(album);
+        }
+    </script>
 
 
 

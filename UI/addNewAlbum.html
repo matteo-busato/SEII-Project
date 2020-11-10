@@ -13,7 +13,7 @@
     <title>EasyMusic - Add New Album</title>
 </head>
 
-<body style="background-color: gray;">
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">EasyMusic</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -37,8 +37,8 @@
     </nav>
 
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
-        <h2>Add New Album</h2>
-        <p>With this powerful tool you can add a new album to your discography.</p>
+        <h2 class="text-center">Add New Album</h2>
+        <p class="text-center">With this powerful tool you can add a new album to your discography.</p>
         <div class="row justify-content-center">
             <div class="col-8 border rounded p-3">
                 <form>
@@ -49,8 +49,7 @@
                     </div>
                     <div class="form-group">
                         <label>Year</label for="Year">
-                        <input type="text" name="Year" id="Year" class="form-control"
-                            placeholder="Insert the year...">
+                        <input type="text" name="Year" id="Year" class="form-control" placeholder="Insert the year...">
                     </div>
                     <div class="form-group">
                         <label>Tracklist</label for="Tracklist">
@@ -64,14 +63,47 @@
                     </div>
                     <div class="form-group">
                         <label>Cost</label for="Cost">
-                        <input type="text" name="Cost" id="Cost" class="form-control"
-                            placeholder="Insert the cost...">
+                        <input type="text" name="Cost" id="Cost" class="form-control" placeholder="Insert the cost...">
                     </div>
-                    <button class="btn btn-primary">Submit new album</button>
+                    <button type="button" class="btn btn-primary" onclick="sendNewAlbum()">Submit new album</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        var artist;
+        var url;
+
+        function getURLparams() {
+            var path = window.location.pathname.split("/");
+            artist = path[3];
+        }
+
+        function sendNewAlbum() {
+            var xhttp = new XMLHttpRequest();
+            url = "/api/v1/artists/" + artist + "/albums";
+            xhttp.open("POST", url, true);
+            xhttp.responseText = "json";
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            var album = {
+                title: document.getElementById("Title").value,
+                year: document.getElementById("Year").value,
+                tracklist: document.getElementById("Tracklist").value.split(','),
+                genre: document.getElementById("Genre").value,
+                cost: document.getElementById("Cost").value
+            };
+            album = JSON.stringify(album);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 201) {
+                    alert("album correctly added to the db");
+                } else if (this.readyState == 4 && this.status == 400) {
+                    alert("error");
+                }
+            }
+            xhttp.send(album);
+        }
+    </script>
 
 
     <!-- Optional JavaScript -->
