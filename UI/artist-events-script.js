@@ -1,8 +1,22 @@
 var albums = document.getElementById('albums'); // Get the list where we will place albums
 
-var func = function(types){
+var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
     console.log("" + types);
 }
+
+
+function findGetParameter(parameterName) { //return the query
+    var result = null,
+        tmp = [];
+    var items = location.search.substr(1).split("&");
+    for (var index = 0; index < items.length; index++) {
+        tmp = items[index].split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    }
+    return result;
+}
+
+var query = findGetParameter("name");
 
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
@@ -10,7 +24,10 @@ var populate = function(classname,what,aHref,onclick){
         div.className="d-flex list-group-item  align-items-center";
         var a = document.createElement("a");
         a.className ="list-group-item-action";
-        a.href=aHref;
+        if(what[i].ismn != undefined)
+            a.href=aHref + what[i].ismn;
+        else
+            a.href=aHref + what[i].id;
         a.innerText = what[i].title;
         div.appendChild(a);
         var button = document.createElement("button");
@@ -32,14 +49,14 @@ xhttp.onreadystatechange = function () {
         var data = this.response;
         console.log(data);
         //insert basic info
-        document.getElementById("artista").innerText = "beatles";
+        document.getElementById("artista").innerText = "autechre";
 
-        //insert albums,merch,events
-        populate("merch",data,"/artist-selected-merch","merch");   //carico gli albums
+        //insert events
+        populate("events",data,"/artist-selected-event?id=","event");   //carico gli eventi
 
     }
 }
-xhttp.open("get", "/api/v1/artists/beatles/merch", true);
+xhttp.open("get", "/api/v1/artists/" + query + "/events", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");

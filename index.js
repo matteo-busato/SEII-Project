@@ -5,7 +5,7 @@ var express = require('express');
 const app = express();
 app.use(express.json());
 
-const userStory4 = require('./userStory#4/app.js');
+const userStory4 = require('./lib/app.js');
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -23,107 +23,58 @@ router.get('/test', function (req, res) {
 //################## SET STATIC PAGES ###########
 app.get('/artist-mainpage', (req, res) => {
 
-        res.sendFile('UserStory#4/UI/artist-mainpage.html', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-mainpage.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 
-});
-
-app.get('/artist-mainpage-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-mainpage-script.js', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
 });
 
 app.get('/artist-albums', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-albums.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
-
-app.get('/artist-albums-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-albums-script.js', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-albums.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
 app.get('/artist-events', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-events.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
-
-app.get('/artist-events-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-events-script.js', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-events.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
 app.get('/artist-merch', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-merch.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
-
-app.get('/artist-merch-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-merch-script.js', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-merch.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
 app.get('/artist-selected-album', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-selected-album.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
-
-app.get('/selected-album-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/selected-album-script.js', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-selected-album.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
 app.get('/artist-selected-event', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-selected-event.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
-
-app.get('/selected-event-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/selected-event-script.js', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-selected-event.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
 app.get('/artist-selected-merch', (req, res) => {
-        res.sendFile('UserStory#4/UI/artist-selected-merch.html', {root:'./'}, (err) => {
+        res.sendFile('UI/artist-selected-merch.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
 });
 
-app.get('/selected-merch-script.js', (req, res) => {
-        res.sendFile('UserStory#4/UI/selected-merch-script.js', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
 //####################################### SET ROUTER #################
 // register our router on /
 app.use(express.static('UI'));
-app.use(express.static('UserStory#4'));
 app.use('/', router);
 
 app.get('/api/v1/artists',userStory4.getArtists);

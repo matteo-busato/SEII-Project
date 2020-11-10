@@ -1,11 +1,23 @@
-
-var getTrack = function(tracklist){
+var getTrack = function(tracklist){     //return a string for the tracklist
     var tmp = "";
     for(var i=0; i<tracklist.length;i++){
         tmp += i + ": " + tracklist[i] + " ; ";
     }
     return tmp;
 }
+
+function findGetParameter(parameterName) { //return the query
+    var result = null,
+        tmp = [];
+    var items = location.search.substr(1).split("&");
+    for (var index = 0; index < items.length; index++) {
+        tmp = items[index].split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    }
+    return result;
+}
+
+var query = findGetParameter("ismn");
 
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
@@ -21,7 +33,7 @@ xhttp.onreadystatechange = function () {
 
     }
 }
-xhttp.open("get", "/api/v1/albums/435490", true);
+xhttp.open("get", "/api/v1/albums/" + query, true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
