@@ -64,7 +64,7 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="imSure">
-                        <label class="form-check-label" for="imSure">I am sure I want to delete this album</label>
+                        <label class="form-check-label" for="imSure" id="imSureLabel">I am sure I want to delete this album</label>
                     </div>
                     <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete this album</button>
                 </form>
@@ -105,17 +105,22 @@
         }
 
         function sendDelete() {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("DELETE", url, true);
-            xhttp.responseText = "json";
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 201) {
-                    alert("album succesfully deleted");
-                } else if (this.readyState == 4 && this.status == 400) {
-                    alert("this album is not present in the database");
+            if ($("#imSure").prop("checked") != false) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("DELETE", url, true);
+                xhttp.responseText = "json";
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 201) {
+                        alert("album succesfully deleted");
+                        // needs to send back to album list since this album has been deleted
+                    } else if (this.readyState == 4 && this.status == 400) {
+                        alert("this album is not present in the database");
+                    }
                 }
+                xhttp.send();
+            } else {
+                $("#imSureLabel").addClass('text-danger');
             }
-            xhttp.send();
         }
     </script>
 
