@@ -31,7 +31,6 @@ function checkEmail(email){
         response: json with an error message or a success message
 */
 const postRegister = (req, res) => {
-    console.log(req.body);
     let data = {
         name: req.body.name,
         email: req.body.email,

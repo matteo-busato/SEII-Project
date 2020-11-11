@@ -10,7 +10,8 @@
         <style>
             body{
                 margin-top: 1px;
-                background: #c2cad0 !important;
+                background: rgb(0,70,255);
+                background: linear-gradient(90deg, rgba(0,70,255,1) 0%, rgba(0,215,255,1) 100%);
             }
         </style>
     </head>
@@ -20,11 +21,11 @@
                 <div class="col-6 d-flex justify-content-center">
                     <div class="card d-flex w-75 shadow-lg">
                         <div class="card-body d-flex justify-content-center mt-3">
-                            <form id="registerForm" class="w-100"> 
+                            <div id="registerForm" class="w-100"> 
                                 <div class="form-group my-3 row justify-content-center">
                                     <label for="name" class="col-sm-3 col-form-label">Name:</label>
                                     <div class="col-sm-5">
-                                        <input type="name" name="name" id="name" class="form-control  " required>
+                                        <input type="name" name="name" id="name" class="form-control w-100" required>
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-center">
@@ -45,7 +46,10 @@
                                 <div class="d-flex justify-content-center mt-3">
                                     <p class="d-none" id="status"></p>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mb-2">   
+                            <p>Already Registered? <a href="/login">  Sign in</a></p>
                         </div>
                     </div>
                 </div>
