@@ -64,7 +64,8 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="imSure">
-                        <label class="form-check-label" for="imSure" id="imSureLabel">I am sure I want to delete this album</label>
+                        <label class="form-check-label" for="imSure" id="imSureLabel">I am sure I want to delete this
+                            album</label>
                     </div>
                     <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete this album</button>
                 </form>
@@ -86,38 +87,31 @@
 
         function getAlbumData(artist, ismn) {
             var album;
-            var xhttp = new XMLHttpRequest();
             url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            xhttp.open("GET", url, true);
-            xhttp.responseText = "json";
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var jsonAlbum = this.response;
-                    album = JSON.parse(jsonAlbum);
-                    document.getElementById("title").value = album.title;
-                    document.getElementById("year").value = album.year;
-                    document.getElementById("tracklist").value = album.tracklist;
-                    document.getElementById("genre").value = album.genre;
-                    document.getElementById("cost").value = album.cost;
-                }
-            }
-            xhttp.send();
+            fetch(url)
+                .then(response => response.json())
+                .then(function (album) {
+                    $("#title").val(album.title);
+                    $("#year").val(album.year);
+                    $("#tracklist").val(album.tracklist);
+                    $("#genre").val(album.genre);
+                    $("#cost").val(album.cost);
+                });
         }
 
         function sendDelete() {
             if ($("#imSure").prop("checked") != false) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("DELETE", url, true);
-                xhttp.responseText = "json";
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 201) {
-                        alert("album succesfully deleted");
-                        // needs to send back to album list since this album has been deleted
-                    } else if (this.readyState == 4 && this.status == 400) {
-                        alert("this album is not present in the database");
-                    }
-                }
-                xhttp.send();
+                fetch(url, {
+                    method: "DELETE",
+                })
+                    .then(response => response.json())
+                    .then(function (response) {
+                        if (response.message) {
+                            alert(response.message);
+                        } else {
+                            alert(response.error);
+                        }
+                    });
             } else {
                 $("#imSureLabel").addClass('text-danger');
             }

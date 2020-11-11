@@ -118,46 +118,41 @@
 
         function getAlbumData(artist, ismn) {
             var album;
-            var xhttp = new XMLHttpRequest();
             url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            xhttp.open("GET", url, true);
-            xhttp.responseText = "json";
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var jsonAlbum = this.response;
-                    album = JSON.parse(jsonAlbum);
-                    document.getElementById("oldTitle").value = album.title;
-                    document.getElementById("oldYear").value = album.year;
-                    document.getElementById("oldTracklist").value = album.tracklist;
-                    document.getElementById("oldGenre").value = album.genre;
-                    document.getElementById("oldCost").value = album.cost;
-                }
-            }
-            xhttp.send();
+            fetch(url)
+                .then(response => response.json())
+                .then(function (album) {
+                    $("#oldTitle").val(album.title);
+                    $("#oldYear").val(album.year);
+                    $("#oldTracklist").val(album.tracklist);
+                    $("#oldGenre").val(album.genre);
+                    $("#oldCost").val(album.cost);
+                });
         }
 
         function sendChange() {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("PUT", url, true);
-            xhttp.responseText = "json";
-            xhttp.setRequestHeader("Content-Type", "application/json");
             var album = {
-                title: document.getElementById("newTitle").value,
-                year: document.getElementById("newYear").value,
-                tracklist: document.getElementById("newTracklist").value.split(','),
-                genre: document.getElementById("newGenre").value,
-                cost: document.getElementById("newCost").value
+                title: $("#newTitle").val(),
+                year: $("#newYear").val(),
+                tracklist: $("#newTracklist").val().split(','),
+                genre: $("#newGenre").val(),
+                cost: $("#newCost").val()
             }
-            album = JSON.stringify(album);
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 201) {
-                    alert("album data changed correctly");
-                    getAlbumData(artist, ismn);
-                } else if (this.readyState == 4 && this.status == 400) {
-                    alert("error");
-                }
-            }
-            xhttp.send(album);
+            fetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(album)
+            })
+                .then(response => response.json())
+                .then(function (response) {
+                    if (response.message) {
+                        alert(response.message);
+                        getAlbumData(artist, ismn);
+                    } else {
+                        alert(response.error);
+                    }
+
+                });
         }
     </script>
 
