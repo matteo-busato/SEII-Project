@@ -26,7 +26,7 @@ const addNewProduct = (req, res) => {
         description: req.body.description,
         qty: parseInt(req.body.qty),
         cost: parseFloat(req.body.cost),
-        owner: req.body.owner
+        owner: req.params.name
     };
     let check = checkDataValidity(product);
     if (!check) {

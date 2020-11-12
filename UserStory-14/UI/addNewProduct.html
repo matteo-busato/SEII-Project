@@ -13,7 +13,7 @@
     <title>EasyMusic - Add New Product</title>
 </head>
 
-<body style="background-color: gray;">
+<body style="background-color: linear-gradient(135deg,#F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">EasyMusic</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -43,31 +43,69 @@
             <div class="col-8 border rounded p-3">
                 <form>
                     <div class="form-group">
-                        <label>Title</label for="Title">
-                        <input type="text" name="Title" id="Title" class="form-control"
+                        <label>Title</label for="title">
+                        <input type="text" name="title" id="title" class="form-control"
                             placeholder="Insert the title...">
                     </div>
                     <div class="form-group">
-                        <label>Description</label for="Description">
-                        <input type="text" name="Description" id="Description" class="form-control"
+                        <label>Id</label for="id">
+                        <input type="text" name="id" id="id" class="form-control"
+                            placeholder="Insert the id...">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label for="description">
+                        <input type="text" name="description" id="description" class="form-control"
                             placeholder="Insert the description...">
                     </div>
                     <div class="form-group">
-                        <label>Quantity</label for="Quantity">
-                        <input type="text" name="Quantity" id="Quantity" class="form-control"
+                        <label>Quantity</label for="qty">
+                        <input type="text" name="qty" id="qty" class="form-control"
                             placeholder="Insert the quantity...">
                     </div>
                     <div class="form-group">
-                        <label>Cost</label for="Cost">
-                        <input type="text" name="Cost" id="Cost" class="form-control"
+                        <label>Cost</label for="cost">
+                        <input type="text" name="cost" id="cost" class="form-control"
                             placeholder="Insert the cost...">
                     </div>
-                    <button class="btn btn-primary">Submit new product</button>
+                    <button type="button" class="btn btn-primary" onClick="sendNewProduct()">Submit new product</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+    var artist;
+    var url;
+
+    function getURLparams() {
+        var path = window.location.pathname.split("/");
+        artist = path[3];
+    }
+
+    function sendNewProduct() {
+        url = "/api/v1/artists/" + artist + "/merch";
+        var product = {
+            title: $("#title").val(),
+            id: $("#id").val(),
+            description: $("#description").val(),
+            qty: $("#qty").val(),
+            cost: $("#cost").val()
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(product)
+        })
+            .then(response => response.json())
+            .then(function (response) {
+                if (response.message) {
+                    alert(response.message);
+                } else {
+                    alert(response.error);
+                }
+            });
+    }
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
