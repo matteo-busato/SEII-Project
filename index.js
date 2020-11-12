@@ -1,8 +1,10 @@
 
+const { json } = require('body-parser');
 var express = require('express');
 
 // instantiate express
 const app = express();
+app.use(express.json());
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -18,6 +20,24 @@ router.get('/test', function (req, res) {
 //####################################### SET ROUTER #################
 // register our router on /
 app.use('/', router);
+
+const path = require('path');
+
+const manageMerch = require('./UserStory#14/manageMerch.js');
+
+app.get('/v1/profiles/:name/merch/addNewProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
+});
+app.get('/v1/profiles/:name/merch/:id/changeProductData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeProductData.html'));
+});
+app.get('/v1/profiles/:name/merch/:id/deleteProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
+});
+
+app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
+app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
+app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
