@@ -9,6 +9,69 @@ servers:
   - url: http://localhost:8000/api/v1
     description: Localhost
 paths:
+  
+  /users:
+    post:
+      description: >-
+        Register a new user to the website as a simple user
+      summary: Register a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+            example:
+              name: "John"
+              email: "john@gmail.com"
+              password: "5up3rS3cr3t4ndL0ngP4ssw0rd"
+      responses:
+        '201':
+          description: 'User registered successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'User registered successfully'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The field 'name' must be a non-empty string"
+                      - "The field 'email' must be a non-empty string"
+                      - "The field 'password' must be a non-empty string"
+                      - "Invalid email format"
+        '409':
+          description: 'Duplicated email'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "This email is already registered"
 
   /artists:
     get:
