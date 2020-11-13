@@ -222,7 +222,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of albums of an artist'
@@ -232,7 +233,43 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
-  
+    post:
+      description: >-
+        Allows to post a new album to the artist's discography
+      summary: post new album
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the album to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '200':
+          description: Album posted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /artists/:name/merch:
     get:
       description: >-
@@ -282,11 +319,13 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: ismn
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'album :ismn of the artist :name'
@@ -295,7 +334,85 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Album'        
+                  $ref: '#/components/schemas/Album'
+    delete:
+      description: >-
+        Allows to delete an album in the artist's discography
+      summary: delete album
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: ismn
+          required: true
+          schema:
+            type: string
+          description: the album's ismn
+      responses:
+        '200':
+          description: Album deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Allows to change an album's data in the artist's discography
+      summary: change album data
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: ismn
+          required: true
+          schema:
+            type: string
+          description: the album's ismn
+      requestBody:
+        description: the album's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '200':
+          description: Album's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the album's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string          
    
   /artists/:name/merch/:id:
     get:
