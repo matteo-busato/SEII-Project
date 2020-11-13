@@ -9,7 +9,7 @@ servers:
   - url: http://localhost:8000/api/v1
     description: Localhost
 paths:
-  
+
   /users:
     post:
       description: >-
@@ -21,7 +21,7 @@ paths:
             schema:
               type: object
               properties:
-                name: 
+                name:
                   type: string
                 email:
                   type: string
@@ -79,7 +79,7 @@ paths:
         Gets the list of artists.
       summary: View all artists
       responses:
-        '200':  
+        '200':
           description: 'Collection of artists'
           content:
             application/json:
@@ -87,7 +87,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Artist'
-  
+
   /albums:
     get:
       description: >-
@@ -102,7 +102,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
-                  
+
   /merch:
     get:
       description: >-
@@ -117,7 +117,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+
   /events:
     get:
       description: >-
@@ -132,7 +132,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  
+
   /artists/:name:
     get:
       description: >-
@@ -152,7 +152,7 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Artist'
-                  
+
   /albums/:ismn:
     get:
       description: >-
@@ -172,7 +172,7 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Album'
-                  
+
   /merch/:id:
     get:
       description: >-
@@ -192,7 +192,7 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+
   /events/:id:
     get:
       description: >-
@@ -212,7 +212,7 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
-  
+
   /artists/:name/albums:
     get:
       description: >-
@@ -261,7 +261,7 @@ paths:
                   message:
                     type: string
         '400':
-          description: Error on deleting the album
+          description: Error on posting the album
           content:
             application/json:
               schema:
@@ -289,7 +289,43 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+    post:
+      description: >-
+        Allows to post a new product to the artist's merch
+      summary: post new product
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the product to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merch'
+      responses:
+        '200':
+          description: Product posted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on posting the product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /artists/:name/events:
     get:
       description: >-
@@ -309,7 +345,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  
+
   /artists/:name/albums/:ismn:
     get:
       description: >-
@@ -412,8 +448,8 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string          
-   
+                    type: string
+
   /artists/:name/merch/:id:
     get:
       description: >-
@@ -436,8 +472,86 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Merch'  
-  
+                  $ref: '#/components/schemas/Merch'
+    delete:
+      description: >-
+        Allows to delete an product in the artist's merch
+      summary: delete product
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the product's id
+      responses:
+        '200':
+          description: Product deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Allows to change an product's data in the artist's merch
+      summary: change product data
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the product id
+      requestBody:
+        description: the product's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merch'
+      responses:
+        '200':
+          description: Product's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the product's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /artists/:name/events/:id:
     get:
       description: >-
@@ -461,7 +575,7 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
-                  
+
 components:
   schemas:
     Artist:
@@ -484,7 +598,7 @@ components:
         name: "system of a down"
         email: "SOAD@ofAdown.com"
         bio: "gruppo statunitense metal"
-        
+
     Album:
       type: object
       required:
@@ -525,7 +639,7 @@ components:
         tracklist: {"track1":"track1","track2":"track2"}
         cost: 10.0
         owner: "Autechre"
-        
+
     Event:
       type: object
       required:
@@ -565,7 +679,7 @@ components:
         description: "reseal party for the new Autechre's album 'Sign'"
         cost: 35.0
         owner: "Autechre"
-        
+
     Merch:
       type: object
       required:
