@@ -34,7 +34,7 @@ app.get('/register', (req, res) => {
 });
 
 //############# registration part ################
-const registration = require('./register/register.js');
+const registration = require('./lib/register.js');
 
 app.post('/api/v1/users', registration.postRegister);
 
