@@ -33,7 +33,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema: 
+            type: string
       responses:
         '200':
           description: 'information about an artist'
@@ -68,7 +69,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of events of an artist'
@@ -78,6 +80,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+      
   /merch:
     get:
       description: >-
@@ -102,7 +105,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of merch of an artist'
@@ -112,21 +116,127 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
+      
+  /artists/{name}/albums:
+    post:
+      description: >-
+        Allows to post a new album to the artist's discography
+      summary: post new album
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the album to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '200':
+          description: Album posted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /artists/{name}/albums/{ismn}:
+    delete:
+      description: >-
+        Allows to delete an album in the artist's discography
+      summary: delete album
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: ismn
+          required: true
+          schema:
+            type: string
+          description: the album's ismn
+      responses:
+        '200':
+          description: Album deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Allows to change an album's data in the artist's discography
+      summary: change album data
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: ismn
+          required: true
+          schema:
+            type: string
+          description: the album's ismn
+      requestBody:
+        description: the album's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        '200':
+          description: Album's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the album's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
                   
 components:
   schemas:
-    Student:
-      type: object
-      required:
-        - id
-        - email
-      properties:
-        id:
-          type: integer
-          description: 'ID of the user'
-        email:
-          type: string
-          description: 'Email address of the user'
     Artist:
       type: object
       required:
@@ -147,7 +257,45 @@ components:
         name: "system of a down"
         email: "fuckthesystem@ofAdown.com"
         bio: "gruppo USA/Armenia che fanno musica metal pazzerella"
-        
+
+    Album:
+      type: object
+      required:
+        - ismn
+        - title
+        - artist
+        - year
+        - tracklist
+        - cost 
+      properties:
+        ismn:
+          type: number
+          description: 'identifying ISMN of the album'
+        title:
+          type: string
+          description: 'title of the album'
+        artist:
+          type: string
+          description: 'artist of the album'
+        year:
+          type: number
+          description: 'year of the album'
+        tracklist:
+          type: array
+          items:
+            type: string
+          description: 'tacklist of the album'
+        cost: 
+          type: number
+          description: 'cost of the album'
+      example:
+        ismn: 67196438
+        title: "metal album 2"
+        artist: "black sabbath"
+        year: 1973
+        tracklist: "track1, track2, track3"
+        cost: 20
+
     Event:
       type: object
       required:
@@ -189,7 +337,7 @@ components:
           type: string
           description: 'info of the merch'
         cost:
-          type: float
+          type: number
           description: 'cost of the merch'
         artist:
           type: string
