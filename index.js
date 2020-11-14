@@ -1,8 +1,10 @@
 
 var express = require('express');
+const events = require('./lib/events.js');
 
 // instantiate express
 const app = express();
+app.use(express.json());
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -18,6 +20,9 @@ router.get('/test', function (req, res) {
 //####################################### SET ROUTER #################
 // register our router on /
 app.use('/', router);
+
+//###### manage events ###########
+app.post('/api/v1/artists/:name/events', events.addEvent);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
