@@ -23,6 +23,8 @@ app.use('/', router);
 
 //###### manage events ###########
 app.post('/api/v1/artists/:name/events', events.addEvent);
+app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
+app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
