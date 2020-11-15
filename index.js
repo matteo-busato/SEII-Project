@@ -38,7 +38,9 @@ app.post('/api/v1/insert'  ,function (req, res) {
 
     var user = new User({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        username: req.body.username,
+        userType: "user"
     });
 
     console.log(user.email);
@@ -65,12 +67,25 @@ router.get('/find', function (req, res) {
     });
 });
 
-router.get('/drop', function(req,res){
+//authenticate user - login
+router.post('/api/v1/authenticate', function (req, res) {
+    var email = req.body.email;
+    var password = req.body.password;
 
-    db.collection("user").remove(function(err, delOK) {
-    if (err) throw err;
-    if (delOK) console.log("Collection deleted");
-  });
+    User.find( { email : email, password: password }, function (err,utente) {
+        if(err)
+            res.json({message: "email or password not matched"});
+        else
+            res.json({message: "user: " + utente });
+    });
+});
+
+router.get('/drop/:id', function(req,res){
+    var id = req.params.id;
+    User.findOneAndRemove({_id: id }, function(err){
+        if(err) res.json("error:" + err)
+        else{ res.json("removed user");}
+    });
 })
 
 app.get('/login', (req, res) => {

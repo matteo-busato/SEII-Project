@@ -8,9 +8,25 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
+  username:{
+      type: 'String',
+      required: true,
+      unique: true
+  },
   password: {
     type: 'String',
     required: true,
+    unique: false
+  },
+  userType: {           // user / artist / moderator
+      type: 'String',
+      required: true,
+      unique: false
+  },
+  bio: {
+      type: 'String',
+      required: false,
+      unique: false
   }
 });
 

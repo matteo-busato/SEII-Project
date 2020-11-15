@@ -18,7 +18,8 @@ var submit = function(){
 
     }
 }
-    xhttp.open("post", "localhost:8080/api/v1/insert", true);
+
+    xhttp.open("post", "/api/v1/insert", true);
     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
