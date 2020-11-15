@@ -25,6 +25,20 @@ app.use('/', router);
 app.post('/api/v1/artists/:name/events', events.addEvent);
 app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
+app.get('/api/v1/artists/:name/events/:id', events.getEvent);
+
+//get instance of path, required to serve html pages (?)
+const path = require('path');
+
+app.get('/v1/artists/:name/events/addNewEvent', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewEvent.html'));
+});
+app.get('/v1/artists/:name/events/:id/changeEventData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeEventData.html'));
+});
+app.get('/v1/artists/:name/events/:id/deleteEvent', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteEvent.html'));
+});
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
