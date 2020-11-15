@@ -152,7 +152,167 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Artist'
-
+    post:
+      description: >-
+        Add informations about the artist specified.
+      summary: Manage informations 
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        requestBody:
+        description: The informations to be add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        responses:
+        '200':
+          description: Informations posted with success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+          '300':
+          description: Some informations are empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+          '400':
+            description: Error on posting the informations
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+    
+    delete:
+      description: >-
+        Allows to delete artist informations
+      summary: Delete informations
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's biography
+        - in: path
+          name: password
+          required: true
+          schema:
+            type: string
+          description: the artist's password
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's genre
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: the artist's email
+      responses:
+        '200':
+          description: Artist informations deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      
+    put:
+      description: >-
+        Allows to change artist informations
+      summary: Change informations
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's biography
+        - in: path
+          name: password
+          required: true
+          schema:
+            type: string
+          description: the artist's password
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's genre
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: the artist's email
+        
+      requestBody:
+        description: the artist's informations to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+      responses:
+        '200':
+          description: Artist's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the artist's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string   
   /albums/:ismn:
     get:
       description: >-
@@ -584,6 +744,8 @@ components:
         - name
         - email
         - bio
+        - password
+        - genre
       properties:
         name:
           type: string
@@ -594,10 +756,18 @@ components:
         bio:
           type: string
           description: 'bio of the artist'
+        password:
+          type: string
+          description: 'password of the artist'
+        genre:
+          type: string
+          description: 'genre of the artist'
       example:
         name: "system of a down"
         email: "SOAD@ofAdown.com"
         bio: "gruppo statunitense metal"
+        password: "anguria66"
+        genre: "Metallo"
 
     Album:
       type: object
