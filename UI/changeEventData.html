@@ -131,12 +131,21 @@
         }
 
         function sendChange() {
-            var event = {
-                title: $("#newTitle").val(),
-                date: $("#newDate").val(),
-                place: $("#newPlace").val(),
-                description: $("#newDescription").val(),
-                cost: $("#newCost").val()
+            var event = {};
+            if ($("#newTitle").val()) {
+                event.title = $("#newTitle").val();
+            }
+            if ($("#newTitle").val()) {
+                event.title = $("#newTitle").val();
+            }
+            if ($("#newPlace").val()) {
+                event.title = $("#newPlace").val();
+            }
+            if ($("#newDescription").val()) {
+                event.title = $("#newDescription").val();
+            }
+            if ($("#newCost").val()) {
+                event.title = $("#newCost").val();
             }
             fetch(url, {
                 method: 'PUT',
