@@ -1,6 +1,8 @@
+
 var bodyparser = require('body-parser');
 var express = require('express');
 
+const mongoose = require('mongoose');
 // instantiate express
 const app = express();
 app.use(bodyparser.json());
@@ -11,12 +13,16 @@ var port = process.env.PORT || 8080;
 
 // get an instance of the express Router
 var router = express.Router();
+const api = require('./api/api.js');
 
 app.use(express.static('UI'));
 app.use('/', router);
 
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test',{
+//####################### connection to database ###############################
+//including system congifuration
+var config = require('./config.js');    //includes user and password for database, secret password for tokens
+
+mongoose.connect( config.database.uri ,{
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -24,77 +30,36 @@ mongoose.connect('mongodb://localhost/test',{
 
 //connection to database
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', console.error.bind( console , 'connection error:' ) );
 db.once('open', function() {
   console.log("we're connected to db");
 });
 
+//##############################################################################
+
+//user model for database
 const User = require('./models/user.js');
-// instantiate express
 
 
-// insert a predefined user
-app.post('/api/v1/insert'  ,function (req, res) {
-
-    var user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        username: req.body.username,
-        userType: "user"
-    });
-
-    console.log(user.email);
-    console.log(user.password);
-
-    user.save( function (err,data) {
-        if(err){
-            res.status(400).json({message: "error saving user." + err});
-        }
-        else{
-            res.status(200).json({message: "saved new user." + user});
-        }
-    });
-});
-
-//get all the users
-router.get('/find', function (req, res) {
-    User.find( function (err,utente) {
-        if(err) res.json({message: "error getting users."});
-        else{
-            var message = "users: ";
-            res.json({message: utente });
-        }
-    });
-});
+// insert a user
+app.post('/api/v1/users', api.register );
 
 //authenticate user - login
-router.post('/api/v1/authenticate', function (req, res) {
-    var email = req.body.email;
-    var password = req.body.password;
+router.post('/api/v1/users/auth', api.auth);
 
-    User.find( { email : email, password: password }, function (err,utente) {
-        if(err)
-            res.json({message: "email or password not matched"});
-        else
-            res.json({message: "user: " + utente });
-    });
-});
+//get all the name of users
+router.get('/api/v1/users', api.getUsers );
 
-router.get('/drop/:id', function(req,res){
-    var id = req.params.id;
-    User.findOneAndRemove({_id: id }, function(err){
-        if(err) res.json("error:" + err)
-        else{ res.json("removed user");}
-    });
-})
 
+//delete a user by its _id
+router.delete('/api/v1/users', api.deleteUser );
+
+//route the login UI
 app.get('/login', (req, res) => {
-
         res.sendFile('UI/login.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
-
 });
 
 //####################################### SET ROUTER #################
