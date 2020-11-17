@@ -1,10 +1,22 @@
 
 var express = require('express');
 const events = require('./lib/events.js');
+const mongoose = require('mongoose');
 
 // instantiate express
 const app = express();
 app.use(express.json());
+
+//connect to db 
+mongoose.connect('mongodb://localhost:27017/SEII', {useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => {
+    console.log('connected to db');
+    
+    app.listen(port, () => {
+        console.log('EasyMusic on port ' + port);
+    });
+});
+
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -54,5 +66,3 @@ app.use((err, req, res, next) => {
 
 //####################################################################
 
-app.listen(port);
-console.log('EasyMusic on port ' + port);
