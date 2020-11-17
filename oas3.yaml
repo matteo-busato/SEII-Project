@@ -73,6 +73,80 @@ paths:
                     enum:
                       - "This email is already registered"
 
+  /users/auth:
+    post:
+      description: >-
+        Login in the website retrying an authorization token
+      summary: Login with token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+            example:
+              email: "john@gmail.com"
+              password: "5up3rS3cr3t4ndL0ngP4ssw0rd"
+      responses:
+        '201':
+          description: 'User logged successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  status:
+                    type: string
+                  username:
+                    type: string
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclR5cGUiOiJ1c2VyIiwiaWF0IjoxNjA1NjAyMTA1LCJleHAiOjE2MDU2ODg1MDUsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC8ifQ.eaK2vBDjZzfYjjD27pzxj9kIhplKf4Yx2lY5iIJs8sI"
+                status: "user"
+                username: "mario_rossi"
+                  
+        '401':
+          description: 'wrong password'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "wrong password"
+        '404':
+          description: 'wrong email'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "wrong email"
+        '501':
+          description: 'hasing password problems'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "something goes wrong, please retry."
+
   /artists:
     get:
       description: >-
