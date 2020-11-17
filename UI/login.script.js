@@ -9,7 +9,7 @@ var submit = function(){
     if (this.readyState == 4) {
         var res = this.response;
         console.log(res);
-        if(res.status == 200){  //login successfully
+        if(res.status == 201){  //login successfully
             window.location.replace('/mainpage');
         }else if(res.status == 404){    //wrong email
             document.getElementById("emailErrorMessage").innerText = "wrong email";

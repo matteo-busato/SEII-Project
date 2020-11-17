@@ -4,6 +4,15 @@ var config = require('../config.js');
 
 const User = require('../models/user.js');
 
+function checkEmail(email){
+    re = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+
+    if(re.test(email))
+        return true;
+    else
+        return false;
+}
+
 //register a user
 //URI: POST: /api/v1/users
 const register = (req, res) => {
@@ -36,10 +45,24 @@ const register = (req, res) => {
 const auth = (req, res) => {
 
     let result = {};
-    let status = 200;
+    let status = 201;
 
     var email = req.body.email;
     var password = req.body.password;
+
+    //check for problems
+    if(!email || typeof email != 'string' ){
+        res.status(404).json("The field 'email' must be a non-empty string");
+        return;
+    }
+    if(!checkEmail(email)){
+        res.status(404).json({ error: "Invalid email format"});
+        return;
+    }
+    if(!password || typeof password != 'string'){
+        res.status(401).json({ error: "The field 'password' must be a non-empty string"});
+        return;
+    }
 
     User.findOne( { email : email }, function (err,user) {
         if(!err && user){   //we look at password matching
