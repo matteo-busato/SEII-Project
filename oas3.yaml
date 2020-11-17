@@ -136,7 +136,7 @@ paths:
                     enum:
                       - "wrong email"
         '501':
-          description: 'hasing password problems'
+          description: 'hashing password problems'
           content:
             application/json:
               schema:
@@ -161,6 +161,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Artist'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on artists"
 
   /albums:
     get:
@@ -176,6 +187,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on albums"
 
   /merch:
     get:
@@ -191,6 +213,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on merch"
 
   /events:
     get:
@@ -206,6 +239,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on events"
 
   /artists/:name:
     get:
@@ -226,6 +270,19 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Artist'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "no artist with name :name"
+                      
     post:
       description: >-
         Add informations about the artist specified.
@@ -387,6 +444,7 @@ paths:
                 properties:
                   error:
                     type: string   
+                    
   /albums/:ismn:
     get:
       description: >-
@@ -406,6 +464,18 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on ismn param"
+                      - "no artist with ismn :ismn"
 
   /merch/:id:
     get:
@@ -426,6 +496,18 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Merch'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on id param"
+                      - "no artist with id :id"
 
   /events/:id:
     get:
@@ -446,6 +528,18 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on id param"
+                      - "no artist with id :id"
 
   /artists/:name/albums:
     get:
@@ -467,6 +561,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "no albums from artist with name :name"
+                      
     post:
       description: >-
         Allows to post a new album to the artist's discography
@@ -523,6 +630,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "no merch from artist with name :name"
     post:
       description: >-
         Allows to post a new product to the artist's merch
@@ -579,6 +698,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "no events from artist with name :name"
 
   /artists/:name/albums/:ismn:
     get:
@@ -605,6 +736,19 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on ismn param"
+                      - "no albums with ismn :ismn from artist with name :name"
     delete:
       description: >-
         Allows to delete an album in the artist's discography
@@ -707,6 +851,19 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Merch'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on id param"
+                      - "no albums with id :id from artist with name :name"
     delete:
       description: >-
         Allows to delete an product in the artist's merch
@@ -809,9 +966,23 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on id param"
+                      - "no albums with id :id from artist with name :name"
 
 components:
   schemas:
+  
     Artist:
       type: object
       required:
