@@ -48,8 +48,7 @@ app.post('/api/v1/users', api.register );
 router.post('/api/v1/users/auth', api.auth);
 
 //get all the name of users
-router.get('/api/v1/users', api.getUsers );
-
+router.get('/api/v1/users', api.validateToken, api.getUsers );
 
 //delete a user by its _id
 router.delete('/api/v1/users', api.deleteUser );
@@ -57,6 +56,14 @@ router.delete('/api/v1/users', api.deleteUser );
 //route the login UI
 app.get('/login', (req, res) => {
         res.sendFile('UI/login.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+//route the main page UI
+app.get('/mainpage', (req, res) => {
+        res.sendFile('UI/main-page.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });

@@ -5,6 +5,7 @@ var config = require('../config.js');
 const User = require('../models/user.js');
 
 //register a user
+//URI: POST: /api/v1/users
 const register = (req, res) => {
 
     let result = {};
@@ -30,6 +31,8 @@ const register = (req, res) => {
         });
 }
 
+//login with email and password. get a token
+//URI: POST: api/v1/users/auth
 const auth = (req, res) => {
 
     let result = {};
@@ -46,16 +49,16 @@ const auth = (req, res) => {
                     //implements jsonwebtoken
 
                     const payload = { username: user.username,      //to know if has right to change albums/events/merch
-                                        userType: user.userType }; //to know what type of user is
+                                        userType: user.userType,
+                                        id: user._id                }; //to know what type of user is
 
                     const options = { expiresIn: '1d', issuer: 'http://localhost:8080/' };
                     const secret = config.secret;
                     const token = jwt.sign(payload, secret, options);
 
                     result.token = token;
-
                     result.status = status;
-                    result.result = user;
+                    result.username = user.username;
                 }else{
                     status = 401;
                     result.status = status;
@@ -78,14 +81,13 @@ const auth = (req, res) => {
     });
 }
 
+//get all the usernames ( only if you are an admin)
+// URI: GET: /api/v1/users
 const getUsers = (req,res) =>{
 
     const payload = req.decoded;
-    // TODO: Log the payload here to verify that it's the same payload
-    //  we used when we created the token
-    console.log('PAYLOAD', payload);
-    if(payload && payload.username === 'admin') {
-        console.log("finding users...");
+    //const payload = req.header['x-access-token'];
+    if(payload && payload.userType === 'admin') {
         User.find( function (err,users) {
             if(err) res.status(404).json({message: "error getting users."});
             else{
@@ -100,13 +102,21 @@ const getUsers = (req,res) =>{
         res.status(401).send(`Authentication error`);
     }
 }
-
+//delete user only if it is your account or if you are an admin
+//URI: DELETE: api/v1/users
 const deleteUser = (req,res) =>{
-    var id = req.params.id;
-    User.findOneAndRemove({_id: id }, function(err){
-        if(err) res.json("error:" + err)
-        else{ res.json("removed user");}
-    });
+    const payload = req.decoded;
+    var username = req.params.username;
+    //const payload = req.header['x-access-token'];
+    if(payload && (payload.userType === 'admin' || payload.username === username) ) {
+
+        User.findOneAndRemove({username: username }, function(err){
+            if(err) res.status(500).json("error:" + err)
+            else{ res.status(200).json("removed user");}
+        });
+    }else{
+        res.status(401).send(`Authentication error`);
+    }
 }
 
 
