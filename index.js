@@ -22,6 +22,21 @@ router.get('/test', function (req, res) {
 app.use('/', router);
 
 
+//################## connect to db #################
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("correctly connected to db");
+});
+
 //############# insertMusic part ################
 
 //get instance of path, required to serve html pages (?)
@@ -29,13 +44,13 @@ const path = require('path');
 
 const insertMusic = require('./lib/insertMusic.js');
 
-app.get('/v1/profiles/:name/albums/addNewAlbum', (req, res) => {
+app.get('/v1/artists/:name/albums/addNewAlbum', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
 });
-app.get('/v1/profiles/:name/albums/:ismn/changeAlbumData', (req, res) => {
+app.get('/v1/artists/:name/albums/:ismn/changeAlbumData', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/changeAlbumData.html'));
 });
-app.get('/v1/profiles/:name/albums/:ismn/deleteAlbum', (req, res) => {
+app.get('/v1/artists/:name/albums/:ismn/deleteAlbum', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
 });
 
