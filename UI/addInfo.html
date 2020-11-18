@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>EasyMusic - Add Artist Info</title>
+</head>
+
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">EasyMusic</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Artists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Events</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
+        <h2 class="text-center">Add Artist Info</h2>
+        <p class="text-center">With this powerful tool you can add informations.</p>
+        <div class="row justify-content-center">
+            <div class="col-8 border rounded p-3">
+                <form>
+                    <div class="form-group">
+                        <label>Password</label for="title">
+                        <input type="password" name="pwd" id="pwd" class="form-control"
+                            placeholder="Insert password...">
+                    </div>
+                    <div class="form-group">
+                        <label>Biography</label for="year">
+                        <input type="text" name="bio" id="bio" class="form-control" placeholder="Insert your bio">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label for="tracklist">
+                        <input type="text" name="genre" id="genret" class="form-control"
+                            placeholder="Insert your genre">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label for="genre">
+                        <input type="text" name="email" id="email" class="form-control"
+                            placeholder="Insert your email">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="sendNewInfo()">Add Informations</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var artist;
+        var url;
+
+        function getURLparams() {
+            var path = window.location.pathname.split("/");
+            artistName = path[2];
+        }
+
+        function sendNewInfo() {
+            url = "'/api/v1/artists/:name";
+            var artist = {
+                password: $("#password").val(),
+                bio: $("#bio").val(),
+                genre: $("#genre").val(),
+                email: $("#email").val()
+            };
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(artist)
+            })
+                .then(response => response.json())
+                .then(function (response) {
+                    if (response.message) {
+                        alert(response.message);
+                    } else {
+                        alert(response.error);
+                    }
+                });
+        }
+    </script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

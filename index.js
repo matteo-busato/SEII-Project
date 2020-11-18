@@ -24,8 +24,9 @@ app.use('/', router);
 
 //############# manageInfo part ################
 
-const manageInfo = require('./manageInfo/manageInfo.js');
+const manageInfo = require('./lib/manageInfo.js');
 
+app.get('/api/v1/artists/:name', manageInfo.getInfo);
 app.post('/api/v1/artists/:name', manageInfo.addInfo);
 app.put('/api/v1/artists/:name', manageInfo.changeInfo);
 app.delete('/api/v1/artists/:name', manageInfo.deleteInfo);
