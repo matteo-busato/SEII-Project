@@ -21,9 +21,26 @@ router.get('/test', function (req, res) {
 // register our router on /
 app.use('/', router);
 
+//################## connect to db #################
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("correctly connected to db");
+});
+
+//############# manageMerch part ################
+
 const path = require('path');
 
-const manageMerch = require('./UserStory#14/manageMerch.js');
+const manageMerch = require('./lib/manageMerch.js');
 
 app.get('/v1/profiles/:name/merch/addNewProduct', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
@@ -38,6 +55,7 @@ app.get('/v1/profiles/:name/merch/:id/deleteProduct', (req, res) => {
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
+app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {

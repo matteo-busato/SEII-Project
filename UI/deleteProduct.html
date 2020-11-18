@@ -80,8 +80,8 @@
                 getProductData(artist, id);
             }
 
-            function getAlbumData(artist, id) {
-                var album;
+            function getProductData(artist, id) {
+                var product;
                 url = "/api/v1/artists/" + artist + "/merch/" + id;
                 fetch(url)
                     .then(response => response.json())
