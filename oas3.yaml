@@ -160,7 +160,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Artist'
+                  $ref: '#/components/schemas/User'
         '400':
           description: 'Request Error'
           content:
@@ -269,7 +269,7 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Artist'
+                  $ref: '#/components/schemas/User'
         '400':
           description: 'Request Error'
           content:
@@ -424,7 +424,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Artist'
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           description: Artist's data changed with success
@@ -983,16 +983,16 @@ paths:
 components:
   schemas:
   
-    Artist:
+    User:
       type: object
       required:
-        - name
+        - username
         - email
         - bio
         - password
-        - genre
+        - userType
       properties:
-        name:
+        username:
           type: string
           description: 'Name of the artist'
         email:
@@ -1004,15 +1004,15 @@ components:
         password:
           type: string
           description: 'password of the artist'
-        genre:
+        userType:
           type: string
-          description: 'genre of the artist'
+          description: 'user/artist/moderator'
       example:
-        name: "system of a down"
+        username: "system of a down"
         email: "SOAD@ofAdown.com"
         bio: "gruppo statunitense metal"
         password: "anguria66"
-        genre: "Metallo"
+        usertype: "artist"
 
     Album:
       type: object
