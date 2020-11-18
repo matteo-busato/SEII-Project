@@ -43,6 +43,11 @@
             <div class="col-8 border rounded p-3">
                 <form>
                     <div class="form-group">
+                        <label>ISMN</label for="ismn">
+                        <input type="text" name="ismn" id="ismn" class="form-control"
+                            placeholder="Insert the ismn...">
+                    </div>
+                    <div class="form-group">
                         <label>Title</label for="title">
                         <input type="text" name="title" id="title" class="form-control"
                             placeholder="Insert the title...">
@@ -95,6 +100,7 @@
         function sendNewAlbum() {
             url = "/api/v1/artists/" + artist + "/albums";
             var album = {
+                ismn: $("#ismn").val(),
                 title: $("#title").val(),
                 year: $("#year").val(),
                 tracklist: $("#tracklist").val().split(','),

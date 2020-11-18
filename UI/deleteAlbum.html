@@ -43,6 +43,10 @@
             <div class="col-8 border rounded p-3">
                 <form>
                     <div class="form-group">
+                        <label>ISMN</label for="ismn">
+                        <input type="text" name="ismn" id="ismn" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
                         <label>Title</label for="title">
                         <input type="text" name="title" id="title" class="form-control" readonly>
                     </div>
@@ -103,6 +107,7 @@
             fetch(url)
                 .then(response => response.json())
                 .then(function (album) {
+                    $("#ismn").val(album.ismn);
                     $("#title").val(album.title);
                     $("#year").val(album.year);
                     $("#tracklist").val(album.tracklist);

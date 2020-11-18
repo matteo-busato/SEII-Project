@@ -4,14 +4,14 @@ const albumSchema = new mongoose.Schema({
     ismn: {
         type: 'Number',
         required: true,
-        unique: false
+        unique: true
     }, 
     title: {
         type: 'String',
         required: true,
         unique: false
     },
-    artist: {
+    owner: {
         type: 'String',
         required: true,
         unique: false
