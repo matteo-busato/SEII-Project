@@ -62,7 +62,7 @@
                         <input type="checkbox" class="form-check-input" id="imSure">
                         <label class="form-check-label" for="imSure">I am sure I want to delete this product</label>
                     </div>
-                    <button class="btn btn-primary my-2">Delete this product</button>
+                    <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete this product</button>
                 </form>
             </div>
         </div>
@@ -76,7 +76,7 @@
             function getURLparams() {
                 var path = window.location.pathname.split("/");
                 artist = path[3];
-                ismn = path[5];
+                id = path[5];
                 getProductData(artist, id);
             }
 
