@@ -14,6 +14,7 @@ function submitForm(){
     .then( function(data) {
         console.log(data);
         var text;
+        $("#status").removeClass();
         if(data.message){
             text = data.message;
             $("#status").addClass("text-success");

@@ -2,6 +2,8 @@ var bodyparser = require('body-parser');
 var express = require('express');
 const mongoose = require('mongoose');
 const registration = require('./lib/register.js');
+const dotenv = require('dotenv');
+dotenv.config();
 
 // instantiate express
 const app = express();
@@ -12,7 +14,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 var port = process.env.PORT || 8080;
 
 //connect to db 
-mongoose.connect('mongodb://localhost:27017/SEII', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => {
     console.log('connected to db');
     
