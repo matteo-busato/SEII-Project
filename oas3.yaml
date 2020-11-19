@@ -796,7 +796,7 @@ paths:
                   message:
                     type: string
         '400':
-          description: Error on posting the product
+          description: "Error on posting the product"
           content:
             application/json:
               schema:
@@ -896,7 +896,29 @@ paths:
                     enum:
                       - "error on name param"
                       - "error on ismn param"
-                      - "no albums with ismn :ismn from artist with name :name"
+                      - "The album :ismn exists in db but the owner is not :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The album :ismn does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    
     delete:
       description: >-
         Allows to delete an album in the artist's discography
@@ -1011,7 +1033,28 @@ paths:
                     enum:
                       - "error on name param"
                       - "error on id param"
-                      - "no albums with id :id from artist with name :name"
+                      - "no merch with :id from artist with :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The product :id does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     delete:
       description: >-
         Allows to delete an product in the artist's merch
@@ -1107,7 +1150,7 @@ paths:
           type: string
       responses:
         '200':
-          description: 'event :ismn of the artist :name'
+          description: 'event :id of the artist :name'
           content:
             application/json:
               schema:
@@ -1126,7 +1169,28 @@ paths:
                     enum:
                       - "error on name param"
                       - "error on id param"
-                      - "no albums with id :id from artist with name :name"
+                      - "no events with :id from artist with :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The event :id does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 
 components:
   schemas:
