@@ -42,13 +42,13 @@ const path = require('path');
 
 const manageMerch = require('./lib/manageMerch.js');
 
-app.get('/v1/profiles/:name/merch/addNewProduct', (req, res) => {
+app.get('/v1/artists/:name/merch/addNewProduct', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
 });
-app.get('/v1/profiles/:name/merch/:id/changeProductData', (req, res) => {
+app.get('/v1/artists/:name/merch/:id/changeProductData', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/changeProductData.html'));
 });
-app.get('/v1/profiles/:name/merch/:id/deleteProduct', (req, res) => {
+app.get('/v1/artists/:name/merch/:id/deleteProduct', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
 });
 
