@@ -1,12 +1,11 @@
 var albums = document.getElementById('albums'); // Get the list where we will place albums
-var merch = document.getElementById('merch'); // Get the list where we will place merch
-var events = document.getElementById('events'); // Get the list where we will place getEvents
 
 var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
     console.log("" + types);
 }
 
-function findGetParameter(parameterName) {  //return the query
+
+function findGetParameter(parameterName) { //return the query
     var result = null,
         tmp = [];
     var items = location.search.substr(1).split("&");
@@ -17,7 +16,8 @@ function findGetParameter(parameterName) {  //return the query
     return result;
 }
 
-var query = findGetParameter("name");
+var query = findGetParameter("username");
+
 
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
@@ -46,24 +46,25 @@ var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4) {
         var data = this.response;
         console.log(data);
+
         //insert basic info
-        document.getElementById("artista").innerText = data[0].name;
-        document.getElementById("bio").innerText = data[0].bio;
+        document.getElementById("artista").innerText = query;
 
-        //insert albums,merch,events
-        populate("albums",data[1].albums,"/artist-selected-album?ismn=","album");   //carico gli albums
-        document.getElementById("moreAlbums").href = "/artist-albums?name=" + data[0].name;
-        populate("events",data[3].events,"/artist-selected-event?id=","event");   //carico gli eventi
-        document.getElementById("moreEvents").href = "/artist-events?name=" + data[0].name;
-        populate("merch",data[2].merch,"/artist-selected-merch?id=","merch");   //carico il merch
-        document.getElementById("moreMerch").href = "/artist-merch?name=" + data[0].name;
-
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert merch
+            populate("merch",data.merch,"/artist-selected-merch?id=","merch");   //carico il merch
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
-xhttp.open("get", "/api/v1/artists/" + query, true);
+xhttp.open("get", "/api/v1/artists/" + query + "/merch", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");

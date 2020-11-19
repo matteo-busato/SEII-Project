@@ -1,22 +1,7 @@
-var albums = document.getElementById('albums'); // Get the list where we will place albums
 
 var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
     console.log("" + types);
 }
-
-
-function findGetParameter(parameterName) { //return the query
-    var result = null,
-        tmp = [];
-    var items = location.search.substr(1).split("&");
-    for (var index = 0; index < items.length; index++) {
-        tmp = items[index].split("=");
-        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-    }
-    return result;
-}
-
-var query = findGetParameter("name");
 
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
@@ -45,18 +30,22 @@ var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4 ) {
         var data = this.response;
         console.log(data);
-        //insert basic info
-        document.getElementById("artista").innerText = query;
 
-        //insert albums
-        populate("albums",data,"/artist-selected-album?ismn=","album");   //carico gli albums
-
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert albums
+            populate("events",data,"/artist-selected-event?id=","events");   //carico gli albums
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
-xhttp.open("get", "/api/v1/artists/" + query + "/albums", true);
+xhttp.open("get", "/api/v1/events", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");

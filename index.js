@@ -1,11 +1,13 @@
 const { json } = require('body-parser');
 var express = require('express');
 
+const mongoose = require('mongoose');
+
 // instantiate express
 const app = express();
 app.use(express.json());
 
-const userStory4 = require('./lib/app.js');
+const userStory4 = require('./api/userStory4.js');
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -19,15 +21,71 @@ router.get('/test', function (req, res) {
     res.json({ message: 'API is working correctly!' });
 });
 
+//####################### connection to database ###############################
+//including system congifuration
+var config = require('./config.js');    //includes user and password for database, secret password for tokens
+
+mongoose.connect( config.database.uri ,{
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+});
+
+//connection to database
+const db = mongoose.connection;
+db.on('error', console.error.bind( console , 'connection error:' ) );
+db.once('open', function() {
+  console.log("we're connected to db");
+});
+
+//user model for database
+const User = require('./models/user.js');
+//album model for database
+const Album = require('./models/album.js');
+//event model for database
+const Event = require('./models/event.js');
+//product model for database
+const Product = require('./models/product.js');
 
 //################## SET STATIC PAGES ###########
-app.get('/artist-mainpage', (req, res) => {
+// register our router on /
+app.use(express.static('UI'));
+//app.use('/', router);
+app.use("/scripts", express.static('./scripts/'));
 
+app.get('/artists', (req, res) => {
+        res.sendFile('UI/artists.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+app.get('/albums', (req, res) => {
+        res.sendFile('UI/albums.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+app.get('/merch', (req, res) => {
+        res.sendFile('UI/merch.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+app.get('/events', (req, res) => {
+        res.sendFile('UI/events.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+app.get('/artist-mainpage', (req, res) => {
         res.sendFile('UI/artist-mainpage.html', {root:'./'}, (err) => {
         res.end();
         if(err) throw(err);
     });
-
 });
 
 app.get('/artist-albums', (req, res) => {
@@ -73,9 +131,6 @@ app.get('/artist-selected-merch', (req, res) => {
 });
 
 //####################################### SET ROUTER #################
-// register our router on /
-app.use(express.static('UI'));
-app.use('/', router);
 
 app.get('/api/v1/artists',userStory4.getArtists);
 app.get('/api/v1/albums',userStory4.getAlbums);
@@ -88,10 +143,11 @@ app.get('/api/v1/events/:id',userStory4.getEvent);
 app.get('/api/v1/artists/:name/albums',userStory4.getArtistAlbums);
 app.get('/api/v1/artists/:name/merch',userStory4.getArtistMerch);
 app.get('/api/v1/artists/:name/events',userStory4.getArtistEvents);
+/*
 app.get('/api/v1/artists/:name/albums/:ismn',userStory4.getArtistAlbumIsmn);
 app.get('/api/v1/artists/:name/merch/:id',userStory4.getArtistMerchId);
 app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
-
+*/
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {

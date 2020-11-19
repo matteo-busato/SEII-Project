@@ -16,7 +16,7 @@ function findGetParameter(parameterName) { //return the query
     return result;
 }
 
-var query = findGetParameter("name");
+var query = findGetParameter("username");
 
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
@@ -45,18 +45,25 @@ var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4 ) {
         var data = this.response;
         console.log(data);
+
         //insert basic info
-        document.getElementById("artista").innerText = "beatles";
+        document.getElementById("artista").innerText = query;
 
-        //insert merch
-        populate("merch",data,"/artist-selected-merch?id=","merch");   //carico il merch
-
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert albums
+            populate("albums",data.albums,"/artist-selected-album?ismn=","album");   //carico gli albums
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
-xhttp.open("get", "/api/v1/artists/" + query + "/merch", true);
+xhttp.open("get", "/api/v1/artists/" + query + "/albums", true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");

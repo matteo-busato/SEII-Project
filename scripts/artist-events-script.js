@@ -16,7 +16,8 @@ function findGetParameter(parameterName) { //return the query
     return result;
 }
 
-var query = findGetParameter("name");
+var query = findGetParameter("username");
+
 
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
@@ -45,15 +46,22 @@ var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4) {
         var data = this.response;
         console.log(data);
+
         //insert basic info
-        document.getElementById("artista").innerText = "autechre";
+        document.getElementById("artista").innerText = query;
 
-        //insert events
-        populate("events",data,"/artist-selected-event?id=","event");   //carico gli eventi
-
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert events
+            populate("events",data.events,"/artist-selected-event?id=","event");   //carico gli eventi
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
 xhttp.open("get", "/api/v1/artists/" + query + "/events", true);

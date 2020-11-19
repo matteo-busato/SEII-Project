@@ -1,11 +1,3 @@
-var getTrack = function(tracklist){     //return a string for the tracklist
-    var tmp = "";
-    for(var i=0; i<tracklist.length;i++){
-        tmp += i + ": " + tracklist[i] + " ; ";
-    }
-    return tmp;
-}
-
 function findGetParameter(parameterName) { //return the query
     var result = null,
         tmp = [];
@@ -17,23 +9,29 @@ function findGetParameter(parameterName) { //return the query
     return result;
 }
 
-var query = findGetParameter("ismn");
+var query = findGetParameter("id");
 
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4) {
         var data = this.response;
-        console.log(data);
-        //insert basic info
-        document.getElementById("artista").innerText = data.owner;
-        document.getElementById("dati").innerText = "Titolo: " + data.title + "\nIsmn:" + data.ismn +
-            "\nYear: " + data.year + "\nGente: " + data.genre + "\nCost: " + data.cost + "\nTracklist: " + getTrack(data.tracklist);
 
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert basic info
+            document.getElementById("artista").innerText = data.owner;
+            document.getElementById("dati").innerText = "Titolo: " + data.title + "\nId:" + data.id +
+                "\nDescription: " + data.description + "\nCost: " + data.cost ;
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
-xhttp.open("get", "/api/v1/albums/" + query, true);
+xhttp.open("get", "/api/v1/merch/" + query, true);
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");

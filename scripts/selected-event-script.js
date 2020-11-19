@@ -15,14 +15,20 @@ var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
 xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
+    if (this.readyState == 4 ) {
         var data = this.response;
-        console.log(data);
-        //insert basic info
-        document.getElementById("artista").innerText = data.owner;
-        document.getElementById("dati").innerText = "Titolo: " + data.title + "\nId:" + data.id +
-            "\nDate: " + data.data + "\nDescription: " + data.description + "\nCost: " + data.cost ;
 
+        if(this.status == 200){
+            document.getElementById("error").innerText = "";
+            document.getElementById("error").style = "display: none";
+            //insert basic info
+            document.getElementById("artista").innerText = data.owner;
+            document.getElementById("dati").innerText = "Titolo: " + data.title + "\nId: " + data.id +
+                "\nDate: " + data.data + "\nDescription: " + data.description + "\nCost: " + data.cost ;
+        }else{
+            document.getElementById("error").innerText = data.error;
+            document.getElementById("error").style = "display: block";
+        }
     }
 }
 xhttp.open("get", "/api/v1/events/" + query, true);

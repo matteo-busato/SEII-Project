@@ -13,7 +13,7 @@
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-        <script src="../scripts/selected-merch-script.js"></script>
+        <script src="../scripts/merch-script.js"></script>
     </head>
 
     <body>
@@ -47,23 +47,22 @@
             </div>
         </nav>
 
+
         <div class="container-fluid mt-4 w-95 mx-auto">
-            <div class="card d-flex my-3">
-                <div class="d-flex card-body">
-                    <div class="mr-auto">
-                        <div class="card-title">
-                            <h4 id="artista">Nome artista</h4>
-                        </div>
-                        <div class="card-text d-flex">
-                            <p class="mr-auto" id="dati">Titolo merch</p>
-                        </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Merch</h5>
+                      <div id="merch" class="list-group">
+
+                      </div>
                     </div>
-                    <div class="my-auto" >
-                        <button id="addToCart" onClick="" class="btn btn-primary ml-auto">add to cart</button>
-                    </div>
+                  </div>
+                  <div class="alert alert-danger" id="error" style="display:none"></div>
                 </div>
-                <div class="alert alert-danger" id="error" style="display:none"></div>
             </div>
+
         </div>
 
     </body>
