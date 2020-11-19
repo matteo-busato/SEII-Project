@@ -1,5 +1,7 @@
 var bodyparser = require('body-parser');
 var express = require('express');
+const mongoose = require('mongoose');
+const registration = require('./lib/register.js');
 
 // instantiate express
 const app = express();
@@ -9,6 +11,15 @@ app.use(bodyparser.urlencoded({ extended: true }));
 // set our port
 var port = process.env.PORT || 8080;
 
+//connect to db 
+mongoose.connect('mongodb://localhost:27017/SEII', {useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => {
+    console.log('connected to db');
+    
+    app.listen(port, () => {
+        console.log('EasyMusic on port ' + port);
+    });
+});
 
 // get an instance of the express Router
 var router = express.Router();
@@ -34,8 +45,6 @@ app.get('/register', (req, res) => {
 });
 
 //############# registration part ################
-const registration = require('./lib/register.js');
-
 app.post('/api/v1/users', registration.postRegister);
 
 // handle invalid requests and internal error
@@ -52,6 +61,3 @@ app.use((err, req, res, next) => {
 
 
 //####################################################################
-
-app.listen(port);
-console.log('EasyMusic on port ' + port);
