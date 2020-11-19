@@ -75,7 +75,7 @@
                             placeholder="Insert new title...">
                     </div>
                     <div class="form-group">
-                        <label>Descriptio</label for="newDescription">
+                        <label>Description</label for="newDescription">
                         <input type="text" name="newDescription" id="newDescription" class="form-control"
                             placeholder="Insert new description...">
                     </div>
@@ -136,7 +136,7 @@
                 .then(function (response) {
                     if (response.message) {
                         alert(response.message);
-                        getProductData(artist, id);
+                        window.location.replace("http://"+window.location.host+"/v1/artists/"+artist+"/merch/"+id+"/changeProductData");
                     } else {
                         alert(response.error);
                     }
