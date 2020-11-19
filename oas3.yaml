@@ -161,7 +161,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '400':
+        '500':
           description: 'Request Error'
           content:
             application/json:
@@ -171,7 +171,7 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "error on artists"
+                      - "error getting users"
 
   /albums:
     get:
@@ -187,7 +187,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
-        '400':
+        '500':
           description: 'Request Error'
           content:
             application/json:
@@ -197,7 +197,7 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "error on albums"
+                      - "error getting albums"
 
   /merch:
     get:
@@ -213,7 +213,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
-        '400':
+        '500':
           description: 'Request Error'
           content:
             application/json:
@@ -223,7 +223,7 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "error on merch"
+                      - "error getting merch"
 
   /events:
     get:
@@ -239,7 +239,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-        '400':
+        '500':
           description: 'Request Error'
           content:
             application/json:
@@ -249,7 +249,7 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "error on events"
+                      - "error getting events"
 
   /artists/:name:
     get:
@@ -282,7 +282,28 @@ paths:
                     enum:
                       - "error on name param"
                       - "no artist with name :name"
-                      
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
     post:
       description: >-
         Add informations about the artist specified.
@@ -327,7 +348,6 @@ paths:
                   properties:
                     error:
                       type: string
-    
     delete:
       description: >-
         Allows to delete artist informations
@@ -382,7 +402,6 @@ paths:
                 properties:
                   error:
                     type: string
-      
     put:
       description: >-
         Allows to change artist informations
@@ -475,7 +494,29 @@ paths:
                     type: string
                     enum:
                       - "error on ismn param"
-                      - "no artist with ismn :ismn"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The album :ismn does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting albums"
+                      
 
   /merch/:id:
     get:
@@ -507,7 +548,28 @@ paths:
                     type: string
                     enum:
                       - "error on id param"
-                      - "no artist with id :id"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The product :id does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting merch"                      
 
   /events/:id:
     get:
@@ -539,7 +601,28 @@ paths:
                     type: string
                     enum:
                       - "error on id param"
-                      - "no artist with id :id"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The event :id does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting event"
 
   /artists/:name/albums:
     get:
@@ -572,8 +655,29 @@ paths:
                     type: string
                     enum:
                       - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
                       - "no albums from artist with name :name"
-                      
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
     post:
       description: >-
         Allows to post a new album to the artist's discography
@@ -641,7 +745,29 @@ paths:
                     type: string
                     enum:
                       - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
                       - "no merch from artist with name :name"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
     post:
       description: >-
         Allows to post a new product to the artist's merch
@@ -709,7 +835,29 @@ paths:
                     type: string
                     enum:
                       - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
                       - "no events from artist with name :name"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
 
   /artists/:name/albums/:ismn:
     get:
