@@ -10,7 +10,8 @@ var submit = function(){
         var res = this.response;
         console.log(res);
         if(res.status == 201){  //login successfully
-            window.location.replace('/mainpage');
+            //here you need to go to the mainpage site
+            //window.location.replace('/mainpage');
         }else if(res.status == 404){    //wrong email
             document.getElementById("emailErrorMessage").innerText = "wrong email";
             document.getElementById("emailError").style = "display: block";

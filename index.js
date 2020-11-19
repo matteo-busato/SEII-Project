@@ -41,17 +41,9 @@ db.once('open', function() {
 const User = require('./models/user.js');
 
 
-// insert a user
-app.post('/api/v1/users', api.register );
-
 //authenticate user - login
 router.post('/api/v1/users/auth', api.auth);
 
-//get all the name of users
-router.get('/api/v1/users', api.validateToken, api.getUsers );
-
-//delete a user by its _id
-router.delete('/api/v1/users', api.deleteUser );
 
 //route the login UI
 app.get('/login', (req, res) => {
@@ -61,13 +53,6 @@ app.get('/login', (req, res) => {
     });
 });
 
-//route the main page UI
-app.get('/mainpage', (req, res) => {
-        res.sendFile('UI/main-page.html', {root:'./'}, (err) => {
-        res.end();
-        if(err) throw(err);
-    });
-});
 
 //####################################### SET ROUTER #################
 // register our router on /

@@ -13,33 +13,6 @@ function checkEmail(email){
         return false;
 }
 
-//register a user
-//URI: POST: /api/v1/users
-const register = (req, res) => {
-
-    let result = {};
-    let status = 201;
-
-    var user = new User({           //create new User
-            email: req.body.email,
-            password: req.body.password,
-            username: req.body.username,
-            userType: "user"
-        });
-
-        user.save((err, user) => {
-            if (!err) {
-                result.status = status;
-                result.result = user;
-             }else{
-                status = 500;
-                result.status = status;
-                result.error = err;
-             }
-                res.status(status).send(result);
-        });
-}
-
 //login with email and password. get a token
 //URI: POST: api/v1/users/auth
 const auth = (req, res) => {
@@ -104,6 +77,7 @@ const auth = (req, res) => {
     });
 }
 
+/*  SOME SPARE APIs
 //get all the usernames ( only if you are an admin)
 // URI: GET: /api/v1/users
 const getUsers = (req,res) =>{
@@ -125,6 +99,7 @@ const getUsers = (req,res) =>{
         res.status(401).send(`Authentication error`);
     }
 }
+
 //delete user only if it is your account or if you are an admin
 //URI: DELETE: api/v1/users
 const deleteUser = (req,res) =>{
@@ -141,7 +116,7 @@ const deleteUser = (req,res) =>{
         res.status(401).send(`Authentication error`);
     }
 }
-
+*/
 
 const  validateToken = (req, res, next) => {
     const authorizationHeaader = req.headers.authorization;
@@ -173,9 +148,9 @@ const  validateToken = (req, res, next) => {
 
 
 module.exports = {
-    register,
-    auth,
-    getUsers,
+    auth
+    /*
     deleteUser,
     validateToken
+    */
 };
