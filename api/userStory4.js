@@ -145,7 +145,6 @@ const getArtist = async (req,res) => {
 //return the selected album
 // URI : api/v1/albums/:ismn
 const getAlbum = async (req,res) => {
-    var found = false;
     var ismn = parseInt(req.params.ismn);
 
     //check input params
@@ -154,7 +153,7 @@ const getAlbum = async (req,res) => {
         return ;
     }
 
-    //check if the requested artist stays in db
+    //check if the requested album stays in db
     let album = await Album.findOne({'ismn':ismn }, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -172,7 +171,6 @@ const getAlbum = async (req,res) => {
 //return the selected merch
 // URI : api/v1/merch/:id
 const getMerch = async (req,res) => {
-    var found = false;
     var id = parseInt(req.params.id);
 
     //check input params
@@ -181,7 +179,7 @@ const getMerch = async (req,res) => {
         return ;
     }
 
-    //check if the requested artist stays in db
+    //check if the requested prod stays in db
     let prod = await Product.findOne({'id':id }, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -199,7 +197,6 @@ const getMerch = async (req,res) => {
 //return the selected event
 // URI : api/v1/events/:id
 const getEvent = async (req,res) => {
-    var found = false;
     var id = parseInt(req.params.id);
     //check input params
     if (isNaN(id)) {
@@ -207,7 +204,7 @@ const getEvent = async (req,res) => {
         return ;
     }
 
-    //check if the requested artist stays in db
+    //check if the requested event stays in db
     let evento = await Event.findOne({'id':id }, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -225,7 +222,6 @@ const getEvent = async (req,res) => {
 //return all the albums of a selected artists
 // URI : api/v1/artists/:name/albums
 const getArtistAlbums = async (req, res) => {
-    var found = false;
     let name = req.params.name;
     var message = {};
     //check input params
@@ -249,21 +245,20 @@ const getArtistAlbums = async (req, res) => {
 
     message.artist = { username : artist.username };
 
-        //check if the requested artist stays in db
-        let albums = await Album.find({'owner':name }, (err) => {
-            if(err) {
-                res.status(500).json({ error: err });
-                return;
-            }
-        });
-
-        if(!albums){
-            res.status(404).json({ error: 'no albums from artist with name : ' + name });
+    //check if the requested album stays in db
+    let albums = await Album.find({'owner':name }, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
             return;
         }
-        message.albums = albums;
-        res.status(200).json(message);
+    });
 
+    if(!albums){
+        res.status(404).json({ error: 'no albums from artist with name : ' + name });
+        return;
+    }
+    message.albums = albums;
+    res.status(200).json(message);
 }
 
 //return all the merch of a selected artists
@@ -293,7 +288,7 @@ const getArtistMerch = async (req, res) => {
 
     message.artist = { username : artist.username };
 
-    //check if the requested artist stays in db
+    //check if the requested merch stays in db
     let merch = await Product.find({'owner':name }, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -336,7 +331,7 @@ const getArtistEvents = async (req, res) => {
 
     message.artist = { username : artist.username };
 
-    //check if the requested artist stays in db
+    //check if the requested events stays in db
     let events = await Event.find({'owner':name }, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -352,10 +347,10 @@ const getArtistEvents = async (req, res) => {
     res.status(200).json(message);
 
 }
-/* NON SERVONO PER ORA
+
 //return  the ismn album of a selected artist
 // URI : api/v1/artists/:name/albums/:ismn
-const getArtistAlbumIsmn = (req, res) => {
+const getArtistAlbumIsmn = async (req, res) => {
     let name = req.params.name;
     let ismn = parseInt(req.params.ismn);
 
@@ -369,24 +364,47 @@ const getArtistAlbumIsmn = (req, res) => {
         return ;
     }
 
-    let found = false;
-    for (let i=0; i < albums.length && !found; ++i) {
-        if (albums[i].owner == name && albums[i].ismn == ismn){
-            res.status(200).json(album[i]);
-            found = true;
+    //check if the requested album stays in db
+    let album = await Album.findOne({'ismn':ismn }, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
         }
+    });
+
+    //check if the requested artist stays in db
+    let artist = await User.findOne({'username':name, 'userType':'artist'}, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+
+    if(!artist){
+        res.status(404).json({ error: 'The artist ' + name + ' does not exist' });
+        return;
     }
-    if(!found)
-        res.status(400).json({ error: 'no albums with ismn : ' + ismn + ' from artist with name : ' + name });
+
+    if(!album){
+        res.status(404).json({ error: 'The album ' + ismn + ' does not exist' });
+        return;
+    }
+
+    if(album.owner != name){
+        res.status(400).json({ error: 'The album ' + ismn + 'exists in db but the owner is not ' + name });
+        return;
+    }
+    res.status(200).json(album);
 }
+
+
 // return the id merch of a selected artist
 // URI : /api/v1/artists/:name/merch/:id
-const getArtistMerchId = (req, res) => {
+const getArtistMerchId = async (req, res) => {
     let name = req.params.name;
     let id = req.params.id;
-
     //check input params
-    if (typeof id != 'number' || !isNaN(id)) {
+    if (isNaN(id)) {
         res.status(400).json({ error: 'error on id param'});
         return ;
     }
@@ -395,25 +413,48 @@ const getArtistMerchId = (req, res) => {
         return ;
     }
 
-    let found = false;
-    for (let i=0; i < merch.length && !found; ++i) {
-        if (merch[i].owner == name && merch[i].id == id){
-            res.status(200).json(merch[i]);
-            found = true;
+    //check if the requested prod stays in db
+    let prod = await Product.findOne({'id':id }, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
         }
+    });
+
+    //check if the requested artist stays in db
+    let artist = await User.findOne({'username':name, 'userType':'artist'}, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+
+    if(!prod){
+        res.status(404).json({ error: 'The product ' + id + ' does not exist' });
+        return;
     }
-    if(!found)
-        res.status(400).json({ error: 'no merch with id : ' + id + ' from artist with name : ' + name });
+
+    if(!artist){
+        res.status(404).json({ error: 'The artist ' + name + ' does not exist' });
+        return;
+    }
+
+    if(prod.owner != name){
+        res.status(400).json({ error: 'The product ' + id + 'exists in db but the owner is not ' + name });
+        return;
+    }
+
+    res.status(200).json(prod);
 }
 
 // return the id event of a selected artist
 // URI : /api/v1/artists/:name/events/:id
-const getArtistEventId = (req, res) => {
+const getArtistEventId = async (req, res) => {
     let name = req.params.name;
     let id = req.params.id;
 
     //check input params
-    if (typeof id != 'number' || !isNaN(id)) {
+    if (isNaN(id)) {
         res.status(400).json({ error: 'error on id param'});
         return ;
     }
@@ -422,17 +463,39 @@ const getArtistEventId = (req, res) => {
         return ;
     }
 
-    let found = false;
-    for (let i=0; i < events.length && !found; ++i) {
-        if (events[i].owner == name && events[i].id == id){
-            res.status(200).json(events[i]);
-            found = true;
+    //check if the requested event stays in db
+    let evento = await Event.findOne({'id':id }, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
         }
+    });
+
+    //check if the requested artist stays in db
+    let artist = await User.findOne({'username':name, 'userType':'artist'}, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+
+    if(!evento){
+        res.status(404).json({ error: 'The event ' + id + ' does not exist' });
+        return;
     }
-    if(!found)
-        res.status(400).json({ error: 'no event with id : ' + id + ' from artist with name : ' + name });
+
+    if(!artist){
+        res.status(404).json({ error: 'The artist ' + name + ' does not exist' });
+        return;
+    }
+
+    if(evento.owner != name){
+        res.status(400).json({ error: 'The event ' + id + 'exists in db but the owner is not ' + name });
+        return;
+    }
+
+    res.status(200).json(evento);
 }
-*/
 
 module.exports = {
     getArtists,
@@ -445,10 +508,8 @@ module.exports = {
     getEvent,
     getArtistAlbums,
     getArtistMerch,
-    getArtistEvents
-    /*
+    getArtistEvents,
     getArtistAlbumIsmn,
     getArtistMerchId,
     getArtistEventId
-    */
 };

@@ -143,11 +143,9 @@ app.get('/api/v1/events/:id',userStory4.getEvent);
 app.get('/api/v1/artists/:name/albums',userStory4.getArtistAlbums);
 app.get('/api/v1/artists/:name/merch',userStory4.getArtistMerch);
 app.get('/api/v1/artists/:name/events',userStory4.getArtistEvents);
-/*
 app.get('/api/v1/artists/:name/albums/:ismn',userStory4.getArtistAlbumIsmn);
 app.get('/api/v1/artists/:name/merch/:id',userStory4.getArtistMerchId);
 app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
-*/
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
