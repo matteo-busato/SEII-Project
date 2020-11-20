@@ -260,7 +260,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'information about an artist with 5 albums, 5 merch and 5 events'
@@ -312,15 +313,15 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
+      requestBody:
+          description: The informations to be add
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
       responses:
-        requestBody:
-        description: The informations to be add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Artist'
-        responses:
         '200':
           description: Informations posted with success
           content:
@@ -330,7 +331,7 @@ paths:
                 properties:
                   message:
                     type: string
-          '300':
+        '300':
           description: Some informations are empty
           content:
             application/json:
@@ -339,15 +340,15 @@ paths:
                 properties:
                   message:
                     type: string
-          '400':
-            description: Error on posting the informations
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    error:
-                      type: string
+        '400':
+          description: Error on posting the informations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     delete:
       description: >-
         Allows to delete artist informations
@@ -473,7 +474,8 @@ paths:
         - in: path
           name: ismn
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about the album selected by ismn'
@@ -517,7 +519,6 @@ paths:
                     enum:
                       - "error getting albums"
                       
-
   /merch/:id:
     get:
       description: >-
@@ -527,7 +528,8 @@ paths:
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about a merch selected by id'
@@ -580,7 +582,8 @@ paths:
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about a event selected by id'
@@ -724,7 +727,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of merch of an artist'
@@ -814,7 +818,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of events of an artist'
@@ -858,6 +863,82 @@ paths:
                     type: string
                     enum:
                       - "error getting objects"
+    post:
+      description: >-
+        Insert a new Event in the database, the artist should be authenticated to perform this action
+      summary: Insert a new Event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the event to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: 'Event inserted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'The event has been correctly inserted in the db with id :id'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The field 'title' must be a non-empty string"
+                      - "The field 'date' must be a non-empty string"
+                      - "The field 'date' must be in the form dd/mm/yyyy hh:mm"
+                      - "The field 'place' must be a non-empty string"
+                      - "The field 'description' must be a non-empty string"
+                      - "The field 'cost' must be a decimal number greater than zero"
+        '404':
+          description: 'Artist not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+        '409':
+          description: 'Duplicated date'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "In this date there is already an event, please remove it first"
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string      
 
   /artists/:name/albums/:ismn:
     get:
@@ -1007,11 +1088,13 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'merch :ismn of the artist :name'
@@ -1143,11 +1226,13 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'event :id of the artist :name'
@@ -1191,7 +1276,148 @@ paths:
                 properties:
                   error:
                     type: string
+    delete:
+      description: >-
+        Delete an event from the artist's event list 
+      summary: 
+        Delete event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the event's id
+      responses:
+        '200':
+          description: 'Event deleted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "Event deleted successfully"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The id field should be a non-empty string"
+                      - "The id is not valid"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+                      - "There is no event with id :id created by :artist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Update an event from the artist's event list, one or more fields can be omitted
+      summary: 
+        Update event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the event's id
+      requestBody:
+        description: the event's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: 'Event updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "Event updated successfully"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The id field should be a non-empty string"
+                      - "The id is not valid"
+                      - "The field 'title' must be a non-empty string"
+                      - "The field 'date' must be a non-empty string"
+                      - "The field 'date' must be in the form dd/mm/yyyy hh:mm"
+                      - "The field 'place' must be a non-empty string"
+                      - "The field 'description' must be a non-empty string"
+                      - "The field 'cost' must be a decimal number greater than zero"
 
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+                      - "There is no event with id :id created by :artist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Error updating the db"
+                    
 components:
   schemas:
   
@@ -1244,7 +1470,7 @@ components:
           type: string
           description: 'ISMN code of the album'
         year:
-          type: int
+          type: number
           description: 'year of the album'
         genre:
           type: string
@@ -1253,7 +1479,7 @@ components:
           type: array
           description: 'the tracklist of the album'
         cost:
-          type: float
+          type: number
           description: 'the cost of the album'
         owner:
           type: string
@@ -1294,7 +1520,7 @@ components:
           type: string
           description: 'description of the event'
         cost:
-          type: float
+          type: number
           description: 'cost of the event'
         owner:
           type: string
@@ -1327,10 +1553,10 @@ components:
           type: string
           description: 'info of the merch'
         qty:
-          type: int
+          type: number
           description: 'number of available objects'
         cost:
-          type: float
+          type: number
           description: 'cost of the merch'
         owner:
           type: string
