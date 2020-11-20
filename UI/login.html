@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src='login.script.js'></script>
+        <style>
+            body{
+                margin-top: 1px;
+                background: #c2cad0 !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid"  style="position: absolute; top:10%;">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-6 d-flex justify-content-center">
+                    <div class="card d-flex w-50 shadow-lg">
+                        <div class="card-body d-flex justify-content-center mt-3 pb-0">
+                            <div class="w-100 mx-3">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" class="form-control">
+                                    <div class="alert alert-danger alert-dismissible fade show" id="emailError" style="display: none">
+                                        <span id="emailErrorMessage"></span>
+                                        <button type="button" onclick="closeEmailError()" class="close" data-dismiss="alert">&times;</button>
+                                    </div>
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password" class="form-control">
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" id="passwordError" style="display: none">
+                                    <span id="passwordErrorMessage"></span>
+                                    <button type="button" onclick="closePasswordError()" class="close" data-dismiss="alert">&times;</button>
+                                </div>
+                                <button onclick="submit()" class="btn btn-primary btn-block">Sign in</button>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <a href="/resetPassword" style="text-decoration-color: red;"><p class="text-danger">Reset Password</p></a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="d-flex justify-content-center">
+                            <a href="https://facebook.com">
+                                <div class="d-flex justify-content-center">
+                                    <img class="img-fluid w-75" src="https://scontent.ffco3-1.fna.fbcdn.net/v/t39.2365-6/17639236_1785253958471956_282550797298827264_n.png?_nc_cat=105&amp;ccb=2&amp;_nc_sid=ad8a9d&amp;_nc_ohc=c1qWXfVo1uIAX__1lZU&amp;_nc_ht=scontent.ffco3-1.fna&amp;oh=95deea04aa78b981e435426d1db61c65&amp;oe=5FCC3296">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-center my-3">
+                            <a href="https://google.com">
+                                <div class="d-flex justify-content-center">
+                                    <img src='btn_google_signin_dark_normal_web@2x.png' class='img-fluid' style="width: 77%;">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center justify-content-center mt-3">
+                <div class="col-6 d-flex justify-content-center">
+                    <div class="card d-flex w-50 shadow-lg">
+                        <div class="card-body d-flex justify-content-center">
+                            <button class="btn btn-primary btn-block mx-3">Create an account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    </body>
+</html>

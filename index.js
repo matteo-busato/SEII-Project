@@ -1,19 +1,26 @@
 const { json } = require('body-parser');
 var express = require('express');
 
-const mongoose = require('mongoose');
-
 // instantiate express
 const app = express();
 app.use(express.json());
 
 const userStory4 = require('./api/userStory4.js');
 
+var bodyparser = require('body-parser');
+
+const mongoose = require('mongoose');
+// instantiate express
+const app = express();
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
+
 // set our port
 var port = process.env.PORT || 8080;
 
 // get an instance of the express Router
 var router = express.Router();
+const api = require('./api/api.js');
 
 
 // test route to make sure everything is working
@@ -30,6 +37,9 @@ mongoose.connect( config.database.uri ,{
     useCreateIndex: true,
     useUnifiedTopology: true
 });
+
+app.use(express.static('UI'));
+app.use('/', router);
 
 //connection to database
 const db = mongoose.connection;
@@ -48,6 +58,23 @@ const Event = require('./models/event.js');
 const Product = require('./models/product.js');
 
 //################## SET STATIC PAGES ###########
+//##############################################################################
+
+
+//authenticate user - login
+router.post('/api/v1/users/auth', api.auth);
+
+
+//route the login UI
+app.get('/login', (req, res) => {
+        res.sendFile('UI/login.html', {root:'./'}, (err) => {
+        res.end();
+        if(err) throw(err);
+    });
+});
+
+
+//####################################### SET ROUTER #################
 // register our router on /
 app.use(express.static('UI'));
 //app.use('/', router);
