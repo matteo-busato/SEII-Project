@@ -9,7 +9,7 @@ servers:
   - url: http://localhost:8000/api/v1
     description: Localhost
 paths:
-  
+
   /users:
     post:
       description: >-
@@ -21,7 +21,7 @@ paths:
             schema:
               type: object
               properties:
-                name: 
+                name:
                   type: string
                 email:
                   type: string
@@ -73,21 +73,106 @@ paths:
                     enum:
                       - "This email is already registered"
 
+  /users/auth:
+    post:
+      description: >-
+        Login in the website retrying an authorization token
+      summary: Login with token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+            example:
+              email: "john@gmail.com"
+              password: "5up3rS3cr3t4ndL0ngP4ssw0rd"
+      responses:
+        '201':
+          description: 'User logged successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  status:
+                    type: string
+                  username:
+                    type: string
+              example:
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclR5cGUiOiJ1c2VyIiwiaWF0IjoxNjA1NjAyMTA1LCJleHAiOjE2MDU2ODg1MDUsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC8ifQ.eaK2vBDjZzfYjjD27pzxj9kIhplKf4Yx2lY5iIJs8sI"
+                status: "user"
+                username: "mario_rossi"
+                  
+        '401':
+          description: 'wrong password'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "wrong password"
+        '404':
+          description: 'wrong email'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "wrong email"
+        '501':
+          description: 'hashing password problems'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "something goes wrong, please retry."
+
   /artists:
     get:
       description: >-
         Gets the list of artists.
       summary: View all artists
       responses:
-        '200':  
+        '200':
           description: 'Collection of artists'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Artist'
-  
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting users"
+
   /albums:
     get:
       description: >-
@@ -102,7 +187,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
-                  
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting albums"
+
   /merch:
     get:
       description: >-
@@ -117,7 +213,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting merch"
+
   /events:
     get:
       description: >-
@@ -132,7 +239,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting events"
+
   /artists/:name:
     get:
       description: >-
@@ -142,7 +260,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'information about an artist with 5 albums, 5 merch and 5 events'
@@ -151,8 +270,201 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Artist'
-                  
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "no artist with name :name"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
+    post:
+      description: >-
+        Add informations about the artist specified.
+      summary: Manage informations 
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+          description: The informations to be add
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Informations posted with success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+        '300':
+          description: Some informations are empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on posting the informations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      description: >-
+        Allows to delete artist informations
+      summary: Delete informations
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's biography
+        - in: path
+          name: password
+          required: true
+          schema:
+            type: string
+          description: the artist's password
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's genre
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: the artist's email
+      responses:
+        '200':
+          description: Artist informations deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Allows to change artist informations
+      summary: Change informations
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's biography
+        - in: path
+          name: password
+          required: true
+          schema:
+            type: string
+          description: the artist's password
+        - in: path
+          name: bio
+          required: true
+          schema:
+            type: string
+          description: the artist's genre
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: the artist's email
+        
+      requestBody:
+        description: the artist's informations to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Artist's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the artist's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string   
+                    
   /albums/:ismn:
     get:
       description: >-
@@ -162,7 +474,8 @@ paths:
         - in: path
           name: ismn
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about the album selected by ismn'
@@ -172,7 +485,40 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Album'
-                  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on ismn param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The album :ismn does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting albums"
+                      
   /merch/:id:
     get:
       description: >-
@@ -182,7 +528,8 @@ paths:
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about a merch selected by id'
@@ -192,7 +539,40 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on id param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The product :id does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting merch"                      
+
   /events/:id:
     get:
       description: >-
@@ -202,7 +582,8 @@ paths:
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'get all the information about a event selected by id'
@@ -212,7 +593,40 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
-  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on id param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The event :id does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting event"
+
   /artists/:name/albums:
     get:
       description: >-
@@ -233,6 +647,40 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
+                      - "no albums from artist with name :name"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
     post:
       description: >-
         Allows to post a new album to the artist's discography
@@ -261,7 +709,7 @@ paths:
                   message:
                     type: string
         '400':
-          description: Error on deleting the album
+          description: Error on posting the album
           content:
             application/json:
               schema:
@@ -279,7 +727,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of merch of an artist'
@@ -289,7 +738,77 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Merch'
-                  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
+                      - "no merch from artist with name :name"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
+    post:
+      description: >-
+        Allows to post a new product to the artist's merch
+      summary: post new product
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the product to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merch'
+      responses:
+        '200':
+          description: Product posted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: "Error on posting the product"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /artists/:name/events:
     get:
       description: >-
@@ -299,7 +818,8 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'Collection of events of an artist'
@@ -309,7 +829,117 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exist"
+                      - "no events from artist with name :name"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error getting objects"
+    post:
+      description: >-
+        Insert a new Event in the database, the artist should be authenticated to perform this action
+      summary: Insert a new Event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+      requestBody:
+        description: the event to be posted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: 'Event inserted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - 'The event has been correctly inserted in the db with id :id'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The field 'title' must be a non-empty string"
+                      - "The field 'date' must be a non-empty string"
+                      - "The field 'date' must be in the form dd/mm/yyyy hh:mm"
+                      - "The field 'place' must be a non-empty string"
+                      - "The field 'description' must be a non-empty string"
+                      - "The field 'cost' must be a decimal number greater than zero"
+        '404':
+          description: 'Artist not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+        '409':
+          description: 'Duplicated date'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "In this date there is already an event, please remove it first"
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string      
+
   /artists/:name/albums/:ismn:
     get:
       description: >-
@@ -335,6 +965,41 @@ paths:
                 type: object
                 items:
                   $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on ismn param"
+                      - "The album :ismn exists in db but the owner is not :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The album :ismn does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    
     delete:
       description: >-
         Allows to delete an album in the artist's discography
@@ -412,8 +1077,8 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string          
-   
+                    type: string
+
   /artists/:name/merch/:id:
     get:
       description: >-
@@ -423,11 +1088,13 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: 'merch :ismn of the artist :name'
@@ -436,8 +1103,120 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Merch'  
-  
+                  $ref: '#/components/schemas/Merch'
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on id param"
+                      - "no merch with :id from artist with :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The product :id does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      description: >-
+        Allows to delete an product in the artist's merch
+      summary: delete product
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the product's id
+      responses:
+        '200':
+          description: Product deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on deleting the product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Allows to change an product's data in the artist's merch
+      summary: change product data
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the product id
+      requestBody:
+        description: the product's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merch'
+      responses:
+        '200':
+          description: Product's data changed with success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error on changing the product's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /artists/:name/events/:id:
     get:
       description: >-
@@ -447,31 +1226,211 @@ paths:
         - in: path
           name: name
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
-          description: 'event :ismn of the artist :name'
+          description: 'event :id of the artist :name'
           content:
             application/json:
               schema:
                 type: object
                 items:
                   $ref: '#/components/schemas/Event'
-                  
+        '400':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "error on name param"
+                      - "error on id param"
+                      - "no events with :id from artist with :name"
+        '404':
+          description: 'Service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The event :id does not exist"
+                      - "The artist :name does not exist"
+        '500':
+          description: 'Resource Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      description: >-
+        Delete an event from the artist's event list 
+      summary: 
+        Delete event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the event's id
+      responses:
+        '200':
+          description: 'Event deleted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "Event deleted successfully"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The id field should be a non-empty string"
+                      - "The id is not valid"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+                      - "There is no event with id :id created by :artist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      description: >-
+        Update an event from the artist's event list, one or more fields can be omitted
+      summary: 
+        Update event
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+          description: the artist's name
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the event's id
+      requestBody:
+        description: the event's data to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: 'Event updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "Event updated successfully"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The id field should be a non-empty string"
+                      - "The id is not valid"
+                      - "The field 'title' must be a non-empty string"
+                      - "The field 'date' must be a non-empty string"
+                      - "The field 'date' must be in the form dd/mm/yyyy hh:mm"
+                      - "The field 'place' must be a non-empty string"
+                      - "The field 'description' must be a non-empty string"
+                      - "The field 'cost' must be a decimal number greater than zero"
+
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :artist does not exist"
+                      - "There is no event with id :id created by :artist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Error updating the db"
+                    
 components:
   schemas:
-    Artist:
+  
+    User:
       type: object
       required:
-        - name
+        - username
         - email
         - bio
+        - password
+        - userType
       properties:
-        name:
+        username:
           type: string
           description: 'Name of the artist'
         email:
@@ -480,11 +1439,19 @@ components:
         bio:
           type: string
           description: 'bio of the artist'
+        password:
+          type: string
+          description: 'password of the artist'
+        userType:
+          type: string
+          description: 'user/artist/moderator'
       example:
-        name: "system of a down"
+        username: "system of a down"
         email: "SOAD@ofAdown.com"
         bio: "gruppo statunitense metal"
-        
+        password: "anguria66"
+        usertype: "artist"
+
     Album:
       type: object
       required:
@@ -503,7 +1470,7 @@ components:
           type: string
           description: 'ISMN code of the album'
         year:
-          type: int
+          type: number
           description: 'year of the album'
         genre:
           type: string
@@ -512,7 +1479,7 @@ components:
           type: array
           description: 'the tracklist of the album'
         cost:
-          type: float
+          type: number
           description: 'the cost of the album'
         owner:
           type: string
@@ -525,7 +1492,7 @@ components:
         tracklist: {"track1":"track1","track2":"track2"}
         cost: 10.0
         owner: "Autechre"
-        
+
     Event:
       type: object
       required:
@@ -553,7 +1520,7 @@ components:
           type: string
           description: 'description of the event'
         cost:
-          type: float
+          type: number
           description: 'cost of the event'
         owner:
           type: string
@@ -565,7 +1532,7 @@ components:
         description: "reseal party for the new Autechre's album 'Sign'"
         cost: 35.0
         owner: "Autechre"
-        
+
     Merch:
       type: object
       required:
@@ -586,10 +1553,10 @@ components:
           type: string
           description: 'info of the merch'
         qty:
-          type: int
+          type: number
           description: 'number of available objects'
         cost:
-          type: float
+          type: number
           description: 'cost of the merch'
         owner:
           type: string
