@@ -1,5 +1,6 @@
 const { json } = require('body-parser');
 var express = require('express');
+const bcrypt = require ('bcrypt');
 
 // instantiate express
 const app = express();
@@ -10,8 +11,8 @@ const userStory4 = require('./api/userStory4.js');
 var bodyparser = require('body-parser');
 
 const mongoose = require('mongoose');
-// instantiate express
-const app = express();
+
+
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 

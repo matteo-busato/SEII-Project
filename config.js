@@ -1,7 +1,7 @@
 module.exports = {
 	secret: 'secretpassword',
 	database: {
-		uri: 'mongodb://localhost/test',
+		uri: 'mongodb://localhost/SEII',
 		user: 'user',
 		password: 'user'
 	}
