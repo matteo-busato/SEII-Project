@@ -64,5 +64,7 @@ app.use((err, req, res, next) => {
     res.json({ error: { message: err.message } });
 });
 
-//####################################################################
 
+
+//######################## for testing #############################
+module.exports = app;
