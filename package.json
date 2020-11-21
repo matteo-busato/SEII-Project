@@ -1,25 +1,30 @@
 {
-  "name": "seii-project",
+  "name": "seii-project-registrazione",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api.js",
+    "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/matteo-busato/SEII-Project.git"
+  "directories": {
+    "lib": "lib"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/matteo-busato/SEII-Project/issues"
-  },
-  "homepage": "https://github.com/matteo-busato/SEII-Project#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.10.15"
+    "mongoose": "^5.10.15",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "testEnvironment":"node"
   }
 }

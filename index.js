@@ -13,6 +13,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 // set our port
 var port = process.env.PORT || 8080;
 
+/*
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => {
@@ -21,6 +22,23 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
     app.listen(port, () => {
         console.log('EasyMusic on port ' + port);
     });
+});
+*/
+
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("correctly connected to db");
+});
+
+app.listen(port, () => {
+    console.log('EasyMusic on port ' + port);
 });
 
 // get an instance of the express Router
