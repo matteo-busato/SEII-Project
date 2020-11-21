@@ -9,9 +9,6 @@ app.use(express.json());
 
 const userStory4 = require('./api/userStory4.js');
 
-// set our port
-var port = process.env.PORT || 8080;
-
 // get an instance of the express Router
 var router = express.Router();
 
@@ -161,5 +158,4 @@ app.use((err, req, res, next) => {
 
 //####################################################################
 
-app.listen(port);
-console.log('EasyMusic on port ' + port);
+module.exports = app
