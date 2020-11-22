@@ -46,5 +46,42 @@ describe('test POST to /api/v1/users', () => {
         expect(response.status).toEqual(400);
     });
 
+    //## 2 ##
+    it('The field email must be a non-empty string', async () => {
+      expect.assertions(1);
+      var response = await fetch(url + '/api/v1/users', {
+          method: 'POST',
+          body: JSON.stringify({
+              username: "testname",
+              email: "",
+              password: "asd123",
+              userType: "user"
+          }),
+          headers: {
+          'Content-Type': 'application/json',
+          }
+      });
+      var json = await response.json();
+      expect(response.status).toEqual(400);
+  });
+
+    //##3##
+    it('The field password must be a non-empty string', async () => {
+      expect.assertions(1);
+      var response = await fetch(url + '/api/v1/users', {
+          method: 'POST',
+          body: JSON.stringify({
+              username: "testname",
+              email: "testemail#test.com",
+              password: "",
+              userType: "user"
+         }),
+          headers: {
+          'Content-Type': 'application/json',
+          }
+      });
+      var json = await response.json();
+      expect(response.status).toEqual(400);
+  });
 
 });
