@@ -25,7 +25,7 @@ app.use('/', router);
 //################## connect to db #################
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test', {
+mongoose.connect('mongodb://localhost/SEII', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
