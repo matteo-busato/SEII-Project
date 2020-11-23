@@ -1,4 +1,3 @@
-const { json } = require('body-parser');
 var express = require('express');
 const bcrypt = require ('bcrypt');
 
@@ -7,17 +6,11 @@ const app = express();
 app.use(express.json());
 
 const userStory4 = require('./api/userStory4.js');
-
 var bodyparser = require('body-parser');
-
 const mongoose = require('mongoose');
-
-
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
-// set our port
-var port = process.env.PORT || 8080;
 
 // get an instance of the express Router
 var router = express.Router();
@@ -189,5 +182,4 @@ app.use((err, req, res, next) => {
 
 //####################################################################
 
-app.listen(port);
-console.log('EasyMusic on port ' + port);
+module.exports = app
