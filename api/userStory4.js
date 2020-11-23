@@ -1,5 +1,3 @@
-
-var config = require('../config.js');
 const User = require('../models/user.js');
 const Album = require('../models/album.js');
 const Event = require('../models/event.js');

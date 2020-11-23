@@ -1,4 +1,4 @@
-const app = require("./index.js");
+const app = require("../index.js");
 const fetch = require("node-fetch");
 const mongoose = require('mongoose');
 

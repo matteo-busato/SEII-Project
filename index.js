@@ -1,16 +1,13 @@
 var express = require('express');
 const bcrypt = require ('bcrypt');
-const events = require('./lib/events.js');
 
 // instantiate express
 const app = express();
 app.use(express.json());
 
-const userStory4 = require('./api/userStory4.js');
 var bodyparser = require('body-parser');
 
 const mongoose = require('mongoose');
-const registration = require('./lib/register.js');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -20,7 +17,12 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 // get an instance of the express Router
 var router = express.Router();
-const api = require('./api/api.js');
+
+//get instance of APIs
+const login = require('./api/login.js');
+const userStory4 = require('./api/userStory4.js');
+const registration = require('./api/register.js');
+const events = require('./api/events.js');
 
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
@@ -38,21 +40,19 @@ mongoose.connect('mongodb://localhost:27017/SEII', {
 */
 
 //connect to db 
-mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
-.then(() => {
+mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
+{
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+}).then(() => {
     console.log('connected to db');
-    
-    app.listen(port, () => {
-        console.log('EasyMusic on port ' + port);
-    });
 });
 
 //connection to database
 const db = mongoose.connection;
 db.on('error', console.error.bind( console , 'connection error:' ) );
-db.once('open', function() {
-  console.log("we're connected to db");
-});
 
 //user model for database
 const User = require('./models/user.js');
@@ -68,7 +68,7 @@ const Product = require('./models/product.js');
 
 
 //authenticate user - login
-router.post('/api/v1/users/auth', api.auth);
+router.post('/api/v1/users/auth', login.auth);
 
 app.use(express.static('UI'));
 app.use('/', router);
