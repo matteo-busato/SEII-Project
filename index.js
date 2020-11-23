@@ -15,6 +15,7 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
 
+
 // get an instance of the express Router
 var router = express.Router();
 
@@ -23,6 +24,7 @@ const login = require('./api/login.js');
 const userStory4 = require('./api/userStory4.js');
 const registration = require('./api/register.js');
 const events = require('./api/events.js');
+const insertMusic = require('./api/insertMusic.js');
 
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
@@ -201,6 +203,12 @@ app.post('/api/v1/artists/:name/events', events.addEvent);
 app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
 app.get('/api/v1/artists/:name/events/:id', events.getEvent);
+//################## SET ROUTER #################
+// register our router on /
+app.use('/', router);
+
+
+//############# insertMusic part ################
 
 //get instance of path, required to serve html pages (?)
 const path = require('path');
@@ -215,6 +223,22 @@ app.get('/v1/artists/:name/events/:id/deleteEvent', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteEvent.html'));
 });
 
+
+app.get('/v1/artists/:name/albums/addNewAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
+});
+app.get('/v1/artists/:name/albums/:ismn/changeAlbumData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeAlbumData.html'));
+});
+app.get('/v1/artists/:name/albums/:ismn/deleteAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
+});
+
+app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
+app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
+app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
+app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
+
 // handle invalid requests and internal error
 app.use((req, res, next) => {
     const err = new Error('Not Found');
@@ -227,6 +251,7 @@ app.use((err, req, res, next) => {
     res.json({ error: { message: err.message } });
 });
 
-//####################################################
+
+//####################################################################
 
 module.exports = app
