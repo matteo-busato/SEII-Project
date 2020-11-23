@@ -8,7 +8,6 @@ const url = "http://localhost:8080"
 describe('api.test', () => {
 
     let server;
-
     let connection;
 
   beforeAll( async ()  => {

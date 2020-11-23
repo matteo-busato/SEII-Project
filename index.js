@@ -25,6 +25,7 @@ const userStory4 = require('./api/userStory4.js');
 const registration = require('./api/register.js');
 const events = require('./api/events.js');
 const insertMusic = require('./api/insertMusic.js');
+const manageMerch = require('./api/manageMerch.js');
 
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
@@ -238,6 +239,22 @@ app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
 app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
 app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
 app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
+
+//############# manageMerch part ################
+app.get('/v1/artists/:name/merch/addNewProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
+});
+app.get('/v1/artists/:name/merch/:id/changeProductData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeProductData.html'));
+});
+app.get('/v1/artists/:name/merch/:id/deleteProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
+});
+
+app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
+app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
+app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
+app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
