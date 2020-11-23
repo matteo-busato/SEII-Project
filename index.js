@@ -7,7 +7,12 @@ app.use(express.json());
 
 const userStory4 = require('./api/userStory4.js');
 var bodyparser = require('body-parser');
+
 const mongoose = require('mongoose');
+const registration = require('./lib/register.js');
+const dotenv = require('dotenv');
+dotenv.config();
+
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
@@ -16,24 +21,30 @@ app.use(bodyparser.urlencoded({ extended: true }));
 var router = express.Router();
 const api = require('./api/api.js');
 
-
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
     res.json({ message: 'API is working correctly!' });
 });
 
 //####################### connection to database ###############################
-//including system congifuration
-var config = require('./config.js');    //includes user and password for database, secret password for tokens
-
-mongoose.connect( config.database.uri ,{
-    useNewUrlParser: true,
+/*
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useFindAndModify: false
 });
+*/
 
-app.use(express.static('UI'));
-app.use('/', router);
+//connect to db 
+mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => {
+    console.log('connected to db');
+    
+    app.listen(port, () => {
+        console.log('EasyMusic on port ' + port);
+    });
+});
 
 //connection to database
 const db = mongoose.connection;
@@ -52,11 +63,14 @@ const Event = require('./models/event.js');
 const Product = require('./models/product.js');
 
 //################## SET STATIC PAGES ###########
-//##############################################################################
+
 
 
 //authenticate user - login
 router.post('/api/v1/users/auth', api.auth);
+
+app.use(express.static('UI'));
+app.use('/', router);
 
 
 //route the login UI
@@ -68,9 +82,8 @@ app.get('/login', (req, res) => {
 });
 
 
-//####################################### SET ROUTER #################
-// register our router on /
-app.use(express.static('UI'));
+//####################################### SET static pages USERSTORY#4 #################
+
 //app.use('/', router);
 app.use("/scripts", express.static('./scripts/'));
 
@@ -151,7 +164,7 @@ app.get('/artist-selected-merch', (req, res) => {
     });
 });
 
-//####################################### SET ROUTER #################
+//####################################### SET API USERSTORY#4 #################
 
 app.get('/api/v1/artists',userStory4.getArtists);
 app.get('/api/v1/albums',userStory4.getAlbums);
@@ -168,6 +181,20 @@ app.get('/api/v1/artists/:name/albums/:ismn',userStory4.getArtistAlbumIsmn);
 app.get('/api/v1/artists/:name/merch/:id',userStory4.getArtistMerchId);
 app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
 
+
+//################## SET STATIC PAGES REGISTRAZIONE ###########
+app.get('/register', (req, res) => {
+    
+    res.sendFile('UI/register.html', {root:'./'}, (err) => {
+        res.end();
+        console.log(err);
+        if(err) throw(err);
+    });
+});
+
+//############# registration part ################
+app.post('/api/v1/users', registration.postRegister);
+
 // handle invalid requests and internal error
 app.use((req, res, next) => {
     const err = new Error('Not Found');
@@ -180,6 +207,6 @@ app.use((err, req, res, next) => {
     res.json({ error: { message: err.message } });
 });
 
-//####################################################################
+//####################################################
 
 module.exports = app
