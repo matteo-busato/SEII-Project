@@ -631,7 +631,7 @@ paths:
     get:
       description: >-
         Gets the list of albums of an artist :name.
-      summary: View all events of an artist
+      summary: View all albums of an artist
       parameters:
         - in: path
           name: name
