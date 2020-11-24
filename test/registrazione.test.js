@@ -1,4 +1,4 @@
-const app = require("../index.js");
+const app = require("./index.js");
 const fetch = require("node-fetch");
 const mongoose = require('mongoose');
 
@@ -34,7 +34,7 @@ describe('test POST to /api/v1/users', () => {
             method: 'POST',
             body: JSON.stringify({
                 username: "",
-                email: "testemail#test.com",
+                email: "testemail@test.com",
                 password: "asd123",
                 userType: "user"
             }),
@@ -72,7 +72,7 @@ describe('test POST to /api/v1/users', () => {
           method: 'POST',
           body: JSON.stringify({
               username: "testname",
-              email: "testemail#test.com",
+              email: "testemail@test.com",
               password: "",
               userType: "user"
          }),
