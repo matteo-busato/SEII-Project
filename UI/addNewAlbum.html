@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>EasyMusic - Add New Album</title>
+</head>
+
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">EasyMusic</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Artists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Events</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
+        <h2 class="text-center">Add New Album</h2>
+        <p class="text-center">With this powerful tool you can add a new album to your discography.</p>
+        <div class="row justify-content-center">
+            <div class="col-8 border rounded p-3">
+                <form>
+                    <div class="form-group">
+                        <label>ISMN</label for="ismn">
+                        <input type="text" name="ismn" id="ismn" class="form-control"
+                            placeholder="Insert the ismn...">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label for="title">
+                        <input type="text" name="title" id="title" class="form-control"
+                            placeholder="Insert the title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label for="year">
+                        <input type="text" name="year" id="year" class="form-control" placeholder="Insert the year...">
+                    </div>
+                    <div class="form-group">
+                        <label>Tracklist</label for="tracklist">
+                        <input type="text" name="tracklist" id="tracklist" class="form-control"
+                            placeholder="Insert the tracklist...">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label for="genre">
+                        <input type="text" name="genre" id="genre" class="form-control"
+                            placeholder="Insert the genre...">
+                    </div>
+                    <div class="form-group">
+                        <label>Cost</label for="cost">
+                        <input type="text" name="cost" id="cost" class="form-control" placeholder="Insert the cost...">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="sendNewAlbum()">Submit new album</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+        var artist;
+        var url;
+
+        function getURLparams() {
+            var path = window.location.pathname.split("/");
+            artist = path[3];
+        }
+
+        function sendNewAlbum() {
+            url = "/api/v1/artists/" + artist + "/albums";
+            var album = {
+                ismn: $("#ismn").val(),
+                title: $("#title").val(),
+                year: $("#year").val(),
+                tracklist: $("#tracklist").val().split(','),
+                genre: $("#genre").val(),
+                cost: $("#cost").val()
+            };
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(album)
+            })
+                .then(response => response.json())
+                .then(function (response) {
+                    if (response.message) {
+                        alert(response.message);
+                    } else {
+                        alert(response.error);
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

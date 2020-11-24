@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-var config = require('../config.js');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const User = require('../models/user.js');
 
@@ -50,7 +51,7 @@ const auth = (req, res) => {
 
                     const options = { expiresIn: '1d', issuer: 'http://localhost:8080/' };
                     const secret = config.secret;
-                    const token = jwt.sign(payload, secret, options);
+                    const token = jwt.sign(payload, process.env.SECRET, options);
 
                     result.token = token;
                     result.status = status;
