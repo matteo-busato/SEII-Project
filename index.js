@@ -50,7 +50,7 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
     useCreateIndex: true,
     useFindAndModify: false
 }).then(() => {
-    console.log('connected to db');
+    console.log('connected to db');    
 });
 
 //connection to database
@@ -89,7 +89,7 @@ app.get('/login', (req, res) => {
 //####################################### SET static pages USERSTORY#4 #################
 
 //app.use('/', router);
-app.use("/scripts", express.static('./scripts/'));
+app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 app.get('/artists', (req, res) => {
         res.sendFile('UI/artists.html', {root:'./'}, (err) => {

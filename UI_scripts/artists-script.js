@@ -39,3 +39,21 @@ xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
 xhttp.send();
+
+
+var trova = function(){
+    var type = $('#searchType').val();
+    var query = $('#query').val();
+    console.log(type);
+    console.log(query);
+
+    if(type == 1){  //searching for artist
+
+    }else if(type == 2){    //searching for album
+
+    }else if(type == 3){    //searching for song
+
+    }else{      //searching for genre
+
+    }
+}

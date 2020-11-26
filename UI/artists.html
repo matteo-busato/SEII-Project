@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            .navbar-nav.navbar-center {
+               position: absolute;
+                left: 50%;
+                transform: translatex(-50%);
+            }
+        </style>
         <title>Artist</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,8 +30,38 @@
                     <li class="nav-item">
                         <a class="nav-link" href=""><h4>EasyMusic</h4></a>
                     </li>
-                </ul>
+                </ul>                                                                                 
             </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav navbar-center">
+                    
+                    <li class="nav-item">
+                        <div class="input-group bg-dark mb-3">                                                
+                            <select class="custom-select bg-light" id="searchType">                                                      
+                                <option selected value="1">Artist</option>
+                                <option value="2">Album</option>
+                                <option value="3">Song</option>
+                                <option value="4">Genre</option>
+                            </select>
+                        </div>  
+                    </li>
+
+                    <li class="nav-item w-75">
+                            <input type="text" id="query" class="form-control bg-light" placeholder="Search">
+                    </li>
+
+                    <li class="nav-item">
+                            <div class="input-group-btn" >
+                              <button class="btn btn-default bg-light" onclick="trova()">
+                                <i class="glyphicon glyphicon-search">Go</i>
+                              </button>
+                            </div>                                              
+                    </li>
+
+                </ul>         
+            </div>
+
             <div class="navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item mr-3">
