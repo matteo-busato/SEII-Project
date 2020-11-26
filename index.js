@@ -89,7 +89,7 @@ app.get('/login', (req, res) => {
 //####################################### SET static pages USERSTORY#4 #################
 
 //app.use('/', router);
-app.use("/scripts", express.static('./scripts/'));
+app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 app.get('/artists', (req, res) => {
         res.sendFile('UI/artists.html', {root:'./'}, (err) => {
