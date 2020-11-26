@@ -43,7 +43,17 @@ function toDate(dateStr) {
 */
 const addEvent = async (req, res) => {
 
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
     let artist = req.params.name;
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
 
     let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
         if(err) {
@@ -52,12 +62,18 @@ const addEvent = async (req, res) => {
         }
     });
 
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
+        return;
+    }
+
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
         return;
     }
 
     let event = {
+        id: 121210,
         title: req.body.title,
         date: req.body.date,
         place: req.body.place,

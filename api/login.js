@@ -50,7 +50,6 @@ const auth = (req, res) => {
                                         id: user._id                }; //to know what type of user is
 
                     const options = { expiresIn: '1d', issuer: 'http://localhost:8080/' };
-                    const secret = config.secret;
                     const token = jwt.sign(payload, process.env.SECRET, options);
 
                     result.token = token;
