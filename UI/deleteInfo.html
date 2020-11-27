@@ -37,69 +37,35 @@
     </nav>
 
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
-        <h2 class="text-center">Delete an Album</h2>
-        <p class="text-center">With this powerful tool you can delete one album from your discography.</p>
+        <h2 class="text-center" id= "artist">Delete Artist info for</h2>
+        <p class="text-center">With this powerful tool you can delete your informations</p>
         <div class="row justify-content-center">
             <div class="col-8 border rounded p-3">
                 <form>
-                    <div class="form-group">
-                        <label>Title</label for="title">
-                        <input type="text" name="title" id="title" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Year</label for="year">
-                        <input type="text" name="year" id="year" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Tracklist</label for="tracklist">
-                        <input type="text" name="tracklist" id="tracklist" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Genre</label for="genre">
-                        <input type="text" name="genre" id="genre" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Cost</label for="cost">
-                        <input type="text" name="cost" id="cost" class="form-control" readonly>
-                    </div>
                     <div class="form-check">
+                        <p class="text">    </p>
                         <input type="checkbox" class="form-check-input" id="imSure">
-                        <label class="form-check-label" for="imSure" id="imSureLabel">I am sure I want to delete this
-                            album</label>
+                        <label class="form-check-label" for="imSure" id="imSureLabel">I am sure I want to delete my informations</label>
                     </div>
-                    <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete this album</button>
+                    <button type="button" class="btn btn-primary my-2" onclick="sendDelete()">Delete infos</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        var artist;
-        var ismn;
+        var artistName;
         var url;
 
         function getURLparams() {
             var path = window.location.pathname.split("/");
-            artist = path[3];
-            ismn = path[5];
-            getAlbumData(artist, ismn);
-        }
-
-        function getAlbumData(artist, ismn) {
-            var album;
-            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            fetch(url)
-                .then(response => response.json())
-                .then(function (album) {
-                    $("#title").val(album.title);
-                    $("#year").val(album.year);
-                    $("#tracklist").val(album.tracklist);
-                    $("#genre").val(album.genre);
-                    $("#cost").val(album.cost);
-                });
+            artistName= path[3];
+            var element = document.getElementById("artist");
+            element.innerHTML =  "Delete Artist info for " + artistName;
         }
 
         function sendDelete() {
+            url = "/api/v1/artists/" + artistName;
             if ($("#imSure").prop("checked") != false) {
                 fetch(url, {
                     method: "DELETE",

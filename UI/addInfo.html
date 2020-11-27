@@ -37,7 +37,7 @@
     </nav>
 
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
-        <h2 class="text-center">Add Artist Info</h2>
+        <h2 class="text-center" id = "artist">Artist info</h2>
         <p class="text-center">With this powerful tool you can add informations.</p>
         <div class="row justify-content-center">
             <div class="col-8 border rounded p-3">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <label>Genre</label for="tracklist">
-                        <input type="text" name="genre" id="genret" class="form-control"
+                        <input type="text" name="genre" id="genre" class="form-control"
                             placeholder="Insert your genre">
                     </div>
                     <div class="form-group">
@@ -68,18 +68,21 @@
     </div>
 
     <script>
-        var artist;
+        var artistName;
         var url;
 
         function getURLparams() {
             var path = window.location.pathname.split("/");
-            artistName = path[2];
+            artistName = path[3];
+            var element = document.getElementById("artist");
+            element.innerHTML =  "Artist info for " + artistName;
         }
 
         function sendNewInfo() {
-            url = "'/api/v1/artists/:name";
+            url = "/api/v1/artists/" + artistName;
             var artist = {
-                password: $("#password").val(),
+                name: artistName,
+                password: $("#pwd").val(),
                 bio: $("#bio").val(),
                 genre: $("#genre").val(),
                 email: $("#email").val()
@@ -113,5 +116,4 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 </body>
-
 </html>

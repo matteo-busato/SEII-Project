@@ -23,8 +23,20 @@ app.use('/', router);
 
 
 //############# manageInfo part ################
-
+const path = require('path');
 const manageInfo = require('./lib/manageInfo.js');
+
+app.get('/v1/artists/:name/addInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addInfo.html'));
+});
+
+app.get('/v1/artists/:name/deleteInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteInfo.html'));
+});
+
+app.get('/v1/artists/:name/changeInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeInfo.html'));
+});
 
 app.get('/api/v1/artists/:name', manageInfo.getInfo);
 app.post('/api/v1/artists/:name', manageInfo.addInfo);
