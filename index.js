@@ -73,12 +73,13 @@ const Product = require('./models/product.js');
 router.post('/api/v1/users/auth', login.auth);
 
 app.use(express.static('UI'));
+app.use("/UI_scripts", express.static('./UI_scripts/'));
 app.use('/', router);
 
 //check token for this pages
-app.use('/v1/artists/:name/events/addNewEvent', tokenChecker);
-app.use('/v1/artists/:name/events/:id/changeEventData', tokenChecker);
-app.use('/v1/artists/:name/events/:id/deleteEvent', tokenChecker);
+//app.use('/v1/artists/:name/events/addNewEvent', tokenChecker);
+//app.use('/v1/artists/:name/events/:id/changeEventData', tokenChecker);
+//app.use('/v1/artists/:name/events/:id/deleteEvent', tokenChecker);
 app.use('/api/v1/artists/:name/events', tokenChecker);
 app.use('/api/v1/artists/:name/events/:id', tokenChecker);
 
@@ -208,7 +209,6 @@ app.post('/api/v1/users', registration.postRegister);
 app.post('/api/v1/artists/:name/events', events.addEvent);
 app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
-app.get('/api/v1/artists/:name/events/:id', events.getEvent);
 //################## SET ROUTER #################
 // register our router on /
 

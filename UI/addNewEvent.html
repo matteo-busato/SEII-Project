@@ -43,6 +43,11 @@
             <div class="col-8 border rounded p-3">
                 <form>
                     <div class="form-group">
+                        <label>ID</label for="id">
+                        <input type="text" name="id" id="id" class="form-control"
+                            placeholder="Insert an ID for the event...">
+                    </div>
+                    <div class="form-group">
                         <label>Title</label for="title">
                         <input type="text" name="title" id="title" class="form-control"
                             placeholder="Insert the title...">
@@ -83,6 +88,8 @@
         function sendNewEvent() {
             url = "/api/v1/artists/" + artist + "/events";
             var event = {
+                token: window.localStorage.getItem('token'),
+                id: $("#id").val(),
                 title: $("#title").val(),
                 date: $("#date").val(),
                 place: $("#place").val(),
@@ -94,7 +101,13 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(event)
             })
-                .then(response => response.json())
+                .then(response => {
+                    if(response.status == 401){
+                        window.location = window.location.pathname.split('/')[0]+'/login';
+                    } else {
+                        return response.json()
+                    }
+                })
                 .then(function (response) {
                     if (response.message) {
                         alert(response.message);

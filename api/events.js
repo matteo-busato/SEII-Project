@@ -62,18 +62,18 @@ const addEvent = async (req, res) => {
         }
     });
 
-    if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an event for this artist"});
-        return;
-    }
-
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
         return;
     }
 
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
+        return;
+    }
+
     let event = {
-        id: 121210,
+        id: req.body.id,
         title: req.body.title,
         date: req.body.date,
         place: req.body.place,
@@ -83,6 +83,26 @@ const addEvent = async (req, res) => {
     }
 
     //checks
+    if (!event.id || typeof event.id != 'string') {
+        res.status(400).json({ error: 'The id field should be a non-empty string' });
+        return;
+    }
+
+    let isIn = await Event.findOne({ 'id': event.id, 'owner': artist }, function (err) {
+        if (err)
+            if (err.kind == "ObjectId")
+                res.status(400).json({ error: "The id is not valid" });
+            else
+                res.status(500).json({ error: err });
+
+        return;
+    });
+
+    if (isIn) {
+        res.status(404).json({ error: 'There is already an event with id' + event.id });
+        return;
+    }
+
     if (!event.title || typeof event.title != 'string') {
         res.status(400).json({ error: "The field 'title' must be a non-empty string" });
         return;
@@ -147,7 +167,17 @@ const addEvent = async (req, res) => {
 */
 const removeEvent = async (req, res) => {
 
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
     let artist = req.params.name;
+    
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
 
     let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
         if(err) {
@@ -155,9 +185,14 @@ const removeEvent = async (req, res) => {
             return;
         }
     });
-
+    
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
+        return;
+    }
+
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
         return;
     }
 
@@ -198,7 +233,17 @@ const removeEvent = async (req, res) => {
 */
 const changeEvent = async (req, res) => {
 
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
     let artist = req.params.name;
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
 
     let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
         if(err) {
@@ -209,6 +254,11 @@ const changeEvent = async (req, res) => {
 
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
+        return;
+    }
+
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
         return;
     }
 
@@ -348,27 +398,8 @@ const changeEvent = async (req, res) => {
     res.status(201).json({ message: 'Event updated successfully' });
 }
 
-//Da decidere se lasciarla qua o no
-// ######### GET EVENT DATA ########## 
-// function for getting event data with get method (copiata da Matteo Busato)
-const getEvent = (req, res) => {
-    let artist = req.params.name;
-    let id = parseInt(req.params.id);
-    let found = false;
-    for (let i = 0; i < events.length && !found; i++) {
-        if (events[i].owner == artist && events[i].id == id) {
-            res.status(200).json(events[i]);
-            found = true;
-        }
-    }
-    if (!found) {
-        res.status(400).json({ error: 'no event with id : ' + id + ' from artist with name : ' + name });
-    }
-}
-
 module.exports = {
     addEvent,
     removeEvent,
-    changeEvent,
-    getEvent
+    changeEvent
 }

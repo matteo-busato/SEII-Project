@@ -8,7 +8,7 @@ const tokenChecker = function (req, res, next) {
 
     //if there is no token return an error
     if (!token) {
-        return res.status(401).json({ error: 'no token provided' });
+        return res.status(401).json({ error: 'Please login first' });
     }
 
     //decode and verify token
