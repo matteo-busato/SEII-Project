@@ -120,6 +120,7 @@
             if ($("#imSure").prop("checked") != false) {
                 fetch(url, {
                     method: "DELETE",
+                    body: JSON.stringify({ token: window.localStorage.getItem('token') })
                 })
                     .then(response => response.json())
                     .then(function (response) {

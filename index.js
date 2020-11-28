@@ -1,15 +1,15 @@
 var express = require('express');
 const bcrypt = require ('bcrypt');
+var bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // instantiate express
 const app = express();
 app.use(express.json());
 
-var bodyparser = require('body-parser');
-
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -24,8 +24,10 @@ const login = require('./api/login.js');
 const userStory4 = require('./api/userStory4.js');
 const registration = require('./api/register.js');
 const events = require('./api/events.js');
-const insertMusic = require('./api/insertMusic.js');
+const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
+
+const tokenChecker = require('./api/tokenChecker.js');
 
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
@@ -33,15 +35,15 @@ router.get('/test', function (req, res) {
 });
 
 //####################### connection to database ###############################
-/*
+// local db for testing
 mongoose.connect('mongodb://localhost:27017/SEII', {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
 });
-*/
 
+/*
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
 {
@@ -52,6 +54,7 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 }).then(() => {
     console.log('connected to db');
 });
+*/
 
 //connection to database
 const db = mongoose.connection;
@@ -209,7 +212,7 @@ app.get('/api/v1/artists/:name/events/:id', events.getEvent);
 app.use('/', router);
 
 
-//############# insertMusic part ################
+//############# manageAlbum part ################
 
 //get instance of path, required to serve html pages (?)
 const path = require('path');
@@ -224,6 +227,8 @@ app.get('/v1/artists/:name/events/:id/deleteEvent', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteEvent.html'));
 });
 
+// ##################### manage album part ###############################
+// routes for html pages and api requests for user story #15
 
 app.get('/v1/artists/:name/albums/addNewAlbum', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
@@ -235,10 +240,13 @@ app.get('/v1/artists/:name/albums/:ismn/deleteAlbum', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
 });
 
-app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
-app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
-app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
-app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
+app.use('/api/v1/artists/:name/albums', tokenChecker);
+app.use('/api/v1/artists/:name/albums/:ismn', tokenChecker);
+
+app.post('/api/v1/artists/:name/albums', manageAlbum.addNewAlbum);
+app.delete('/api/v1/artists/:name/albums/:ismn', manageAlbum.deleteAlbum);
+app.put('/api/v1/artists/:name/albums/:ismn', manageAlbum.changeAlbumData);
+//app.get('/api/v1/artists/:name/albums/:ismn', manageAlbum.getAlbum);
 
 //############# manageMerch part ################
 app.get('/v1/artists/:name/merch/addNewProduct', (req, res) => {

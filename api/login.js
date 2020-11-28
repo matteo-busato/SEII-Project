@@ -24,6 +24,7 @@ const auth = (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
+
     //check for problems
     if(!email || typeof email != 'string' ){
         res.status(404).json("The field 'email' must be a non-empty string");
@@ -40,40 +41,40 @@ const auth = (req, res) => {
 
     User.findOne( { email : email }, function (err,user) {
         if(!err && user){   //we look at password matching
-
-            bcrypt.compare( password, user.password ).then( match => {
+            bcrypt.compare( password, user.password, function (err, match) {
                 if(match) { //matched password
                     //implements jsonwebtoken
-
                     const payload = { username: user.username,      //to know if has right to change albums/events/merch
                                         userType: user.userType,
                                         id: user._id                }; //to know what type of user is
-
                     const options = { expiresIn: '1d', issuer: 'http://localhost:8080/' };
-                    const secret = config.secret;
                     const token = jwt.sign(payload, process.env.SECRET, options);
-
                     result.token = token;
                     result.status = status;
                     result.username = user.username;
-                }else{
+                    res.status(status).json(result);
+                    return;
+                }else if(!match){
                     status = 401;
                     result.status = status;
                     result.error = 'wrong password';
+                    res.status(status).json(result);
+                    return;
                 }
-                res.status(status).send(result);
-
-            }).catch( err => {
+                if (err) {
                 status = 500;
                 result.status = status;
                 result.error = err;
-                res.status(status).send(result);
-            });
-        }else{      //email not matching
+                res.status(status).json(result);
+                return;
+                }
+            });  
+        } else {      //email not matching
             status = 404;
             result.status = status;
             result.error = "wrong email";
-            res.status(status).send(result);
+            res.status(status).json(result);
+            return;
         }
     });
 }
