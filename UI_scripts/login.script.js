@@ -11,7 +11,7 @@ var submit = function(){
         console.log(res);
         if(res.status == 201){  //login successfully
             if(res.token){
-                window.localStorage.setItem('token', res.token);
+                window.sessionStorage.setItem('token', res.token);
             }
 
             //here you need to go to the mainpage site

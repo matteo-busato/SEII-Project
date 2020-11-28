@@ -17,7 +17,7 @@ artist = findGetParameter("username");
 function sendNewEvent() {
     url = "/api/v1/artists/" + artist + "/events";
     var event = {
-        token: window.localStorage.getItem('token'),
+        token: window.sessionStorage.getItem('token'),
         id: $("#id").val(),
         title: $("#title").val(),
         date: $("#date").val(),

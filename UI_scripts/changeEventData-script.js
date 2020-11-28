@@ -32,21 +32,23 @@ function getEventData(artist, ismn) {
 }
 
 function sendChange() {
-    var event = {};
+    var event = {
+        token: window.sessionStorage.getItem('token')
+    };
     if ($("#newTitle").val()) {
         event.title = $("#newTitle").val();
     }
-    if ($("#newTitle").val()) {
-        event.title = $("#newTitle").val();
+    if ($("#newDate").val()) {
+        event.date = $("#newDate").val();
     }
     if ($("#newPlace").val()) {
-        event.title = $("#newPlace").val();
+        event.place = $("#newPlace").val();
     }
     if ($("#newDescription").val()) {
-        event.title = $("#newDescription").val();
+        event.description = $("#newDescription").val();
     }
     if ($("#newCost").val()) {
-        event.title = $("#newCost").val();
+        event.cost = $("#newCost").val();
     }
     fetch(url, {
         method: 'PUT',

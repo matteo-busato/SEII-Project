@@ -61,14 +61,15 @@ const Product = require('./models/product.js');
 app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
 app.use('/', router);
-app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //check token for this pages
-//app.use('/v1/artists/:name/events/addNewEvent', tokenChecker);
-//app.use('/v1/artists/:name/events/:id/changeEventData', tokenChecker);
-//app.use('/v1/artists/:name/events/:id/deleteEvent', tokenChecker);
-app.use('/api/v1/artists/:name/events', tokenChecker);
-app.use('/api/v1/artists/:name/events/:id', tokenChecker);
+app.post('/api/v1/artists/:name/events', tokenChecker);
+app.put('/api/v1/artists/:name/events', tokenChecker);
+app.delete('/api/v1/artists/:name/events', tokenChecker);
+
+app.post('/api/v1/artists/:name/events/:id', tokenChecker); 
+app.put('/api/v1/artists/:name/events/:id', tokenChecker);
+app.delete('/api/v1/artists/:name/events/:id', tokenChecker);
 
 //route the login UI
 app.get('/login', (req, res) => {
@@ -224,33 +225,6 @@ router.post('/api/v1/users/auth', login.auth);
 app.post('/api/v1/artists/:name/events', events.addEvent);
 app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
-//################## SET ROUTER #################
-// register our router on /
-
-//get instance of path, required to serve html pages (?)
-const path = require('path');
-
-app.get('/v1/artists/:name/events/addNewEvent', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/addNewEvent.html'));
-});
-app.get('/v1/artists/:name/events/:id/changeEventData', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/changeEventData.html'));
-});
-app.get('/v1/artists/:name/events/:id/deleteEvent', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/deleteEvent.html'));
-});
-
-//############# insertMusic part ################
-
-app.get('/v1/artists/:name/albums/addNewAlbum', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
-});
-app.get('/v1/artists/:name/albums/:ismn/changeAlbumData', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/changeAlbumData.html'));
-});
-app.get('/v1/artists/:name/albums/:ismn/deleteAlbum', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
-});
 
 //###### manage albums api ###########
 app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);

@@ -34,17 +34,20 @@ function getEventData(artist, id) {
 
 function sendDelete() {
     if ($("#imSure").prop("checked") != false) {
+        
         fetch(url, {
             method: "DELETE",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({token: window.sessionStorage.getItem('token')})
         })
-            .then(response => response.json())
-            .then(function (response) {
-                if (response.message) {
-                    alert(response.message);
-                } else {
-                    alert(response.error);
-                }
-            });
+        .then(response => response.json())
+        .then(function (response) {
+            if (response.message) {
+                alert(response.message);
+            } else {
+                alert(response.error);
+            }
+        });
     } else {
         $("#imSureLabel").addClass('text-danger');
     }

@@ -73,7 +73,7 @@ const addEvent = async (req, res) => {
     }
 
     let event = {
-        id: req.body.id,
+        id: parseInt(req.body.id),
         title: req.body.title,
         date: req.body.date,
         place: req.body.place,
@@ -83,8 +83,8 @@ const addEvent = async (req, res) => {
     }
 
     //checks
-    if (!event.id || typeof event.id != 'string') {
-        res.status(400).json({ error: 'The id field should be a non-empty string' });
+    if (isNaN(event.id) || event.id < 0) {
+        res.status(400).json({ error: 'The id field should be an integer greater than 0' });
         return;
     }
 
@@ -196,14 +196,14 @@ const removeEvent = async (req, res) => {
         return;
     }
 
-    let id = req.params.id;
+    let id = parseInt(req.params.id);
 
-    if (!id || typeof id != 'string') {
-        res.status(400).json({ error: 'The id field should be a non-empty string' });
+    if (isNaN(id) || id < 0) {
+        res.status(400).json({ error: 'The id field should be an integer greater than 0' });
         return;
     }
 
-    let isIn = await Event.findOne({ '_id': id, 'owner': artist }, function (err) {
+    let isIn = await Event.findOne({ 'id': id, 'owner': artist }, function (err) {
         if (err)
             if (err.kind == "ObjectId")
                 res.status(400).json({ error: "The id is not valid" });
@@ -218,7 +218,7 @@ const removeEvent = async (req, res) => {
         return;
     }
 
-    await Event.remove({ '_id': id, 'owner': artist }, function (err) {
+    await Event.remove({ 'id': id, 'owner': artist }, function (err) {
         if (err)
             res.status(500).json({ error: err });
         else
@@ -262,14 +262,14 @@ const changeEvent = async (req, res) => {
         return;
     }
 
-    let id = req.params.id;
+    let id = parseInt(req.params.id);
 
-    if (!id || typeof id != 'string') {
-        res.status(400).json({ error: 'The id field should be a non-empty string' });
+    if (isNaN(id) || id < 0) {
+        res.status(400).json({ error: 'The id field should be an integer greater than 0' });
         return;
     }
 
-    let isIn = await Event.findOne({ '_id': id, 'owner': artist }, function (err) {
+    let isIn = await Event.findOne({ 'id': id, 'owner': artist }, function (err) {
         if (err)
             if (err.kind == "ObjectId")
                 res.status(400).json({ error: "The id is not valid" });
@@ -351,7 +351,7 @@ const changeEvent = async (req, res) => {
 
     //Data insertion
     if (newEvent.title) {
-        await Event.updateOne({ '_id': id, 'owner': artist }, { $set: { 'title': newEvent.title } }, (err) => {
+        await Event.updateOne({ 'id': id, 'owner': artist }, { $set: { 'title': newEvent.title } }, (err) => {
             if (err) {
                 res.status(500).json({ error: 'Error updating the db' });
                 return;
@@ -369,7 +369,7 @@ const changeEvent = async (req, res) => {
     }
 
     if (newEvent.place) {
-        await Event.updateOne({ '_id': id, 'owner': artist }, { $set: { 'place': newEvent.place } }, (err) => {
+        await Event.updateOne({ 'id': id, 'owner': artist }, { $set: { 'place': newEvent.place } }, (err) => {
             if (err) {
                 res.status(500).json({ error: 'Error updating the db' });
                 return;
@@ -378,7 +378,7 @@ const changeEvent = async (req, res) => {
     }
 
     if (newEvent.description) {
-        await Event.updateOne({ '_id': id, 'owner': artist }, { $set: { 'description': newEvent.description } }, (err) => {
+        await Event.updateOne({ 'id': id, 'owner': artist }, { $set: { 'description': newEvent.description } }, (err) => {
             if (err) {
                 res.status(500).json({ error: 'Error updating the db' });
                 return;
@@ -387,7 +387,7 @@ const changeEvent = async (req, res) => {
     }
 
     if (!isNaN(newEvent.cost)) {
-        await Event.updateOne({ '_id': id, 'owner': artist }, { $set: { 'cost': newEvent.cost } }, (err) => {
+        await Event.updateOne({ 'id': id, 'owner': artist }, { $set: { 'cost': newEvent.cost } }, (err) => {
             if (err) {
                 res.status(500).json({ error: 'Error updating the db' });
                 return;
