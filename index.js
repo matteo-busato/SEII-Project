@@ -32,14 +32,6 @@ router.get('/test', function (req, res) {
 });
 
 //####################### connection to database ###############################
-/*
-mongoose.connect('mongodb://localhost:27017/SEII', {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
-*/
 
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
@@ -49,7 +41,7 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
     useCreateIndex: true,
     useFindAndModify: false
 }).then(() => {
-    console.log('connected to db');
+    console.log('connected to db');    
 });
 
 //connection to database
@@ -66,15 +58,10 @@ const Event = require('./models/event.js');
 const Product = require('./models/product.js');
 
 //################## SET STATIC PAGES ###########
-
-
-
-//authenticate user - login
-router.post('/api/v1/users/auth', login.auth);
-
 app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
 app.use('/', router);
+app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //check token for this pages
 //app.use('/v1/artists/:name/events/addNewEvent', tokenChecker);
@@ -91,11 +78,16 @@ app.get('/login', (req, res) => {
     });
 });
 
+//route the registration UI
+app.get('/register', (req, res) => {    
+    res.sendFile('UI/register.html', {root:'./'}, (err) => {
+        res.end();
+        console.log(err);
+        if(err) throw(err);
+    });
+});
 
 //####################################### SET static pages USERSTORY#4 #################
-
-//app.use('/', router);
-app.use("/scripts", express.static('./scripts/'));
 
 app.get('/artists', (req, res) => {
         res.sendFile('UI/artists.html', {root:'./'}, (err) => {
@@ -174,6 +166,39 @@ app.get('/artist-selected-merch', (req, res) => {
     });
 });
 
+//############# Change / add / remove albums/events/merch UI ################
+
+//get instance of path, required to serve html pages (?)
+const path = require('path');
+
+app.get('/addNewEvent', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewEvent.html'));
+});
+app.get('/changeEventData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeEventData.html'));
+});
+app.get('/deleteEvent', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteEvent.html'));
+});
+app.get('/addNewAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewAlbum.html'));
+});
+app.get('/changeAlbumData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeAlbumData.html'));
+});
+app.get('/deleteAlbum', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
+});
+app.get('/addNewProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
+});
+app.get('/changeProductData', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeProductData.html'));
+});
+app.get('/deleteProduct', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
+});
+
 //####################################### SET API USERSTORY#4 #################
 
 app.get('/api/v1/artists',userStory4.getArtists);
@@ -191,21 +216,11 @@ app.get('/api/v1/artists/:name/albums/:ismn',userStory4.getArtistAlbumIsmn);
 app.get('/api/v1/artists/:name/merch/:id',userStory4.getArtistMerchId);
 app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
 
-
-//################## SET STATIC PAGES REGISTRAZIONE ###########
-app.get('/register', (req, res) => {
-    
-    res.sendFile('UI/register.html', {root:'./'}, (err) => {
-        res.end();
-        console.log(err);
-        if(err) throw(err);
-    });
-});
-
-//############# registration part ################
+//############# login and registration api ################
 app.post('/api/v1/users', registration.postRegister);
+router.post('/api/v1/users/auth', login.auth);
 
-//###### manage events ###########
+//###### manage events api ###########
 app.post('/api/v1/artists/:name/events', events.addEvent);
 app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
@@ -237,22 +252,13 @@ app.get('/v1/artists/:name/albums/:ismn/deleteAlbum', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteAlbum.html'));
 });
 
+//###### manage albums api ###########
 app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
 app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
 app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
 app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
 
 //############# manageMerch part ################
-app.get('/v1/artists/:name/merch/addNewProduct', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/addNewProduct.html'));
-});
-app.get('/v1/artists/:name/merch/:id/changeProductData', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/changeProductData.html'));
-});
-app.get('/v1/artists/:name/merch/:id/deleteProduct', (req, res) => {
-    res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
-});
-
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);

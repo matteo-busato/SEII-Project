@@ -39,3 +39,21 @@ xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
 xhttp.send();
+
+
+var trova = function(){
+    var type = $('#searchType').val();
+    var query = $('#query').val();
+    console.log(type);
+    console.log(query);
+
+    if(type == 1){  //searching for artist
+        window.location.assign("/artist-mainpage?username="+ query);
+    }else if(type == 2){    //searching for album
+        window.location.assign("/artist-selected-album?ismn="+ query);
+    }else if(type == 3){    //searching for product
+        window.location.assign("/artist-selected-merch?id="+ query);
+    }else{      //searching for event
+        window.location.assign("/artist-selected-event?id="+ query);
+    }
+}
