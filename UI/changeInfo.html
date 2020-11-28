@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>EasyMusic - Add Artist Info</title>
+    <title>EasyMusic - Change Artist Data</title>
 </head>
 
 <body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
@@ -35,28 +35,43 @@
             </ul>
         </div>
     </nav>
-
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
-        <h2 class="text-center" id = "artist">Artist info</h2>
-        <p class="text-center">With this powerful tool you can add informations.</p>
-        <div class="row justify-content-center">
-            <div class="col-8 border rounded p-3">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-center">Change Artist Data</h2>
+                <p class="text-center">With this powerful tool you can change your data</p>
+            </div>
+        </div>
+            <div class="col-6 border rounded p-3">
+                <h4>New Artist Info </h4>
+                <p>Insert here the new data.</p>
                 <form>
                     <div class="form-group">
-                        <label>Password</label for="password">
-                        <input type="password" name="pwd" id="pwd" class="form-control"
-                            placeholder="Insert password...">
+                        <label>Name</label for="newTitle">
+                        <input type="text" name="newName" id="newName" class="form-control"
+                            placeholder="Insert new title...">
                     </div>
                     <div class="form-group">
-                        <label>Biography</label for="bio">
-                        <input type="text" name="bio" id="bio" class="form-control" placeholder="Insert your bio">
+                        <label>Old Password</label for="newYear">
+                        <input type="password" name="oldPassword" id="oldPwd" class="form-control"
+                            placeholder="Insert old password...">
                     </div>
                     <div class="form-group">
-                        <label>Email</label for="email">
-                        <input type="text" name="email" id="email" class="form-control"
-                            placeholder="Insert your email">
+                        <label>New Password</label for="newYear">
+                        <input type="password" name="newPassword" id="newPwd" class="form-control"
+                            placeholder="Insert new password...">
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="sendNewInfo()">Add Informations</button>
+                    <div class="form-group">
+                        <label>Bio</label for="newBio">
+                        <input type="text" name="newBio" id="newBio" class="form-control"
+                            placeholder="Insert new bio...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mail</label for="newEmail">
+                        <input type="text" name="newEmail" id="newEmail" class="form-control"
+                            placeholder="Insert new email...">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="sendChange()">Submit new data</button>
                 </form>
             </div>
         </div>
@@ -65,26 +80,24 @@
     <script>
         var artistName;
         var url;
-
         function getURLparams() {
             var path = window.location.pathname.split("/");
             artistName = path[3];
-            var element = document.getElementById("artist");
-            element.innerHTML =  "Artist info for " + artistName;
         }
 
-        function sendNewInfo() {
+        function sendChange() {
             url = "/api/v1/artists/" + artistName;
-            var artist = {
-                name: artistName,
-                password: $("#pwd").val(),
-                bio: $("#bio").val(),
-                email: $("#email").val()
-            };
+            var newArtist = {
+                newName: $("#newName").val(),
+                oldPassword: $("#oldPwd").val(),
+                newPassword: $("#newPwd").val(),
+                newBio: $("#newBio").val(),
+                newEmail: $("#newEmail").val()
+            }
             fetch(url, {
-                method: 'POST',
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(artist)
+                body: JSON.stringify(newArtist)
             })
                 .then(response => response.json())
                 .then(function (response) {
@@ -96,6 +109,7 @@
                 });
         }
     </script>
+
 
 
     <!-- Optional JavaScript -->
@@ -110,4 +124,5 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
