@@ -2,6 +2,14 @@
 <html lang="en">
 
 <head>
+    <title>EasyMusic - Delete_an_Album</title>
+    <style>       
+        .navbar-nav.navbar-center {
+           position: absolute;
+            left: 50%;
+            transform: translatex(-50%);
+        }
+    </style> 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,28 +17,67 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <title>EasyMusic - Delete an Album</title>
+        <script src="../UI_scripts/deleteAlbum-script.js"></script>
 </head>
 
-<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);" onload="getURLparams()">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">EasyMusic</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<body style="background: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);">
+    <nav class="navbar navbar-expand-sm sticky-top bg-dark navbar-dark">
+        <div class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href=""><h4>EasyMusic</h4></a>
+                </li>
+            </ul>                                                                                 
+        </div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+        <div class="navbar-collapse collapse">
+            <ul class="navbar-nav navbar-center">
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Artists</a>
+                    <div class="input-group bg-dark mb-3">                                                
+                        <select class="custom-select bg-light" id="searchType">                                                      
+                            <option selected value="1">Artist</option>
+                            <option value="2">Album</option>
+                            <option value="3">Product</option>
+                            <option value="4">Event</option>
+                        </select>
+                    </div>  
+                </li>
+
+                <li class="nav-item w-75">
+                        <input type="text" id="query" class="form-control bg-light" placeholder="Search">
+                </li>
+
+                <li class="nav-item">
+                        <div class="input-group-btn" >
+                          <button class="btn btn-default bg-light" onclick="trova()">
+                            <i class="glyphicon glyphicon-search">Go</i>
+                          </button>
+                        </div>                                              
+                </li>
+
+            </ul>         
+        </div>
+
+        <div class="navbar-collapse">
+            <ul class="navbar-nav ml-auto">                    
+                <li class="nav-item">
+                    <a class="nav-link" href="/artists">Artists</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Events</a>
+                    <a class="nav-link" href="/events">Events</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Profile</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/albums">Albums</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/merch">Merch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
                 </li>
             </ul>
         </div>
@@ -88,52 +135,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
-    <script>
-        var artist;
-        var ismn;
-        var url;
-
-        function getURLparams() {
-            var path = window.location.pathname.split("/");
-            artist = path[3];
-            ismn = path[5];
-            getAlbumData(artist, ismn);
-        }
-
-        function getAlbumData(artist, ismn) {
-            var album;
-            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            fetch(url)
-                .then(response => response.json())
-                .then(function (album) {
-                    $("#ismn").val(album.ismn);
-                    $("#title").val(album.title);
-                    $("#year").val(album.year);
-                    $("#tracklist").val(album.tracklist);
-                    $("#genre").val(album.genre);
-                    $("#cost").val(album.cost);
-                });
-        }
-
-        function sendDelete() {
-            if ($("#imSure").prop("checked") != false) {
-                fetch(url, {
-                    method: "DELETE",
-                })
-                    .then(response => response.json())
-                    .then(function (response) {
-                        if (response.message) {
-                            alert(response.message);
-                        } else {
-                            alert(response.error);
-                        }
-                    });
-            } else {
-                $("#imSureLabel").addClass('text-danger');
-            }
-        }
-    </script>
 
     
 </body>

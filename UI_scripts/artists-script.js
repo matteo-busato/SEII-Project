@@ -48,12 +48,12 @@ var trova = function(){
     console.log(query);
 
     if(type == 1){  //searching for artist
-
+        window.location.assign("/artist-mainpage?username="+ query);
     }else if(type == 2){    //searching for album
-
-    }else if(type == 3){    //searching for song
-
-    }else{      //searching for genre
-
+        window.location.assign("/artist-selected-album?ismn="+ query);
+    }else if(type == 3){    //searching for product
+        window.location.assign("/artist-selected-merch?id="+ query);
+    }else{      //searching for event
+        window.location.assign("/artist-selected-event?id="+ query);
     }
 }
