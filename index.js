@@ -90,7 +90,7 @@ app.get('/register', (req, res) => {
     });
 });
 
-const tokenChecker = require('./api/tokenChecker.js');
+
 
 //####################################### SET static pages USERSTORY#4 #################
 
@@ -224,6 +224,7 @@ app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
 //############# login and registration api ################
 app.post('/api/v1/users', registration.postRegister);
 router.post('/api/v1/users/auth', login.auth);
+const tokenChecker = require('./api/tokenChecker.js');
 
 //###### manage events api ###########
 app.post('/api/v1/artists/:name/events', events.addEvent);

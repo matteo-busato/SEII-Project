@@ -136,56 +136,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-<<<<<<< HEAD
-    <script>
-        var artist;
-        var ismn;
-        var url;
-
-        function getURLparams() {
-            var path = window.location.pathname.split("/");
-            artist = path[3];
-            ismn = path[5];
-            getAlbumData(artist, ismn);
-        }
-
-        function getAlbumData(artist, ismn) {
-            var album;
-            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            fetch(url)
-                .then(response => response.json())
-                .then(function (album) {
-                    $("#ismn").val(album.ismn);
-                    $("#title").val(album.title);
-                    $("#year").val(album.year);
-                    $("#tracklist").val(album.tracklist);
-                    $("#genre").val(album.genre);
-                    $("#cost").val(album.cost);
-                });
-        }
-
-        function sendDelete() {
-            if ($("#imSure").prop("checked") != false) {
-                fetch(url, {
-                    method: "DELETE",
-                    body: JSON.stringify({ token: window.localStorage.getItem('token') })
-                })
-                    .then(response => response.json())
-                    .then(function (response) {
-                        if (response.message) {
-                            alert(response.message);
-                        } else {
-                            alert(response.error);
-                        }
-                    });
-            } else {
-                $("#imSureLabel").addClass('text-danger');
-            }
-        }
-    </script>
-
-=======
->>>>>>> main
     
 </body>
 

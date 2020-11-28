@@ -34,6 +34,7 @@ function getAlbumData(artist, ismn) {
 
 function sendChange() {
     var album = {
+        token: window.localStorage.getItem('token'),
         ismn: $("#newIsmn").val(),
         title: $("#newTitle").val(),
         year: $("#newYear").val(),

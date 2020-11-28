@@ -173,63 +173,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-<<<<<<< HEAD
-    <script>
-        var artist;
-        var ismn;
-        var url;
-
-        function getURLparams() {
-            var path = window.location.pathname.split("/");
-            artist = path[3];
-            ismn = path[5];
-            getAlbumData(artist, ismn);
-        }
-
-        function getAlbumData(artist, ismn) {
-            var album;
-            url = "/api/v1/artists/" + artist + "/albums/" + ismn;
-            fetch(url)
-                .then(response => response.json())
-                .then(function (album) {
-                    $("#oldIsmn").val(album.ismn);
-                    $("#oldTitle").val(album.title);
-                    $("#oldYear").val(album.year);
-                    $("#oldTracklist").val(album.tracklist);
-                    $("#oldGenre").val(album.genre);
-                    $("#oldCost").val(album.cost);
-                });
-        }
-
-        function sendChange() {
-            var album = {
-                token: window.localStorage.getItem('token'),
-                ismn: $("#newIsmn").val(),
-                title: $("#newTitle").val(),
-                year: $("#newYear").val(),
-                tracklist: $("#newTracklist").val().split(','),
-                genre: $("#newGenre").val(),
-                cost: $("#newCost").val()
-            }
-            fetch(url, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(album)
-            })
-                .then(response => response.json())
-                .then(function (response) {
-                    if (response.message) {
-                        alert(response.message);
-                        window.location.replace("http://"+window.location.host+"/v1/artists/"+artist+"/albums/"+response.newIsmn+"/changeAlbumData");
-                    } else {
-                        alert(response.error);
-                    }
-
-                });
-        }
-    </script>
-=======
->>>>>>> main
 </body>
 
 </html>

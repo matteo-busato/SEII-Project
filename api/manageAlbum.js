@@ -13,16 +13,18 @@ const User = require("../models/user.js");
 const getYear = function(){
     return new Date().getFullYear();
 }
+
 /*
 let prova_user = new User({
-    email: "srv@me.com",
-    username: "srv",
-    password: "asd6asf8adf8ah7",
+    email: "ale@ale.com",
+    username: "ale",
+    password: "123",
     userType: "artist",
-    bio: "cool blues guitarist"
+    bio: "the bomber"
 });
 prova_user.save();
 */
+
 
 // ######### ADD NEW ALBUM ##########
 // function for adding album with post method
@@ -318,9 +320,9 @@ const changeAlbumData = async function (req, res) {
     });
 };
 
-/*
+
 // ######### GET ALBUM DATA ##########
-// function for getting album data with get method (copiata da Matteo Busato)
+// function for getting album data with get method
 const getAlbum = function (req, res) {
     console.log("new get album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artist = req.params.name;
@@ -337,11 +339,11 @@ const getAlbum = function (req, res) {
         }
     });
 }
-*/
+
 
 module.exports = {
     addNewAlbum,
     deleteAlbum,
-    changeAlbumData
-    //getAlbum
+    changeAlbumData,
+    getAlbum
 };

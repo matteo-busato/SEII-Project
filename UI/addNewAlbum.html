@@ -133,47 +133,7 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-<<<<<<< HEAD
-        crossorigin="anonymous"></script>
-
-    <script>
-        var artist;
-        var url;
-
-        function getURLparams() {
-            var path = window.location.pathname.split("/");
-            artist = path[3];
-        }
-
-        function sendNewAlbum() {
-            url = "/api/v1/artists/" + artist + "/albums";
-            var album = {
-                token: window.localStorage.getItem('token'),
-                ismn: $("#ismn").val(),
-                title: $("#title").val(),
-                year: $("#year").val(),
-                tracklist: $("#tracklist").val().split(','),
-                genre: $("#genre").val(),
-                cost: $("#cost").val()
-            };
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(album)
-            })
-                .then(response => response.json())
-                .then(function (response) {
-                    if (response.message) {
-                        alert(response.message);
-                    } else {
-                        alert(response.error);
-                    }
-                });
-        }
-    </script>
-=======
         crossorigin="anonymous"></script>        
->>>>>>> main
 </body>
 
 </html>
