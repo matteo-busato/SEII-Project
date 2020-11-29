@@ -1,15 +1,14 @@
 var express = require('express');
 const bcrypt = require ('bcrypt');
+var bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // instantiate express
 const app = express();
 app.use(express.json());
-
-var bodyparser = require('body-parser');
-
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -25,13 +24,25 @@ const events = require('./api/events.js');
 const insertMusic = require('./api/insertMusic.js');
 const manageMerch = require('./api/manageMerch.js');
 
+const tokenChecker = require('./api/tokenChecker.js');
+
 // test route to make sure everything is working
 router.get('/test', function (req, res) {
     res.json({ message: 'API is working correctly!' });
 });
 
 //####################### connection to database ###############################
+// local db for testing
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+}).then(() => {
+    console.log('connected to db'); 
+});
 
+/*
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
 {
@@ -42,6 +53,7 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 }).then(() => {
     console.log('connected to db');    
 });
+*/
 
 //connection to database
 const db = mongoose.connection;
@@ -226,6 +238,8 @@ app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
 app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
 
 //############# manageMerch part ################
+app.use('/api/v1/artists/:name/merch', tokenChecker);
+app.use('/api/v1/artists/:name/merch/:id', tokenChecker);
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);

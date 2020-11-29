@@ -18,7 +18,6 @@ id = findGetParameter("id");
 getProductData(artist, id);
 
 function getProductData(artist, id) {
-    var product;
     url = "/api/v1/artists/" + artist + "/merch/" + id;
     fetch(url)
         .then(response => response.json())
@@ -32,6 +31,7 @@ function getProductData(artist, id) {
 
 function sendChange() {
     var product = {
+        token: window.localStorage.getItem('token'),
         title: $("#newTitle").val(),
         description: $("#newDescription").val(),
         qty: $("#newQty").val(),

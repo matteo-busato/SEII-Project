@@ -8,11 +8,11 @@ const Product = require("../models/product.js");
 const User = require("../models/user.js");
 /*
 let test_user = new User({
-    email: "thedoors@mail.com",
-    username: "the doors",
-    password: "asd123asd",
+    email: "ale@ale.com",
+    username: "ale",
+    password: "123",
     userType: "artist",
-    bio: "rock 60s band"
+    bio: "the bomber"
 });
 test_user.save();
 */
@@ -23,6 +23,20 @@ const addNewProduct =async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.body.id);
 
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
+
+    if(req.loggedUser.username != reqName){
+        res.status(401).json({error: "You can't add an product for this artist"});
+        return;
+    }
 
     // verify identity of artits
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
@@ -102,6 +116,21 @@ const deleteProduct = async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.params.id);
 
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
+
+    if(req.loggedUser.username != reqName){
+        res.status(401).json({error: "You can't delete an product for this artist"});
+        return;
+    }
+
     // verify identity of artits
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
         if(err) {
@@ -145,6 +174,21 @@ const changeProductData = async (req, res) => {
     console.log("new put product request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let reqName = req.params.name;
     let reqId = parseInt(req.params.id);
+
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
+
+    if(req.loggedUser.username != reqName){
+        res.status(401).json({error: "You can't change an product for this artist"});
+        return;
+    }
 
     // verify identity of artits
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
