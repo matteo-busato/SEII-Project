@@ -1,9 +1,7 @@
 var albums = document.getElementById('albums'); // Get the list where we will place albums
 
-var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
-    console.log("" + types);
-}
-
+var username = window.sessionStorage.getItem("username");
+var userType = window.sessionStorage.getItem("userType");
 
 function findGetParameter(parameterName) { //return the query
     var result = null,
@@ -18,8 +16,7 @@ function findGetParameter(parameterName) { //return the query
 
 var query = findGetParameter("username");
 
-
-var populate = function(classname,what,aHref,onclick){
+var populate = function(classname,what,aHref,owner){
     for(let i=0;i<what.length;i++){
         var div = document.createElement("div");
         div.className="d-flex list-group-item  align-items-center";
@@ -32,11 +29,39 @@ var populate = function(classname,what,aHref,onclick){
         a.innerText = what[i].title;
         div.appendChild(a);
         var button = document.createElement("button");
-        button.className="btn btn-primary ml-auto w-35";
-        button.onclick = function(){
-            func(onclick);
-        }
-        button.innerText = "add to cart";
+        button.className="btn btn-primary ml-2 w-35";
+        if(owner){
+            button.onclick = function(){    //modify element button
+                if(classname == "albums")
+                    window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + what[i].ismn);
+                else if(classname == "events")
+                    window.location.assign("/changeEventData?username="+ username + "&id=" + what[i].id);
+                else{
+                    window.location.assign("/changeProductData?username="+ username + "&id=" + what[i].id);
+                }
+            }
+            button.innerText = "modify";
+            var button2 = document.createElement("button");
+            button2.className="btn btn-primary ml-auto w-35";
+            button2.onclick = function(){    //delete element button
+                if(classname == "albums")
+                    window.location.assign("/deleteAlbum?username="+ username + "&ismn=" + what[i].ismn);
+                else if(classname == "events")
+                    window.location.assign("/deleteEvent?username="+ username + "&id=" + what[i].id);
+                else{
+                    window.location.assign("/deleteProduct?username="+ username + "&id=" + what[i].id);
+                }
+            }
+            button2.innerText = "delete";
+            div.appendChild(button2);
+
+        }else{
+            button.onclick = function(){
+                func(onclick);
+            }
+            button.innerText = "add to cart";
+        }        
+        
         div.appendChild(button);
         document.getElementById( classname ).appendChild(div);
     }
@@ -57,7 +82,13 @@ xhttp.onreadystatechange = function () {
             document.getElementById("error").innerText = "";
             document.getElementById("error").style = "display: none";
             //insert events
-            populate("events",data.events,"/artist-selected-event?id=","event");   //carico gli eventi
+            if(userType == "artist" && data.artist.username == username){ //proprietario pagina
+                populate("events",data.events,"/artist-selected-event?id=",true);   //carico gli eventi
+                document.getElementById("addEvent").href = "/addNewEvent?username=" + data.artist.username;
+                $('#addEvent').show();
+            } else {
+                populate("events",data.events,"/artist-selected-event?id=",false);   //carico gli eventi
+            }
         }else{
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";

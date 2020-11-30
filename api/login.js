@@ -55,6 +55,7 @@ const auth = (req, res) => {
                     result.token = token;
                     result.status = status;
                     result.username = user.username;
+                    result.userType = user.userType;
                 }else{
                     status = 401;
                     result.status = status;

@@ -2,9 +2,8 @@ var albums = document.getElementById('albums'); // Get the list where we will pl
 var merch = document.getElementById('merch'); // Get the list where we will place merch
 var events = document.getElementById('events'); // Get the list where we will place getEvents
 
-var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
-    console.log("" + types);
-}
+var username = window.sessionStorage.getItem("username");
+var userType = window.sessionStorage.getItem("userType");
 
 function findGetParameter(parameterName) {  //return the query
     var result = null,
@@ -19,7 +18,7 @@ function findGetParameter(parameterName) {  //return the query
 
 var query = findGetParameter("username");
 
-var populate = function(classname,what,aHref,onclick){
+var populate = function(classname,what,aHref,owner){
     for(let i=0;i<what.length;i++){
         var div = document.createElement("div");
         div.className="d-flex list-group-item  align-items-center";
@@ -32,11 +31,39 @@ var populate = function(classname,what,aHref,onclick){
         a.innerText = what[i].title;
         div.appendChild(a);
         var button = document.createElement("button");
-        button.className="btn btn-primary ml-auto w-35";
-        button.onclick = function(){
-            func(onclick);
-        }
-        button.innerText = "add to cart";
+        button.className="btn btn-primary ml-2 w-35";
+        if(owner){
+            button.onclick = function(){    //modify element button
+                if(classname == "albums")
+                    window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + what[i].ismn);
+                else if(classname == "events")
+                    window.location.assign("/changeEventData?username="+ username + "&id=" + what[i].id);
+                else{
+                    window.location.assign("/changeProductData?username="+ username + "&id=" + what[i].id);
+                }
+            }
+            button.innerText = "modify";
+            var button2 = document.createElement("button");
+            button2.className="btn btn-primary ml-auto w-35";
+            button2.onclick = function(){    //delete element button
+                if(classname == "albums")
+                    window.location.assign("/deleteAlbum?username="+ username + "&ismn=" + what[i].ismn);
+                else if(classname == "events")
+                    window.location.assign("/deleteEvent?username="+ username + "&id=" + what[i].id);
+                else{
+                    window.location.assign("/deleteProduct?username="+ username + "&id=" + what[i].id);
+                }
+            }
+            button2.innerText = "delete";
+            div.appendChild(button2);
+
+        }else{
+            button.onclick = function(){
+                func(onclick);
+            }
+            button.innerText = "add to cart";
+        }        
+        
         div.appendChild(button);
         document.getElementById( classname ).appendChild(div);
     }
@@ -55,14 +82,32 @@ xhttp.onreadystatechange = function () {
             //insert basic info
             document.getElementById("artista").innerText = data.artist.username;
             document.getElementById("bio").innerText = data.artist.bio;
+            if(userType == "artist" && data.artist.username == username){ //proprietario pagina
+                //insert albums,merch,events
+                populate("albums",data.albums,"/artist-selected-album?ismn=",true);   //carico gli albums
+                document.getElementById("moreAlbums").href = "/artist-albums?username=" + data.artist.username;
+                populate("events",data.events,"/artist-selected-event?id=",true);   //carico gli eventi
+                document.getElementById("moreEvents").href = "/artist-events?username=" + data.artist.username;
+                populate("merch",data.merch,"/artist-selected-merch?id=",true);   //carico il merch
+                document.getElementById("moreMerch").href = "/artist-merch?username=" + data.artist.username;
+                
+                document.getElementById("addAlbum").href = "/addNewAlbum?username=" + data.artist.username;
+                document.getElementById("addProduct").href = "/addNewProduct?username=" + data.artist.username;
+                document.getElementById("addEvent").href = "/addNewEvent?username=" + data.artist.username;
 
-            //insert albums,merch,events
-            populate("albums",data.albums,"/artist-selected-album?ismn=","album");   //carico gli albums
-            document.getElementById("moreAlbums").href = "/artist-albums?username=" + data.artist.username;
-            populate("events",data.events,"/artist-selected-event?id=","event");   //carico gli eventi
-            document.getElementById("moreEvents").href = "/artist-events?username=" + data.artist.username;
-            populate("merch",data.merch,"/artist-selected-merch?id=","merch");   //carico il merch
-            document.getElementById("moreMerch").href = "/artist-merch?username=" + data.artist.username;
+                $('#addAlbum').show();
+                $('#addProduct').show();
+                $('#addEvent').show();
+
+            }else{ //utente semplice
+                //insert albums,merch,events
+                populate("albums",data.albums,"/artist-selected-album?ismn=",false);   //carico gli albums
+                document.getElementById("moreAlbums").href = "/artist-albums?username=" + data.artist.username;
+                populate("events",data.events,"/artist-selected-event?id=",false);   //carico gli eventi
+                document.getElementById("moreEvents").href = "/artist-events?username=" + data.artist.username;
+                populate("merch",data.merch,"/artist-selected-merch?id=",false);   //carico il merch
+                document.getElementById("moreMerch").href = "/artist-merch?username=" + data.artist.username;
+            }
         }else{
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";
