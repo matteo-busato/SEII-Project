@@ -18,7 +18,7 @@ artist = findGetParameter("username");
 function sendNewProduct() {
     url = "/api/v1/artists/" + artist + "/merch";
     var product = {
-        token: window.localStorage.getItem('token'),
+        token: window.sessionStorage.getItem('token'),
         title: $("#title").val(),
         id: $("#id").val(),
         description: $("#description").val(),

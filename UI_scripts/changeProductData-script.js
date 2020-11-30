@@ -31,7 +31,7 @@ function getProductData(artist, id) {
 
 function sendChange() {
     var product = {
-        token: window.localStorage.getItem('token'),
+        token: window.sessionStorage.getItem('token'),
         title: $("#newTitle").val(),
         description: $("#newDescription").val(),
         qty: $("#newQty").val(),

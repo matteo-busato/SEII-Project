@@ -2,7 +2,7 @@ var artist;
 var id;
 var url;
 
-var token = window.localStorage.getItem('token');
+var token = window.sessionStorage.getItem('token');
 
 function findGetParameter(parameterName) {  //return the query
     var result = null,
