@@ -1,8 +1,3 @@
-/*
-const artistList = [{name: "the doors"},
-                    {name: "anderson paak"},
-                    {name: "tyler"}];
-*/
 const mongoose = require('mongoose');
 const Product = require("../models/product.js");
 const User = require("../models/user.js");

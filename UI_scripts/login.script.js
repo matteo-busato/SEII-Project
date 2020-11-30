@@ -10,10 +10,14 @@ var submit = function(){
         var res = this.response;
         console.log(res);
         if(res.status == 201){  //login successfully
-            //here you need to go to the mainpage site
-            //window.location.replace('/mainpage');
             if(res.token){
                 window.sessionStorage.setItem('token', res.token);
+            }
+            if(res.userType){
+                window.sessionStorage.setItem('userType', res.userType);
+            }
+            if(res.username){
+                window.sessionStorage.setItem('username', res.username);
             }
         }else if(res.status == 404){    //wrong email
             document.getElementById("emailErrorMessage").innerText = "wrong email";

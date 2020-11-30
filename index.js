@@ -38,8 +38,6 @@ mongoose.connect('mongodb://localhost:27017/SEII', {
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
-}).then(() => {
-    console.log('connected to db'); 
 });
 
 /*
@@ -240,6 +238,7 @@ app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
 //############# manageMerch part ################
 app.use('/api/v1/artists/:name/merch', tokenChecker);
 app.use('/api/v1/artists/:name/merch/:id', tokenChecker);
+
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
@@ -259,5 +258,4 @@ app.use((err, req, res, next) => {
 
 
 //####################################################################
-
 module.exports = app
