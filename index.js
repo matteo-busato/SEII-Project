@@ -1,6 +1,10 @@
 var express = require('express');
 var bodyparser = require('body-parser');
 const bcrypt = require ('bcrypt');
+<<<<<<< HEAD
+=======
+var bodyparser = require('body-parser');
+>>>>>>> sicurezzaAlbum
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -10,6 +14,10 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> sicurezzaAlbum
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
@@ -21,7 +29,7 @@ const login = require('./api/login.js');
 const userStory4 = require('./api/userStory4.js');
 const registration = require('./api/register.js');
 const events = require('./api/events.js');
-const insertMusic = require('./api/insertMusic.js');
+const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
 
 const tokenChecker = require('./api/tokenChecker.js');
@@ -32,6 +40,15 @@ router.get('/test', function (req, res) {
 });
 
 //####################### connection to database ###############################
+// local db for testing
+/*
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+*/
 
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
@@ -43,6 +60,7 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 }).then(() => {
     console.log('connected to db');    
 });
+
 
 //connection to database
 const db = mongoose.connection;
@@ -87,6 +105,8 @@ app.get('/register', (req, res) => {
         if(err) throw(err);
     });
 });
+
+
 
 //####################################### SET static pages USERSTORY#4 #################
 
@@ -220,6 +240,7 @@ app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
 //############# login and registration api ################
 app.post('/api/v1/users', registration.postRegister);
 router.post('/api/v1/users/auth', login.auth);
+const tokenChecker = require('./api/tokenChecker.js');
 
 //###### manage events api ###########
 app.post('/api/v1/artists/:name/events', events.addEvent);
@@ -227,10 +248,14 @@ app.delete('/api/v1/artists/:name/events/:id', events.removeEvent);
 app.put('/api/v1/artists/:name/events/:id', events.changeEvent);
 
 //###### manage albums api ###########
-app.post('/api/v1/artists/:name/albums', insertMusic.addNewAlbum);
-app.delete('/api/v1/artists/:name/albums/:ismn', insertMusic.deleteAlbum);
-app.put('/api/v1/artists/:name/albums/:ismn', insertMusic.changeAlbumData);
-app.get('/api/v1/artists/:name/albums/:ismn', insertMusic.getAlbum);
+
+app.use('/api/v1/artists/:name/albums', tokenChecker);
+app.use('/api/v1/artists/:name/albums/:ismn', tokenChecker);
+
+app.post('/api/v1/artists/:name/albums', manageAlbum.addNewAlbum);
+app.delete('/api/v1/artists/:name/albums/:ismn', manageAlbum.deleteAlbum);
+app.put('/api/v1/artists/:name/albums/:ismn', manageAlbum.changeAlbumData);
+app.get('/api/v1/artists/:name/albums/:ismn', manageAlbum.getAlbum);
 
 //############# manageMerch part ################
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);

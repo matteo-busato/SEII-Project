@@ -2,6 +2,8 @@ var artist;
 var ismn;
 var url;
 
+var token = window.localStorage.getItem('token');
+
 function findGetParameter(parameterName) {  //return the query
     var result = null,
         tmp = [];
@@ -16,10 +18,9 @@ function findGetParameter(parameterName) {  //return the query
 artist = findGetParameter("username");
 ismn = findGetParameter("ismn");
 
-getAlbumData(artist,ismn);
+getAlbumData(artist, ismn);
 
 function getAlbumData(artist, ismn) {
-    var album;
     url = "/api/v1/artists/" + artist + "/albums/" + ismn;
     fetch(url)
         .then(response => response.json())
@@ -37,6 +38,8 @@ function sendDelete() {
     if ($("#imSure").prop("checked") != false) {
         fetch(url, {
             method: "DELETE",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token:  token })
         })
             .then(response => response.json())
             .then(function (response) {

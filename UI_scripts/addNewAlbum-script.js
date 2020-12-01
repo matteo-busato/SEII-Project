@@ -17,6 +17,7 @@ artist = findGetParameter("username");
 function sendNewAlbum() {
     url = "/api/v1/artists/" + artist + "/albums";
     var album = {
+        token: window.localStorage.getItem('token'),
         ismn: $("#ismn").val(),
         title: $("#title").val(),
         year: $("#year").val(),

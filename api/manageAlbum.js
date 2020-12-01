@@ -13,22 +13,34 @@ const User = require("../models/user.js");
 const getYear = function(){
     return new Date().getFullYear();
 }
+
 /*
 let prova_user = new User({
-    email: "srv@me.com",
-    username: "srv",
-    password: "asd6asf8adf8ah7",
+    email: "ale@ale.com",
+    username: "ale",
+    password: "123",
     userType: "artist",
-    bio: "cool blues guitarist"
+    bio: "the bomber"
 });
 prova_user.save();
 */
+
 
 // ######### ADD NEW ALBUM ##########
 // function for adding album with post method
 // NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const addNewAlbum = async function (req, res) {
     console.log("new post album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
 
     let artist = req.params.name;
     let artistIn = await User.findOne({username: artist, userType: 'artist'}, (err) => {
@@ -40,6 +52,11 @@ const addNewAlbum = async function (req, res) {
     });
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
+        return;
+    }
+
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an album for this artist"});
         return;
     }
 
@@ -124,7 +141,36 @@ const addNewAlbum = async function (req, res) {
 // NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const deleteAlbum = async function (req, res) {
     console.log("new delete album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
+    
     let artist = req.params.name;
+
+    let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+    
+    if(!artistIn){
+        res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
+        return;
+    }
+
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
+        return;
+    }
+
     let ismn = parseInt(req.params.ismn);
 
     let albumIn = await Album.findOne({ismn: ismn, owner: artist}, (err) => {
@@ -159,7 +205,36 @@ const deleteAlbum = async function (req, res) {
 // NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const changeAlbumData = async function (req, res) {
     console.log("new put album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    
+    if(!req.loggedUser){
+        res.status(401).json({error: "Please authenticate first"});
+        return;
+    }
+
     let artist = req.params.name;
+
+    if(req.loggedUser.userType != 'artist'){
+        res.status(401).json({error: "You must be an artist to access this page"});
+        return;
+    }
+
+    let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
+        if(err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+
+    if(!artistIn){
+        res.status(404).json({ error: 'The artist ' + artist + ' does not exist' });
+        return;
+    }
+
+    if(req.loggedUser.username != artist){
+        res.status(401).json({error: "You can't add an event for this artist"});
+        return;
+    }
+
     let oldIsmn = req.params.ismn;
 
     // create updated album only with valid data
@@ -247,7 +322,7 @@ const changeAlbumData = async function (req, res) {
 
 
 // ######### GET ALBUM DATA ##########
-// function for getting album data with get method (copiata da Matteo Busato)
+// function for getting album data with get method
 const getAlbum = function (req, res) {
     console.log("new get album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artist = req.params.name;
