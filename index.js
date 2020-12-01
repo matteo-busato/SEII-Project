@@ -1,10 +1,6 @@
 var express = require('express');
 var bodyparser = require('body-parser');
 const bcrypt = require ('bcrypt');
-<<<<<<< HEAD
-=======
-var bodyparser = require('body-parser');
->>>>>>> sicurezzaAlbum
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -14,10 +10,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-<<<<<<< HEAD
-=======
-
->>>>>>> sicurezzaAlbum
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
