@@ -167,6 +167,13 @@ app.get('/artist-selected-merch', (req, res) => {
     });
 });
 
+app.get('/mainpage', (req, res) => {
+    res.sendFile('UI/mainPage.html', {root:'./'}, (err) => {
+    res.end();
+    if(err) throw(err);
+});
+});
+
 //############# Change / add / remove albums/events/merch UI ################
 //get instance of path, required to serve html pages (?)
 const path = require('path');
@@ -200,6 +207,8 @@ app.get('/deleteProduct', (req, res) => {
 });
 
 //####################################### SET API USERSTORY#4 #################
+
+app.get('/api/v1/artists/overview',userStory4.getOverview);
 
 app.get('/api/v1/artists',userStory4.getArtists);
 app.get('/api/v1/albums',userStory4.getAlbums);
