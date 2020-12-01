@@ -41,6 +41,7 @@ const auth = (req, res) => {
 
     User.findOne( { email : email }, function (err,user) {
         if(!err && user){   //we look at password matching
+
             bcrypt.compare( password, user.password, function (err, match) {
                 if(match) { //matched password
                     //implements jsonwebtoken
@@ -64,15 +65,16 @@ const auth = (req, res) => {
                 status = 500;
                 result.status = status;
                 result.error = err;
-                res.status(status).json(result);
+                res.status(status).send(result);
                 return;
-                }
-            });  
-        } else {      //email not matching
+            }
+        });
+
+        }else{      //email not matching
             status = 404;
             result.status = status;
             result.error = "wrong email";
-            res.status(status).json(result);
+            res.status(status).send(result);
             return;
         }
     });

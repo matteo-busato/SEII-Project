@@ -1,6 +1,5 @@
 var express = require('express');
 var bodyparser = require('body-parser');
-const bcrypt = require ('bcrypt');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -32,16 +31,6 @@ router.get('/test', function (req, res) {
 });
 
 //####################### connection to database ###############################
-// local db for testing
-/*
-mongoose.connect('mongodb://localhost:27017/SEII', {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
-*/
-
 //connect to db 
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
 {
@@ -180,7 +169,6 @@ app.get('/artist-selected-merch', (req, res) => {
 });
 
 //############# Change / add / remove albums/events/merch UI ################
-
 //get instance of path, required to serve html pages (?)
 const path = require('path');
 
@@ -232,7 +220,6 @@ app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
 //############# login and registration api ################
 app.post('/api/v1/users', registration.postRegister);
 router.post('/api/v1/users/auth', login.auth);
-const tokenChecker = require('./api/tokenChecker.js');
 
 //###### manage events api ###########
 app.post('/api/v1/artists/:name/events', events.addEvent);
@@ -250,6 +237,9 @@ app.put('/api/v1/artists/:name/albums/:ismn', manageAlbum.changeAlbumData);
 app.get('/api/v1/artists/:name/albums/:ismn', manageAlbum.getAlbum);
 
 //############# manageMerch part ################
+app.use('/api/v1/artists/:name/merch', tokenChecker);
+app.use('/api/v1/artists/:name/merch/:id', tokenChecker);
+
 app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
@@ -269,5 +259,4 @@ app.use((err, req, res, next) => {
 
 
 //####################################################################
-
 module.exports = app

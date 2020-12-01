@@ -13,17 +13,12 @@ var submit = function(){
             if(res.token){
                 window.sessionStorage.setItem('token', res.token);
             }
-
             if(res.userType){
                 window.sessionStorage.setItem('userType', res.userType);
             }
-            
             if(res.username){
                 window.sessionStorage.setItem('username', res.username);
             }
-
-            //here you need to go to the mainpage site
-            //window.location.replace('/mainpage');
         }else if(res.status == 404){    //wrong email
             document.getElementById("emailErrorMessage").innerText = "wrong email";
             document.getElementById("emailError").style = "display: block";
