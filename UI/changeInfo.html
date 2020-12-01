@@ -38,7 +38,7 @@
     <div class="container-lg border rounded px-5 py-4 m-3 bg-white">
         <div class="row">
             <div class="col">
-                <h2 class="text-center">Change Artist Data</h2>
+                <h2 class="text-center" id = "artist">Change Artist Data</h2>
                 <p class="text-center">With this powerful tool you can change your data</p>
             </div>
         </div>
@@ -47,17 +47,12 @@
                 <p>Insert here the new data.</p>
                 <form>
                     <div class="form-group">
-                        <label>Name</label for="newTitle">
+                        <label>Name</label for="newName">
                         <input type="text" name="newName" id="newName" class="form-control"
-                            placeholder="Insert new title...">
+                            placeholder="Insert new username...">
                     </div>
                     <div class="form-group">
-                        <label>Old Password</label for="newYear">
-                        <input type="password" name="oldPassword" id="oldPwd" class="form-control"
-                            placeholder="Insert old password...">
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label for="newYear">
+                        <label>New Password</label for="newPassword">
                         <input type="password" name="newPassword" id="newPwd" class="form-control"
                             placeholder="Insert new password...">
                     </div>
@@ -67,7 +62,7 @@
                             placeholder="Insert new bio...">
                     </div>
                     <div class="form-group">
-                        <label>Mail</label for="newEmail">
+                        <label>New Mail</label for="newEmail">
                         <input type="text" name="newEmail" id="newEmail" class="form-control"
                             placeholder="Insert new email...">
                     </div>
@@ -83,13 +78,14 @@
         function getURLparams() {
             var path = window.location.pathname.split("/");
             artistName = path[3];
+            var element = document.getElementById("artist");
+            element.innerHTML =  "Change artist info for " + artistName;
         }
 
         function sendChange() {
             url = "/api/v1/artists/" + artistName;
             var newArtist = {
                 newName: $("#newName").val(),
-                oldPassword: $("#oldPwd").val(),
                 newPassword: $("#newPwd").val(),
                 newBio: $("#newBio").val(),
                 newEmail: $("#newEmail").val()

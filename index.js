@@ -21,6 +21,20 @@ router.get('/test', function (req, res) {
 // register our router on /
 app.use('/', router);
 
+//################## connect to db #################
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("correctly connected to db");
+});
 
 //############# manageInfo part ################
 const path = require('path');
@@ -55,7 +69,6 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.json({ error: { message: err.message } });
 });
-
 
 //####################################################################
 
