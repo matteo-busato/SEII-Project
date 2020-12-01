@@ -19,6 +19,9 @@ var submit = function(){
             if(res.username){
                 window.sessionStorage.setItem('username', res.username);
             }
+            
+            window.location.assign("/mainpage");
+
         }else if(res.status == 404){    //wrong email
             document.getElementById("emailErrorMessage").innerText = "wrong email";
             document.getElementById("emailError").style = "display: block";

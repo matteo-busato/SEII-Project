@@ -1,3 +1,7 @@
+var username = window.sessionStorage.getItem("username");
+var userType = window.sessionStorage.getItem("userType");
+
+
 var getTrack = function(tracklist){     //return a string for the tracklist
     var tmp = "";
     for(var i=0; i<tracklist.length;i++){
@@ -25,6 +29,7 @@ xhttp.responseType = "json";
 xhttp.onreadystatechange = function () {    
     if (this.readyState == 4) {
         var data = this.response;
+        
 
         if(this.status == 200){
             document.getElementById("error").innerText = "";
@@ -33,6 +38,34 @@ xhttp.onreadystatechange = function () {
             document.getElementById("artista").innerText = data.owner;
             document.getElementById("dati").innerText = "Titolo: " + data.title + "\nIsmn:" + data.ismn +
                 "\nYear: " + data.year + "\nGenre: " + data.genre + "\nCost: " + data.cost + "\nTracklist: " + getTrack(data.tracklist);
+            
+            var buttons = document.getElementById("buttons");
+
+            if(userType == "artist" && data.owner == username){ //proprietario pagina
+                var button = document.createElement("button");
+                button.className="btn btn-primary ml-2 w-35";
+                button.onclick = function(){    //modify element button
+                    window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + query);
+                }
+                button.innerText = "modify";
+                buttons.appendChild(button);
+
+                var button1 = document.createElement("button");
+                button1.className="btn btn-primary ml-2 w-35";
+                button1.onclick = function(){    //modify element button
+                    window.location.assign("/deleteAlbum?username="+ username + "&ismn=" + query);
+                }
+                button1.innerText = "delete";
+                buttons.appendChild(button1);
+            }else{
+                var button = document.createElement("button");
+                button.className="btn btn-primary ml-2 w-35";
+                button.onclick = function(){    //modify element button
+                    //window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + query);
+                }
+                button.innerText = "add to cart";
+                buttons.appendChild(button);
+            }
         }else{
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";

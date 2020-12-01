@@ -42,7 +42,6 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
     console.log('connected to db');    
 });
 
-
 //connection to database
 const db = mongoose.connection;
 db.on('error', console.error.bind( console , 'connection error:' ) );

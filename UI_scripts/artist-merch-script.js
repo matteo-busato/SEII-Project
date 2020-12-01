@@ -74,7 +74,7 @@ xhttp.responseType = "json";
 xhttp.onreadystatechange = function () {
     if (this.readyState == 4) {
         var data = this.response;
-        console.log(data);
+        
 
         //insert basic info
         document.getElementById("artista").innerText = query;
