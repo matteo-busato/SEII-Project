@@ -146,7 +146,55 @@ paths:
                     type: string
                     enum:
                       - "something goes wrong, please retry."
-
+  
+  /overview:
+    get:
+      description: >-
+        Gets some information included in the website. Used to show some data in the mainpage.
+      summary: Gets some albums/events/merch
+      responses:
+        '200':
+          description: 'Collection of albums/events/merch'
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Database errors"
+                      
+  /overview/:name:
+    get:
+      description: >-
+        Gets some information included in the website. Used to show some data in the mainpage.
+      summary: Gets some albums/events/merch and followed artists by logged user
+      responses:
+        '200':
+          description: 'Collection of albums/events/merch and followed artists'
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Database errors"
+                      
   /artists:
     get:
       description: >-
