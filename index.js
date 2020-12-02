@@ -209,6 +209,7 @@ app.get('/deleteProduct', (req, res) => {
 //####################################### SET API USERSTORY#4 #################
 
 app.get('/api/v1/artists/overview',userStory4.getOverview);
+app.get('/api/v1/artists/overview/:name',userStory4.getOverview);
 
 app.get('/api/v1/artists',userStory4.getArtists);
 app.get('/api/v1/albums',userStory4.getAlbums);

@@ -139,8 +139,22 @@ const getArtist = async (req, res) => {
 //return the general overview of contents for the mainpage
 // URI : api/v1/artists/overview
 const getOverview = async (req, res) => {
+    var name = req.params.name;
     var message = {};
 
+    //check if the requested artist stays in db
+    let user = await User.findOne({ 'username': name }, (err) => {
+        if (err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+    if(user){
+        message.artists = user.followed;
+    }else{
+        message.artists = [];
+    }
+    
     let albumData = await Album.find({}, function (err, album) {
         if (err) {
             res.status(500).json({ message: "error getting albums." });
