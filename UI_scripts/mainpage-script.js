@@ -70,9 +70,9 @@ xhttp.onreadystatechange = function () {
     }
 }
 if(!username){
-    xhttp.open("get", "/api/v1/artists/overview", true);
+    xhttp.open("get", "/api/v1/overview", true);
 }else{
-    xhttp.open("get", "/api/v1/artists/overview/" + username, true);
+    xhttp.open("get", "/api/v1/overview/" + username, true);
 }
 
 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

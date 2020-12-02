@@ -137,7 +137,7 @@ const getArtist = async (req, res) => {
 
 
 //return the general overview of contents for the mainpage
-// URI : api/v1/artists/overview
+// URI : api/v1/overview ; api/v1/overview/:name
 const getOverview = async (req, res) => {
     var name = req.params.name;
     var message = {};
@@ -154,7 +154,7 @@ const getOverview = async (req, res) => {
     }else{
         message.artists = [];
     }
-    
+
     let albumData = await Album.find({}, function (err, album) {
         if (err) {
             res.status(500).json({ message: "error getting albums." });
