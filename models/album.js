@@ -35,7 +35,7 @@ const albumSchema = new mongoose.Schema({
         type: 'Number',
         required: true,
         unique: false
-    }
+    }    
 });
 
 module.exports = mongoose.model('Album', albumSchema);
