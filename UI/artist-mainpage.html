@@ -21,7 +21,7 @@
         <script type="text/javascript" src="../UI_scripts/artist-mainpage-script.js" ></script>        
     </head>
 
-    <body>
+    <body onload="checkfollow()">
         <nav class="navbar navbar-expand-sm sticky-top bg-dark navbar-dark">
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav">
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="my-auto" id="follow">
-                        <button id="btnFollow" onClick="follow()" class="btn btn-primary ml-auto">Follow</button>
+                        <button id="btnFollow" class="btn btn-primary ml-auto"></button>
                     </div>
                 </div>
                 <div class="alert alert-danger" id="error" style="display:none"></div>

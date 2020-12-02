@@ -4,6 +4,7 @@ var events = document.getElementById('events'); // Get the list where we will pl
 
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
+var token = window.sessionStorage.getItem("token");
 
 function findGetParameter(parameterName) {  //return the query
     var result = null,
@@ -139,17 +140,75 @@ var trova = function () {
     }
 }
 
+var checkfollow = function () {
+    if (token) {
+        var url = '/api/v1/artists/' + query + '/follow'
+        var myHeaders = new Headers();
+        myHeaders.append('x-access-token', token);
+        fetch(url, {
+            method: 'GET',
+            headers: myHeaders
+        })
+            .then(response => response.json())
+            .then(function (response) {
+                if (response.message) {
+                    if (response.message == 'follow') {
+                        var btn = document.getElementById('btnFollow');
+                        btn.textContent = 'Unfollow';
+                        btn.onclick = unfollow;
+                    } else if (response.message == 'not follow') {
+                        var btn = document.getElementById('btnFollow');
+                        btn.textContent = 'Follow';
+                        btn.onclick = follow;
+                    }
+                } else if (response.error) {
+                    alert('there was an error, follow functionality is not available at the moment');
+                    var btn = document.getElementById('btnFollow');
+                    btn.textContent = 'Follow';
+                    btn.onclick = checkfollow;
+                }
+            });
+    } else {
+        var btn = document.getElementById('btnFollow');
+        btn.textContent = 'Follow';
+        btn.onclick = follow;
+    }
+}
+
 var follow = function () {
     var url = '/api/v1/artists/' + query + '/follow'
     fetch(url, {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username })
+        body: JSON.stringify({ token: token })
     })
         .then(response => response.json())
         .then(function (response) {
             if (response.message) {
                 alert(response.message);
+                var btn = document.getElementById('btnFollow');
+                btn.textContent = 'Unfollow';
+                btn.onclick = unfollow;
+            } else if (response.error) {
+                alert(response.error);
+            }
+        });
+}
+
+var unfollow = function () {
+    var url = '/api/v1/artists/' + query + '/follow'
+    fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+    })
+        .then(response => response.json())
+        .then(function (response) {
+            if (response.message) {
+                alert(response.message);
+                var btn = document.getElementById('btnFollow');
+                btn.textContent = 'Follow';
+                btn.onclick = follow;
             } else if (response.error) {
                 alert(response.error);
             }

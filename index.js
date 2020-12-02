@@ -255,7 +255,10 @@ app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
 
 //############# follow artists part ################
-app.put('/api/v1/artists/:name/follow', follow.follow);
+app.use('/api/v1/artists/:name/follow', tokenChecker);
+app.get('/api/v1/artists/:name/follow', follow.checkfollow);
+app.post('/api/v1/artists/:name/follow', follow.follow);
+app.delete('/api/v1/artists/:name/follow', follow.unfollow);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
