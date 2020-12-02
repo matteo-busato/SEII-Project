@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const index = require('../index.js');
-const events = require('../lib/events.js');
+const events = require('../api/events.js');
 
 describe('test POST to /v1/api/artists/:name/events', () => {
 
