@@ -84,7 +84,7 @@ const addEvent = async (req, res) => {
 
     //checks
     if (isNaN(event.id) || event.id < 0) {
-        res.status(400).json({ error: 'The id field should be an integer greater than 0' });
+        res.status(400).json({ error: "The field 'id' must be an integer greater than 0" });
         return;
     }
 
@@ -99,7 +99,7 @@ const addEvent = async (req, res) => {
     });
 
     if (isIn) {
-        res.status(404).json({ error: 'There is already an event with id' + event.id });
+        res.status(409).json({ error: 'There is already an event with id' + event.id });
         return;
     }
 
@@ -192,14 +192,14 @@ const removeEvent = async (req, res) => {
     }
 
     if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an event for this artist"});
+        res.status(401).json({error: "You can't delete an event for this artist"});
         return;
     }
 
     let id = parseInt(req.params.id);
 
     if (isNaN(id) || id < 0) {
-        res.status(400).json({ error: 'The id field should be an integer greater than 0' });
+        res.status(400).json({ error: "The field 'id' must be an integer greater than 0" });
         return;
     }
 
@@ -258,7 +258,7 @@ const changeEvent = async (req, res) => {
     }
 
     if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an event for this artist"});
+        res.status(401).json({error: "You can't modify an event for this artist"});
         return;
     }
 

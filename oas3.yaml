@@ -976,6 +976,8 @@ paths:
                   error:
                     type: string
                     enum:
+                      - "The field 'id' must be an integer greater than 0"
+                      - "The id is not valid"
                       - "The field 'title' must be a non-empty string"
                       - "The field 'date' must be a non-empty string"
                       - "The field 'date' must be in the form dd/mm/yyyy hh:mm"
@@ -983,6 +985,19 @@ paths:
                       - "The field 'place' must be a non-empty string"
                       - "The field 'description' must be a non-empty string"
                       - "The field 'cost' must be a decimal number greater than zero"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't add an event for this artist"
         '404':
           description: 'Artist not found'
           content:
@@ -993,9 +1008,9 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "The artist :artist does not exist"
+                      - "The artist :artist does not exists"
         '409':
-          description: 'Duplicated date'
+          description: 'Duplicated item'
           content:
             application/json:
               schema:
@@ -1005,6 +1020,7 @@ paths:
                     type: string
                     enum:
                       - "In this date there is already an event, please remove it first"
+                      - "There is already an event with id :id"
         '500':
           description: 'Internal server error'
           content:
@@ -1420,8 +1436,21 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "The id field should be a non-empty string"
+                      - "The field 'id' must be an integer greater than 0"
                       - "The id is not valid"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't delete an event for this artist"
         '404':
           description: 'Not found error'
           content:
@@ -1489,7 +1518,7 @@ paths:
                   error:
                     type: string
                     enum:
-                      - "The id field should be a non-empty string"
+                      - "The field 'id' must be an integer greater than 0"
                       - "The id is not valid"
                       - "The field 'title' must be a non-empty string"
                       - "The field 'date' must be a non-empty string"
@@ -1498,7 +1527,19 @@ paths:
                       - "The field 'place' must be a non-empty string"
                       - "The field 'description' must be a non-empty string"
                       - "The field 'cost' must be a decimal number greater than zero"
-
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't modify an event for this artist"              
         '404':
           description: 'Not found error'
           content:
@@ -1511,6 +1552,17 @@ paths:
                     enum:
                       - "The artist :artist does not exist"
                       - "There is no event with id :id created by :artist"
+        '409':
+          description: 'Duplicated item'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "In this date there is already an event, please remove it first"
         '500':
           description: "Internal server error"
           content:
