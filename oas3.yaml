@@ -759,7 +759,7 @@ paths:
                     enum:
                      - 'The album has been correctly inserted in the db with ISMN = :ismn' 
         '400':
-          description: Error on posting the album
+          description: Error on posting the album (data not valid in request)
           content:
             application/json:
               schema:
@@ -767,6 +767,31 @@ paths:
                 properties:
                   error:
                     type: string
+        '401':
+          description: Unauthorized request to post album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - Please login first
+                      - Please authenticate first
+                      - You must be an artist to access this page
+                      - You can't add an album for another artist
+        '403':
+          description: Token not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: 
+                    type: string
+                    enum:
+                      - Failed to authenticate token
         '404':
           description: Artist not found
           content:
@@ -1164,6 +1189,31 @@ paths:
                     type: string
                     enum:
                       - The album has been correctly deleted from the db
+        '401':
+          description: Unauthorized request to post album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - Please login first
+                      - Please authenticate first
+                      - You must be an artist to access this page
+                      - You can't delete an album for another artist
+        '403':
+          description: Token not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: 
+                    type: string
+                    enum:
+                      - Failed to authenticate token
         '404':
           description: Album not found
           content:
@@ -1220,6 +1270,31 @@ paths:
                 properties:
                   message:
                     type: string
+        '401':
+          description: Unauthorized request to post album
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - Please login first
+                      - Please authenticate first
+                      - You must be an artist to access this page
+                      - You can't change the album data for another artist
+        '403':
+          description: Token not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: 
+                    type: string
+                    enum:
+                      - Failed to authenticate token
         '404':
           description: Album doesn't exit
           content:

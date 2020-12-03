@@ -56,7 +56,7 @@ const addNewAlbum = async function (req, res) {
     }
 
     if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an album for this artist"});
+        res.status(401).json({error: "You can't add an album for another artist"});
         return;
     }
 
@@ -167,7 +167,7 @@ const deleteAlbum = async function (req, res) {
     }
 
     if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an event for this artist"});
+        res.status(401).json({error: "You can't delete an album for another artist"});
         return;
     }
 
@@ -231,7 +231,7 @@ const changeAlbumData = async function (req, res) {
     }
 
     if(req.loggedUser.username != artist){
-        res.status(401).json({error: "You can't add an event for this artist"});
+        res.status(401).json({error: "You can't change the album data for another artist"});
         return;
     }
 
