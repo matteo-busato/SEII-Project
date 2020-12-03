@@ -250,11 +250,11 @@ paths:
   /merch:
     get:
       description: >-
-        Gets the list of merch.
+        Gets the list of products.
       summary: View all merch
       responses:
         '200':
-          description: 'Collection of merch'
+          description: 'Collection of product'
           content:
             application/json:
               schema:
@@ -570,8 +570,8 @@ paths:
   /merch/:id:
     get:
       description: >-
-        Gets the merch specified.
-      summary: View a merch
+        Gets the protuct specified.
+      summary: View a product
       parameters:
         - in: path
           name: id
@@ -580,7 +580,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 'get all the information about a merch selected by id'
+          description: 'get all the information about a product selected by id'
           content:
             application/json:
               schema:
@@ -795,7 +795,7 @@ paths:
   /artists/:name/merch:
     get:
       description: >-
-        Gets the list of merch of an artist :name.
+        Gets the merch of an artist :name.
       summary: View all merch of an artist
       parameters:
         - in: path
@@ -805,7 +805,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Collection of merch of an artist'
+          description: 'Collection of protucts of an artist'
           content:
             application/json:
               schema:
@@ -864,8 +864,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Merch'
       responses:
-        '200':
-          description: Product posted with success
+        '201':
+          description: 'Product inserted successfully'
           content:
             application/json:
               schema:
@@ -873,8 +873,10 @@ paths:
                 properties:
                   message:
                     type: string
+                    enum:
+                      - "The event has been correctly inserted in the db with id :id"
         '400':
-          description: "Error on posting the product"
+          description: 'Request Error'
           content:
             application/json:
               schema:
@@ -882,6 +884,48 @@ paths:
                 properties:
                   error:
                     type: string
+                    enum:
+                      - "The product's title must be a non-empty string"
+                      - "The product's id must be a non-empty string"
+                      - "The product's description must be a non-empty string"
+                      - "The product's quantity must be >= 0"
+                      - "The product's cost must be >= 0"
+                      - "There is already exists product with id: Id created by: artist"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't add an product for this artist"
+        '404':
+          description: 'Artist not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist: name does not match with the product owner"
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - "server error on the db, please retry"
 
   /artists/:name/events:
     get:
@@ -1202,8 +1246,8 @@ paths:
   /artists/:name/merch/:id:
     get:
       description: >-
-        Gets a merch by its :id of an artist :name.
-      summary: View :id merch of artist :name
+        Gets a product by its :id of an artist :name.
+      summary: View :id product of artist :name
       parameters:
         - in: path
           name: name
@@ -1217,7 +1261,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 'merch :ismn of the artist :name'
+          description: 'product :id of the artist :name'
           content:
             application/json:
               schema:
@@ -1277,7 +1321,7 @@ paths:
           description: the product's id
       responses:
         '200':
-          description: Product deleted with success
+          description: 'Product deleted with success'
           content:
             application/json:
               schema:
@@ -1285,6 +1329,8 @@ paths:
                 properties:
                   message:
                     type: string
+                    enum:
+                    - "The product has been correctly deleted from the db"
         '400':
           description: Error on deleting the product
           content:
@@ -1294,6 +1340,44 @@ paths:
                 properties:
                   error:
                     type: string
+                    enum:
+                    - "The id is not valid"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't delete an product for this artist"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "There is no product with id: Id created by: artist's name"
+                      - "The artist: name the name does not match with the product owner"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - "Server error on the db, please retry"
     put:
       description: >-
         Allows to change an product's data in the artist's merch
@@ -1310,7 +1394,7 @@ paths:
           required: true
           schema:
             type: string
-          description: the product id
+          description: the product's id
       requestBody:
         description: the product's data to be changed
         content:
@@ -1318,8 +1402,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Merch'
       responses:
-        '200':
-          description: Product's data changed with success
+        '201':
+          description: 'Product updated successfully'
           content:
             application/json:
               schema:
@@ -1327,8 +1411,10 @@ paths:
                 properties:
                   message:
                     type: string
+                    enum:
+                      - "Product updated successfully"
         '400':
-          description: Error on changing the product's data
+          description: 'Request error'
           content:
             application/json:
               schema:
@@ -1336,6 +1422,50 @@ paths:
                 properties:
                   error:
                     type: string
+                    enum:
+                      - "The id is not valid"
+                      - "The field 'title' must be a non-empty string"
+                      - "The field 'description' must be a non-empty string"
+                      - "The field 'quantity' must be a integer number greater than zero"
+                      - "The field 'cost' must be a decimal number greater than zero"
+                      - "The field 'cost' must be a decimal number greater than zero"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+                      - "You must be an artist to access this page"
+                      - "You can't change an product for this artist"              
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist: name does not match with the product owner"
+                      - "There is no product with id: Id created by: artist's name"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Server error on the db, please retry"
+                      - "Error updating the db"
 
   /artists/:name/events/:id:
     get:
@@ -1702,26 +1832,26 @@ components:
       properties:
         title:
           type: string
-          description: 'Title of the merch'
+          description: 'Title of the product'
         ID:
           type: string
-          description: 'ID of the merch'
+          description: 'ID of the product'
         description:
           type: string
-          description: 'info of the merch'
+          description: 'info of the product'
         qty:
           type: number
-          description: 'number of available objects'
+          description: 'number of available products'
         cost:
           type: number
-          description: 'cost of the merch'
+          description: 'cost of the product'
         owner:
           type: string
-          description: 'owner of the merch'
+          description: 'owner of the product'
       example:
-        title: "Sign album"
+        title: "T-Shirt"
         ID: "432452"
-        description: "new Autechre's album"
+        description: "new Autechre's T-Shirt"
         qty: 500
         cost: 10.0
         owner: "Autechre"
