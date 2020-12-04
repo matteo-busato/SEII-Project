@@ -35,13 +35,13 @@ describe('GET /api/v1/artists/', () => {
 
     it('GET /api/v1/artists/:name/albums/:ismn with a negative ismn should return an error', function(done){
       request(index)
-      .get('/api/v1/artists/Meshuggah/albums/-10')
+      .get('/api/v1/artists/ale/albums/-10')
       .expect(404, { error: 'The album -10 does not exist' }, done);
     });
     
     it('GET /api/v1/artists/:name/albums/:ismn with a float ismn should use the integer part of the ismn', function(done){
       request(index)
-      .get('/api/v1/artists/Meshuggah/albums/10.12')
+      .get('/api/v1/artists/ale/albums/10.12')
       .expect(404,{ error: 'The album 10 does not exist' }, done);
     });
 
