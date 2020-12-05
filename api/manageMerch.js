@@ -218,8 +218,8 @@ const changeProductData = async (req, res) => {
     let newProduct = {
         title: req.body.title,
         description: req.body.description,
-        qty: parseInt(req.body.qty),
-        cost: parseFloat(req.body.cost)
+        qty: req.body.qty,
+        cost: req.body.cost
     }
 
     if (newProduct.title != undefined && (!newProduct.title || typeof newProduct.title != 'string')) {

@@ -31,12 +31,21 @@ function getProductData(artist, id) {
 
 function sendChange() {
     var product = {
-        token: window.sessionStorage.getItem('token'),
-        title: $("#newTitle").val(),
-        description: $("#newDescription").val(),
-        qty: $("#newQty").val(),
-        cost: $("#newCost").val()
-    };
+        token: window.sessionStorage.getItem('token')
+    }
+
+    if($("#newTitle").val())
+        product.title = $("#newTitle").val();
+    
+    if($("#newDescription").val())
+        product.description = $("#newDescription").val();    
+    
+    if($("#newQty").val())
+        product.qty = $("#newQty").val();    
+    
+    if($("#newCost").val())
+        product.cost = $("#newCost").val();   
+
     fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
