@@ -3,6 +3,23 @@ var func = function(types){     //function used to implement a method to add to 
     console.log("" + types);
 }
 
+var username = window.sessionStorage.getItem("username");
+var userType = window.sessionStorage.getItem("userType");
+
+$(document).ready( function(){
+    if(username && userType){
+        $("#authButton").on('click', function (){
+                window.sessionStorage.clear();
+                window.location.assign('/mainpage');
+        });
+        $("#authButton").text("Logout");
+    } else {
+        $("#authButton").text("Login");
+        $("#authButton").attr("href", "/login");
+    }
+});
+
+
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
         var div = document.createElement("div");
