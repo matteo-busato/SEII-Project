@@ -17,9 +17,10 @@ router.get('/test', function (req, res) {
     res.json({ message: 'API is working correctly!' });
 });
 
-//################## SET ROUTER #################
-// register our router on /
+//################## SET ROUTER ###########
 app.use('/', router);
+// app.use(express.static('UI'));
+// app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //################## connect to db #################
 
@@ -35,6 +36,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log("correctly connected to db");
 });
+
 
 //############# manageInfo part ################
 const path = require('path');
