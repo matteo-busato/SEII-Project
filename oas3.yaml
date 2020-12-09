@@ -1541,6 +1541,207 @@ paths:
                     enum:
                       - "Server error on the db, please retry"
                       - "Error updating the db"
+  
+  /artists/:name/follow:
+    get:
+      description: >-
+        Checks if user follows the specified artist
+      summary: Checks if user follows the specified artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Check completed with success'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "follow"
+                      - "not follow"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "this artist does not exist"
+                      - "this user does not exist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on finding the artist in the db, please retry"
+                      - "server error on finding the user in the db, please retry"
+                      - "server error on checking if already following, please retry"
+    post:
+      description: >-
+        Allows a user to follow an artist
+      summary: Allows a user to follow an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Follow completed with success'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "you now follow :name"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "you already follow this artist"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "this artist does not exist"
+                      - "this user does not exist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on finding the artist in the db, please retry"
+                      - "server error on finding the user in the db, please retry"
+                      - "server error on checking if already following, please retry"
+                      - "server error on following this artist, please retry"
+    delete:
+      description: >-
+        Allows a user to unfollow an artist
+      summary: Allows a user to unfollow an artist
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Unfollow completed with success'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - "you no longer follow :name"
+        '400':
+          description: 'Request error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "you already don't follow this artist"
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please authenticate first"
+        '404':
+          description: 'Not found error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "this artist does not exist"
+                      - "this user does not exist"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on finding the artist in the db, please retry"
+                      - "server error on finding the user in the db, please retry"
+                      - "server error on checking if already following, please retry"
+                      - "server error on unfollowing this artist, please retry"
 
   /artists/:name/events/:id:
     get:
