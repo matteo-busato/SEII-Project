@@ -33,7 +33,7 @@ router.get('/test', function (req, res) {
 
 //####################### connection to database ###############################
 //connect to db 
-/*
+
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
 {
     useNewUrlParser: true, 
@@ -47,14 +47,15 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 //connection to database
 const db = mongoose.connection;
 db.on('error', console.error.bind( console , 'connection error:' ) );
-*/
 
+/*
 mongoose.connect('mongodb://localhost:27017/SEII', {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
 });
+*/
 
 //user model for database
 const User = require('./models/user.js');
