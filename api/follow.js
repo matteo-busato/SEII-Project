@@ -62,6 +62,11 @@ const follow = async function (req, res) {
     var user = req.loggedUser.username;
     var artist = req.params.name;
 
+    if(user == artist){
+        res.status(400).json({ error: 'An artist cannot follow himself' });
+        return;
+    }
+
     var artistIn = await User.findOne({ username: artist, userType: 'artist'}, (err) => {
         if(err){
             console.error(err);
