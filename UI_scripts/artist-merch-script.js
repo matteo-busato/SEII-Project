@@ -1,7 +1,6 @@
-var albums = document.getElementById('albums'); // Get the list where we will place albums
-
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
+var token = window.sessionStorage.getItem("token");
 
 function findGetParameter(parameterName) { //return the query
     var result = null,
@@ -56,9 +55,9 @@ var populate = function(classname,what,aHref,owner){
             button2.innerText = "delete";
             div.appendChild(button2);
 
-        }else{
+        }else if(username){
             button.onclick = function(){
-                func(onclick);
+                addToCart("merch",what[i].id);
             }
             button.innerText = "add to cart";
         }        
@@ -118,4 +117,21 @@ var trova = function(){
     }else{      //searching for event
         window.location.assign("/artist-selected-event?id="+ query);
     }
+}
+
+var addToCart = function (type, ismn) {
+    var url = '/api/v1/cart/type/' + type + '/id/' + ismn;    
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+    })
+        .then(response => response.json())
+        .then(function (response) {
+            if (response.message) {
+                alert(response.message);
+            } else if (response.error) {
+                alert(response.error);
+            }
+        });
 }

@@ -1,5 +1,6 @@
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
+var token = window.sessionStorage.getItem("token");
 
 function findGetParameter(parameterName) { //return the query
     var result = null,
@@ -47,11 +48,11 @@ xhttp.onreadystatechange = function () {
                 }
                 button1.innerText = "delete";
                 buttons.appendChild(button1);
-            } else {
+            } else if(username) {
                 var button = document.createElement("button");
                 button.className = "btn btn-primary ml-2 w-35";
                 button.onclick = function () {    //modify element button
-                    //window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + query);
+                    addToCart("merch",data.id);
                 }
                 button.innerText = "add to cart";
                 buttons.appendChild(button);
@@ -84,4 +85,21 @@ var trova = function () {
     } else {      //searching for event
         window.location.assign("/artist-selected-event?id=" + query);
     }
+}
+
+var addToCart = function(type,ismn){
+    var url = '/api/v1/cart/type/' + type + '/id/' + ismn;    
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+    })
+        .then(response => response.json())
+        .then(function (response) {
+            if (response.message) {
+                alert(response.message);                
+            } else if (response.error) {
+                alert(response.error);
+            }
+        });
 }

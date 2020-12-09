@@ -23,6 +23,7 @@ const events = require('./api/events.js');
 const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
 const follow = require('./api/follow.js');
+const cart = require('./api/addToCart.js');
 
 const tokenChecker = require('./api/tokenChecker.js');
 
@@ -270,6 +271,12 @@ app.use('/api/v1/artists/:name/follow', tokenChecker);
 app.get('/api/v1/artists/:name/follow', follow.checkfollow);
 app.post('/api/v1/artists/:name/follow', follow.follow);
 app.delete('/api/v1/artists/:name/follow', follow.unfollow);
+
+//############# cart manager part ########################
+
+app.use('/api/v1/cart/type/:type/id/:id',tokenChecker);
+app.post('/api/v1/cart/type/:type/id/:id',cart.addToCart);
+app.delete('/api/v1/cart/type/:type/id/:id',cart.deleteFromCart);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
