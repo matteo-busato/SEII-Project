@@ -22,6 +22,7 @@ const registration = require('./api/register.js');
 const events = require('./api/events.js');
 const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
+const follow = require('./api/follow.js');
 
 const tokenChecker = require('./api/tokenChecker.js');
 
@@ -32,6 +33,7 @@ router.get('/test', function (req, res) {
 
 //####################### connection to database ###############################
 //connect to db 
+/*
 mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
 {
     useNewUrlParser: true, 
@@ -45,6 +47,14 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 //connection to database
 const db = mongoose.connection;
 db.on('error', console.error.bind( console , 'connection error:' ) );
+*/
+
+mongoose.connect('mongodb://localhost:27017/SEII', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
 
 //user model for database
 const User = require('./models/user.js');
@@ -253,6 +263,12 @@ app.post('/api/v1/artists/:name/merch', manageMerch.addNewProduct);
 app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
+
+//############# follow artists part ################
+app.use('/api/v1/artists/:name/follow', tokenChecker);
+app.get('/api/v1/artists/:name/follow', follow.checkfollow);
+app.post('/api/v1/artists/:name/follow', follow.follow);
+app.delete('/api/v1/artists/:name/follow', follow.unfollow);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
