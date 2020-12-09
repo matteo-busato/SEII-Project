@@ -5,7 +5,7 @@ const events = require('../api/events.js');
 
 describe('test POST authorization to /api/v1/artists/:name/events', () => {
     
-    test('post event without token', () => {
+    test('post event without token', (done) => {
         return request(index)
         .post('/api/v1/artists/ale/events')
         .set('Content-Type', 'application/json')
@@ -17,7 +17,7 @@ describe('test POST authorization to /api/v1/artists/:name/events', () => {
             description: 'test event just for testing',
             cost: '25.50'
         })
-        .expect(401, { error: 'Please login first' });
+        .expect(401, { error: 'Please login first' }, done);
     });
 
     test('post event with valid token to another artist', () => {
@@ -25,6 +25,7 @@ describe('test POST authorization to /api/v1/artists/:name/events', () => {
         .post('/api/v1/artists/bob/events')
         .set('Content-Type', 'application/json')
         .send({
+            // needs new token every time
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZSIsInVzZXJUeXBlIjoiYXJ0aXN0IiwiaWQiOiI1ZmI2OWI5NjlhZmU1YjI1ODA4N2Q4Y2YiLCJpYXQiOjE2MDY5ODc5NTAsImV4cCI6MTYwNzA3NDM1MCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwLyJ9.RZ80IsvW-9AH4W1nNeR28AtvDtvJubeuvG41s7S_a5Q",
             id: '7000',
             title: 'test concert',
@@ -55,6 +56,7 @@ describe('test DELETE authorization to /api/v1/artists/:name/events/:id', () => 
         .delete('/api/v1/artists/ale/events/1')
         .set('Content-Type', 'application/json')
         .send({
+            // new new token every time
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyVHlwZSI6InVzZXIiLCJpZCI6IjVmYzhiZjJhNTQ0MDI1M2QwMGIwMzAwNCIsImlhdCI6MTYwNjk5MTY3NiwiZXhwIjoxNjA3MDc4MDc2LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvIn0.r9ZHP5pQ6ej9vtE0-IK99gy7v-jNSslqyGDF-Ml_Zo8"
         })
         .expect(401, { error: "You must be an artist to access this page" });
@@ -79,6 +81,7 @@ describe('test PUT authorization to /api/v1/artists/:name/events/:id', () => {
         .put('/api/v1/artists/ale/events/1')
         .set('Content-type', 'application/json')
         .send({
+            // needs new token every time
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZSIsInVzZXJUeXBlIjoiYXJ0aXN0IiwiaWQiOiI1ZmI2OWI5NjlhZmU1YjI1ODA4N2Q4Y2YiLCJpYXQiOjE2MDY5ODc5NTAsImV4cCI6MTYwNzA3NDM1MCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwLyJ9.RZ80IsvW-9AH4W1nNeR28AtvDtvJubeuvG41s7S_a5Q",
             description: 'changing description for testing'
         })
