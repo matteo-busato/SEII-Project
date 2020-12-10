@@ -25,7 +25,7 @@ app.use("/UI_scripts", express.static('./UI_scripts/'));
 //################## connect to db #################
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/SEII', {
+mongoose.connect('mongodb://localhost/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -37,20 +37,19 @@ db.once('open', function () {
     console.log("correctly connected to db");
 });
 
-
 //############# manageInfo part ################
 const path = require('path');
 const manageInfo = require('./lib/manageInfo.js');
 
-app.get('/v1/artists/:name/addInfo', (req, res) => {
+app.get('addInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addInfo.html'));
 });
 
-app.get('/v1/artists/:name/deleteInfo', (req, res) => {
+app.get('deleteInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteInfo.html'));
 });
 
-app.get('/v1/artists/:name/changeInfo', (req, res) => {
+app.get('changeInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/changeInfo.html'));
 });
 
