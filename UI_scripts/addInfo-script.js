@@ -4,11 +4,11 @@ var artistName;
         function getURLparams() {
             var path = window.location.pathname.split("/");
             artistName = path[3];
-            var element = document.getElementById("artist");
-            element.innerHTML =  "Artist info for " + artistName;
+            console.log(artistName);
         }
 
         function sendNewInfo() {
+            getURLparams();
             url = "/api/v1/artists/" + artistName;
             var artist = {
                 name: '',

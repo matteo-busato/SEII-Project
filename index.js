@@ -19,8 +19,8 @@ router.get('/test', function (req, res) {
 
 //################## SET ROUTER ###########
 app.use('/', router);
-// app.use(express.static('UI'));
-// app.use("/UI_scripts", express.static('./UI_scripts/'));
+app.use(express.static('UI'));
+app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //################## connect to db #################
 

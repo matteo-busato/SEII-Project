@@ -3,11 +3,10 @@ var artistName;
         function getURLparams() {
             var path = window.location.pathname.split("/");
             artistName = path[3];
-            var element = document.getElementById("artist");
-            element.innerHTML =  "Change artist info for " + artistName;
         }
 
         function sendChange() {
+            getURLparams();
             url = "/api/v1/artists/" + artistName;
             var newArtist = {
                 newName: $("#newName").val(),

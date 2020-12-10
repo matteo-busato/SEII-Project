@@ -4,11 +4,10 @@ var artistName;
         function getURLparams() {
             var path = window.location.pathname.split("/");
             artistName= path[3];
-            var element = document.getElementById("artist");
-            element.innerHTML =  "Delete Artist info for " + artistName;
         }
 
         function sendDelete() {
+            getURLparams();
             url = "/api/v1/artists/" + artistName;
             if ($("#imSure").prop("checked") != false) {
                 fetch(url, {
