@@ -3,6 +3,9 @@ var func = function(types){     //function used to implement a method to add to 
     console.log("" + types);
 }
 
+var username = window.sessionStorage.getItem("username");
+var userType = window.sessionStorage.getItem("userType");
+
 var populate = function(classname,what,aHref,onclick){
     for(let i=0;i<what.length;i++){
         var div = document.createElement("div");
