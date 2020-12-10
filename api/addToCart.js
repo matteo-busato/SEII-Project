@@ -2,7 +2,6 @@ const User = require('../models/user');
 const Album = require("../models/album.js");
 const Event = require("../models/event.js");
 const Merch = require("../models/product.js");
-const album = require('../models/album.js');
 
 /*
 *   Add to cart a product.
@@ -10,6 +9,7 @@ const album = require('../models/album.js');
 */
 const addToCart = async (req, res) => {
 
+    //if the user is not logged
     if (!req.loggedUser) {
         res.status(401).json({ error: "Please authenticate first" });
         return;
@@ -31,6 +31,7 @@ const addToCart = async (req, res) => {
 
     if (type == "album") {    //the product is an album
 
+        //check if the album exists and get it's informations
         let album = await Album.findOne({ ismn: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -51,6 +52,7 @@ const addToCart = async (req, res) => {
             cost: album.cost
         };
 
+        //push the album to the cart
         User.findOneAndUpdate({ username: user }, { $push: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);
@@ -65,6 +67,7 @@ const addToCart = async (req, res) => {
 
     } else if (type == "event") {  //the product is an event
 
+        //check if the event exists and get it's informations
         let event = await Event.findOne({ id: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -87,6 +90,7 @@ const addToCart = async (req, res) => {
             cost: event.cost
         };
 
+        //push the event to the cart
         User.findOneAndUpdate({ username: user }, { $push: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);
@@ -103,6 +107,7 @@ const addToCart = async (req, res) => {
 
     } else {      //the product is a merch
 
+        //check if the product exists and get it's informations
         let product = await Merch.findOne({ id: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -125,6 +130,7 @@ const addToCart = async (req, res) => {
             cost: product.cost
         };
 
+        //push the product to the cart
         User.findOneAndUpdate({ username: user }, { $push: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);
@@ -143,6 +149,8 @@ const addToCart = async (req, res) => {
 *   DELETE /Cart/type/:type/id/:id
 */
 const deleteFromCart = async (req, res) => {
+    
+    //if the user is not logged
     if (!req.loggedUser) {
         res.status(401).json({ error: "Please authenticate first" });
         return;
@@ -163,6 +171,7 @@ const deleteFromCart = async (req, res) => {
 
     if (type == "album") {    //the product is an album
 
+        //check if the album exists and get it's informations
         let album = await Album.findOne({ ismn: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -182,7 +191,8 @@ const deleteFromCart = async (req, res) => {
             title: album.title,
             cost: album.cost
         };
-
+        
+        //pull the album from the cart
         User.findOneAndUpdate({ username: user }, { $pull: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);
@@ -197,6 +207,7 @@ const deleteFromCart = async (req, res) => {
 
     } else if (type == "event") {  //the product is an event
 
+        //check if the event exists and get it's informations
         let event = await Event.findOne({ id: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -219,6 +230,7 @@ const deleteFromCart = async (req, res) => {
             cost: event.cost
         };
 
+        //pull the event from the cart
         User.findOneAndUpdate({ username: user }, { $pull: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);
@@ -232,6 +244,7 @@ const deleteFromCart = async (req, res) => {
 
     } else {      //the product is a merch
 
+        //check if the product exists and get it's informations
         let product = await Merch.findOne({ id: parseInt(id) }, function (err) {
             if (err) {
                 console.error(err);
@@ -254,6 +267,7 @@ const deleteFromCart = async (req, res) => {
             cost: product.cost
         };
 
+        //pull the product from the cart
         User.findOneAndUpdate({ username: user }, { $pull: { cart: toCart } }, (err) => {
             if (err) {
                 console.error(err);

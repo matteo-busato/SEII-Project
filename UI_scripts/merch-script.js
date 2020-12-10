@@ -1,7 +1,9 @@
+//get username / userType and token from the sessionStorage
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
 var token = window.sessionStorage.getItem("token");
 
+//populate the html page with data coming from the database
 var populate = function (classname, what, aHref, onclick) {
     for (let i = 0; i < what.length; i++) {
         var div = document.createElement("div");
@@ -14,7 +16,7 @@ var populate = function (classname, what, aHref, onclick) {
             a.href = aHref + what[i].id;
         a.innerText = what[i].title;
         div.appendChild(a);
-        if (username) {
+        if (username) { //if I'm a logged user, implement the addToCart button
             var button = document.createElement("button");
             button.className = "btn btn-primary ml-auto w-35";
             button.onclick = function () {
@@ -28,6 +30,7 @@ var populate = function (classname, what, aHref, onclick) {
     }
 }
 
+//calls to the server to retrieves data from the database
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
@@ -35,12 +38,11 @@ xhttp.onreadystatechange = function () {
     if (this.readyState == 4) {
         var data = this.response;
 
-        if (this.status == 200) {
+        if (this.status == 200) {   //The API calls returns OK state
             document.getElementById("error").innerText = "";
-            document.getElementById("error").style = "display: none";
-            //insert albums
-            populate("merch", data, "/artist-selected-merch?id=", "merch");   //carico gli albums
-        } else {
+            document.getElementById("error").style = "display: none";            
+            populate("merch", data, "/artist-selected-merch?id=", "merch");   //insert merch
+        } else {    //displays the errors on the html page
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";
         }
@@ -53,7 +55,7 @@ xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, 
 xhttp.send();
 
 
-var trova = function () {
+var trova = function () {   //function for the searchbar, used to recall APIs to search artists / albums / products and events
     var type = $('#searchType').val();
     var query = $('#query').val();
     console.log(type);
@@ -70,7 +72,7 @@ var trova = function () {
     }
 }
 
-var addToCart = function (type, ismn) {
+var addToCart = function (type, ismn) { //calls to the API that permits to include an element to the cart list
     var url = '/api/v1/cart/type/' + type + '/id/' + ismn;    
     fetch(url, {
         method: 'POST',

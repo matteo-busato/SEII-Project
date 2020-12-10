@@ -25,6 +25,7 @@ const manageMerch = require('./api/manageMerch.js');
 const follow = require('./api/follow.js');
 const cart = require('./api/addToCart.js');
 
+//api used to check the token for authorization
 const tokenChecker = require('./api/tokenChecker.js');
 
 // test route to make sure everything is working
@@ -35,28 +36,19 @@ router.get('/test', function (req, res) {
 //####################### connection to database ###############################
 //connect to db 
 
-mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
-{
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-}).then(() => {
-    console.log('connected to db');    
-});
+mongoose.connect('mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority',
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    }).then(() => {
+        console.log('connected to db');
+    });
 
 //connection to database
 const db = mongoose.connection;
-db.on('error', console.error.bind( console , 'connection error:' ) );
-
-/*
-mongoose.connect('mongodb://localhost:27017/SEII', {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
-*/
+db.on('error', console.error.bind(console, 'connection error:'));
 
 //user model for database
 const User = require('./models/user.js');
@@ -77,113 +69,111 @@ app.post('/api/v1/artists/:name/events', tokenChecker);
 app.put('/api/v1/artists/:name/events', tokenChecker);
 app.delete('/api/v1/artists/:name/events', tokenChecker);
 
-app.post('/api/v1/artists/:name/events/:id', tokenChecker); 
+app.post('/api/v1/artists/:name/events/:id', tokenChecker);
 app.put('/api/v1/artists/:name/events/:id', tokenChecker);
 app.delete('/api/v1/artists/:name/events/:id', tokenChecker);
 
 //route the login UI
 app.get('/login', (req, res) => {
-        res.sendFile('UI/login.html', {root:'./'}, (err) => {
+    res.sendFile('UI/login.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 //route the registration UI
-app.get('/register', (req, res) => {    
-    res.sendFile('UI/register.html', {root:'./'}, (err) => {
+app.get('/register', (req, res) => {
+    res.sendFile('UI/register.html', { root: './' }, (err) => {
         res.end();
         console.log(err);
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
-
-
 
 //####################################### SET static pages USERSTORY#4 #################
 
 app.get('/artists', (req, res) => {
-        res.sendFile('UI/artists.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artists.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/albums', (req, res) => {
-        res.sendFile('UI/albums.html', {root:'./'}, (err) => {
+    res.sendFile('UI/albums.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/merch', (req, res) => {
-        res.sendFile('UI/merch.html', {root:'./'}, (err) => {
+    res.sendFile('UI/merch.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/events', (req, res) => {
-        res.sendFile('UI/events.html', {root:'./'}, (err) => {
+    res.sendFile('UI/events.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-mainpage', (req, res) => {
-        res.sendFile('UI/artist-mainpage.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-mainpage.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-albums', (req, res) => {
-        res.sendFile('UI/artist-albums.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-albums.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-events', (req, res) => {
-        res.sendFile('UI/artist-events.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-events.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-merch', (req, res) => {
-        res.sendFile('UI/artist-merch.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-merch.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-selected-album', (req, res) => {
-        res.sendFile('UI/artist-selected-album.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-selected-album.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-selected-event', (req, res) => {
-        res.sendFile('UI/artist-selected-event.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-selected-event.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/artist-selected-merch', (req, res) => {
-        res.sendFile('UI/artist-selected-merch.html', {root:'./'}, (err) => {
+    res.sendFile('UI/artist-selected-merch.html', { root: './' }, (err) => {
         res.end();
-        if(err) throw(err);
+        if (err) throw (err);
     });
 });
 
 app.get('/mainpage', (req, res) => {
-    res.sendFile('UI/mainPage.html', {root:'./'}, (err) => {
-    res.end();
-    if(err) throw(err);
-});
+    res.sendFile('UI/mainPage.html', { root: './' }, (err) => {
+        res.end();
+        if (err) throw (err);
+    });
 });
 
 //############# Change / add / remove albums/events/merch UI ################
@@ -220,23 +210,23 @@ app.get('/deleteProduct', (req, res) => {
 
 //####################################### SET API USERSTORY#4 #################
 
-app.get('/api/v1/overview',userStory4.getOverview);
-app.get('/api/v1/overview/:name',userStory4.getOverview);
+app.get('/api/v1/overview', userStory4.getOverview);
+app.get('/api/v1/overview/:name', userStory4.getOverview);
 
-app.get('/api/v1/artists',userStory4.getArtists);
-app.get('/api/v1/albums',userStory4.getAlbums);
-app.get('/api/v1/merch',userStory4.getMerchs);
-app.get('/api/v1/events',userStory4.getEvents);
-app.get('/api/v1/artists/:name',userStory4.getArtist);
-app.get('/api/v1/albums/:ismn',userStory4.getAlbum);
-app.get('/api/v1/merch/:id',userStory4.getMerch);
-app.get('/api/v1/events/:id',userStory4.getEvent);
-app.get('/api/v1/artists/:name/albums',userStory4.getArtistAlbums);
-app.get('/api/v1/artists/:name/merch',userStory4.getArtistMerch);
-app.get('/api/v1/artists/:name/events',userStory4.getArtistEvents);
-app.get('/api/v1/artists/:name/albums/:ismn',userStory4.getArtistAlbumIsmn);
-app.get('/api/v1/artists/:name/merch/:id',userStory4.getArtistMerchId);
-app.get('/api/v1/artists/:name/events/:id',userStory4.getArtistEventId);
+app.get('/api/v1/artists', userStory4.getArtists);
+app.get('/api/v1/albums', userStory4.getAlbums);
+app.get('/api/v1/merch', userStory4.getMerchs);
+app.get('/api/v1/events', userStory4.getEvents);
+app.get('/api/v1/artists/:name', userStory4.getArtist);
+app.get('/api/v1/albums/:ismn', userStory4.getAlbum);
+app.get('/api/v1/merch/:id', userStory4.getMerch);
+app.get('/api/v1/events/:id', userStory4.getEvent);
+app.get('/api/v1/artists/:name/albums', userStory4.getArtistAlbums);
+app.get('/api/v1/artists/:name/merch', userStory4.getArtistMerch);
+app.get('/api/v1/artists/:name/events', userStory4.getArtistEvents);
+app.get('/api/v1/artists/:name/albums/:ismn', userStory4.getArtistAlbumIsmn);
+app.get('/api/v1/artists/:name/merch/:id', userStory4.getArtistMerchId);
+app.get('/api/v1/artists/:name/events/:id', userStory4.getArtistEventId);
 
 //############# login and registration api ################
 app.post('/api/v1/users', registration.postRegister);
@@ -274,9 +264,9 @@ app.delete('/api/v1/artists/:name/follow', follow.unfollow);
 
 //############# cart manager part ########################
 
-app.use('/api/v1/cart/type/:type/id/:id',tokenChecker);
-app.post('/api/v1/cart/type/:type/id/:id',cart.addToCart);
-app.delete('/api/v1/cart/type/:type/id/:id',cart.deleteFromCart);
+app.use('/api/v1/cart/type/:type/id/:id', tokenChecker);
+app.post('/api/v1/cart/type/:type/id/:id', cart.addToCart);
+app.delete('/api/v1/cart/type/:type/id/:id', cart.deleteFromCart);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {

@@ -1,9 +1,6 @@
 
-var func = function(types){     //function used to implement a method to add to cart an object ( or modify in case of owner)
-    console.log("" + types);
-}
-
-var populate = function(classname,what,aHref,onclick){
+//populate the html page with data coming from the database
+var populate = function(classname,what,aHref){
     for(let i=0;i<what.length;i++){
         var div = document.createElement("div");
         div.className="d-flex list-group-item  align-items-center";
@@ -16,6 +13,7 @@ var populate = function(classname,what,aHref,onclick){
     }
 }
 
+//calls to the server to retrieves data from the database
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
@@ -23,12 +21,12 @@ xhttp.onreadystatechange = function () {
     if (this.readyState == 4 ) {
         var data = this.response;
 
-        if(this.status == 200){
+        if(this.status == 200){ //The API calls returns OK state
             document.getElementById("error").innerText = "";
             document.getElementById("error").style = "display: none";
             //insert albums
-            populate("artists",data,"/artist-mainpage?username=","album");   //carico gli albums
-        }else{
+            populate("artists",data,"/artist-mainpage?username=");   //carico gli artisti
+        }else{  //displays the errors on the html page
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";            
         }
@@ -41,7 +39,7 @@ xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, 
 xhttp.send();
 
 
-var trova = function(){
+var trova = function(){     //function for the searchbar, used to recall APIs to search artists / albums / products and events
     var type = $('#searchType').val();
     var query = $('#query').val();
     console.log(type);

@@ -1,3 +1,4 @@
+//get username / userType and token from the sessionStorage
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
 var token = window.sessionStorage.getItem("token");
@@ -15,6 +16,8 @@ function findGetParameter(parameterName) { //return the query
 
 var query = findGetParameter("id");
 
+
+//calls to the server to retrieves data from the database
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
@@ -22,7 +25,7 @@ xhttp.onreadystatechange = function () {
     if (this.readyState == 4) {
         var data = this.response;
 
-        if (this.status == 200) {
+        if (this.status == 200) { //The API calls returns OK state
             document.getElementById("error").innerText = "";
             document.getElementById("error").style = "display: none";
             //insert basic info
@@ -32,7 +35,7 @@ xhttp.onreadystatechange = function () {
 
             var buttons = document.getElementById("buttons");
 
-            if (userType == "artist" && data.owner == username) { //proprietario pagina
+            if (userType == "artist" && data.owner == username) { //event owner
                 var button = document.createElement("button");
                 button.className = "btn btn-primary ml-2 w-35";
                 button.onclick = function () {    //modify element button
@@ -43,22 +46,22 @@ xhttp.onreadystatechange = function () {
 
                 var button1 = document.createElement("button");
                 button1.className = "btn btn-primary ml-2 w-35";
-                button1.onclick = function () {    //modify element button
+                button1.onclick = function () {    //delete element button
                     window.location.assign("/deleteEvent?username=" + username + "&id=" + query);
                 }
                 button1.innerText = "delete";
                 buttons.appendChild(button1);
-            } else if(username){
+            } else if (username) {
                 var button = document.createElement("button");
                 button.className = "btn btn-primary ml-2 w-35";
-                button.onclick = function () {    //modify element button
-                    addToCart("event",data.id);
+                button.onclick = function () {    //addToCart element button
+                    addToCart("event", data.id);
                 }
                 button.innerText = "add to cart";
                 buttons.appendChild(button);
             }
 
-        } else {
+        } else {    //displays the errors on the html page
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";
         }
@@ -71,7 +74,7 @@ xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, 
 xhttp.send();
 
 
-var trova = function () {
+var trova = function () {   //function for the searchbar, used to recall APIs to search artists / albums / products and events
     var type = $('#searchType').val();
     var query = $('#query').val();
     console.log(type);
@@ -88,8 +91,8 @@ var trova = function () {
     }
 }
 
-var addToCart = function(type,ismn){
-    var url = '/api/v1/cart/type/' + type + '/id/' + ismn;    
+var addToCart = function (type, ismn) {    //calls to the API that permits to include an element to the cart list
+    var url = '/api/v1/cart/type/' + type + '/id/' + ismn;
     fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -98,7 +101,7 @@ var addToCart = function(type,ismn){
         .then(response => response.json())
         .then(function (response) {
             if (response.message) {
-                alert(response.message);                
+                alert(response.message);
             } else if (response.error) {
                 alert(response.error);
             }
