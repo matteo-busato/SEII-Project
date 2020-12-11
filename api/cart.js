@@ -5,7 +5,7 @@ const Merch = require("../models/product.js");
 
 /*
 *   Add to cart a product.
-*   POST /Cart/type/:type/id/:id
+*   POST api/v1/cart/type/:type/id/:id
 */
 const addToCart = async (req, res) => {
 
@@ -146,7 +146,7 @@ const addToCart = async (req, res) => {
 
 /*
 *   delete from cart a product.
-*   DELETE /Cart/type/:type/id/:id
+*   DELETE api/v1/cart/type/:type/id/:id
 */
 const deleteFromCart = async (req, res) => {
     
@@ -160,7 +160,7 @@ const deleteFromCart = async (req, res) => {
     let type = req.params.type;
     //identification number of product. It can be the ismn for the album, here i will call it as id.
     let id = req.params.id;
-    //user who want to add to cart the product
+    //user who want to remove from cart the product
     let user = req.loggedUser.username;
 
     // check if input id is valid
@@ -281,7 +281,38 @@ const deleteFromCart = async (req, res) => {
     }
 }
 
+/*
+*   get cart list.
+*   GET api/v1/cart/
+*/
+const getCartList = async (req, res) => {
+    //if the user is not logged
+    if (!req.loggedUser) {
+        res.status(401).json({ error: "Please authenticate first" });
+        return;
+    }
+
+    //user who want to add to cart the product
+    let user = req.loggedUser.username;
+
+    //check if the requested artist stays in db
+    let userDB = await User.findOne({ 'username': user }, (err) => {
+        if (err) {
+            res.status(500).json({ error: err });
+            return;
+        }
+    });
+
+    if (!userDB) {
+        res.status(404).json({ error: 'The user ' + user + ' does not exist' });
+        return;
+    }
+
+    res.status(200).json({message : userDB.cart});
+}
+
 module.exports = {
     addToCart,
-    deleteFromCart
+    deleteFromCart,
+    getCartList
 }

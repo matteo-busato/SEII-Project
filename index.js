@@ -23,7 +23,8 @@ const events = require('./api/events.js');
 const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
 const follow = require('./api/follow.js');
-const cart = require('./api/addToCart.js');
+const mainpage = require('./api/mainpage.js');
+const cart = require('./api/cart.js');
 
 //api used to check the token for authorization
 const tokenChecker = require('./api/tokenChecker.js');
@@ -169,13 +170,6 @@ app.get('/artist-selected-merch', (req, res) => {
     });
 });
 
-app.get('/mainpage', (req, res) => {
-    res.sendFile('UI/mainPage.html', { root: './' }, (err) => {
-        res.end();
-        if (err) throw (err);
-    });
-});
-
 //############# Change / add / remove albums/events/merch UI ################
 //get instance of path, required to serve html pages (?)
 const path = require('path');
@@ -208,10 +202,30 @@ app.get('/deleteProduct', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
 });
 
-//####################################### SET API USERSTORY#4 #################
+//############# Cart UI ################
 
-app.get('/api/v1/overview', userStory4.getOverview);
-app.get('/api/v1/overview/:name', userStory4.getOverview);
+app.get('/cart', (req, res) => {
+    res.sendFile('UI/cart.html', { root: './' }, (err) => {
+        res.end();
+        if (err) throw (err);
+    });
+});
+
+//############# mainpage UI ################
+
+app.get('/mainpage', (req, res) => {
+    res.sendFile('UI/mainPage.html', { root: './' }, (err) => {
+        res.end();
+        if (err) throw (err);
+    });
+});
+
+//############# mainPage APIs ################
+
+app.get('/api/v1/overview', mainpage.getOverview);
+app.get('/api/v1/overview/:name', mainpage.getOverview);
+
+//####################################### SET API USERSTORY#4 #################
 
 app.get('/api/v1/artists', userStory4.getArtists);
 app.get('/api/v1/albums', userStory4.getAlbums);
@@ -257,6 +271,7 @@ app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
 
 //############# follow artists part ################
+
 app.use('/api/v1/artists/:name/follow', tokenChecker);
 app.get('/api/v1/artists/:name/follow', follow.checkfollow);
 app.post('/api/v1/artists/:name/follow', follow.follow);
@@ -264,9 +279,11 @@ app.delete('/api/v1/artists/:name/follow', follow.unfollow);
 
 //############# cart manager part ########################
 
+app.use('/api/v1/cart', tokenChecker);
 app.use('/api/v1/cart/type/:type/id/:id', tokenChecker);
 app.post('/api/v1/cart/type/:type/id/:id', cart.addToCart);
 app.delete('/api/v1/cart/type/:type/id/:id', cart.deleteFromCart);
+app.get('/api/v1/cart', cart.getCartList);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
