@@ -141,6 +141,11 @@ const addToCart = async (req, res) => {
                 return;
             }
         });
+
+        if (!userDB) {
+            res.status(404).json({ error: 'The user ' + user + ' does not exist' });
+            return;
+        }
     }
 }
 
@@ -278,6 +283,11 @@ const deleteFromCart = async (req, res) => {
                 return;
             }
         });
+
+        if (!userDB) {
+            res.status(404).json({ error: 'The user ' + user + ' does not exist' });
+            return;
+        }
     }
 }
 
@@ -288,7 +298,7 @@ const deleteFromCart = async (req, res) => {
 const getCartList = async (req, res) => {
     //if the user is not logged
     if (!req.loggedUser) {
-        res.status(401).json({ error: "Please authenticate first" });
+        res.status(401).json({ error: "Please login first" });
         return;
     }
 

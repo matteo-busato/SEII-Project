@@ -8,8 +8,10 @@ var getCartList = function () {     //calls to the API that permits to remove an
     var url = '/api/v1/cart';
     fetch(url, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json',
-                   'x-access-token' : token }        
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        }
     })
         .then(response => response.json())
         .then(function (response) {
@@ -43,9 +45,15 @@ var populate = function (what) {
         else
             a.href = "/artist-selected-merch?id=" + what[i].id;
 
-        a.innerText = what[i].title + "                 " + what[i].cost;
+        a.innerText = what[i].title;
+
+        var span = document.createElement("span");
+        span.className = "list-group-item-action";
+        span.innerText = what[i].cost;
+
         total += what[i].cost;
         div.appendChild(a);
+        div.appendChild(span);
 
 
         var button = document.createElement("button");
@@ -58,6 +66,22 @@ var populate = function (what) {
 
         document.getElementById("cartList").appendChild(div);
     }
+
+    //setting the total cost and checkout button
+    var divtot = document.createElement("div");
+    divtot.className = "d-flex list-group-item  align-items-center";
+
+    var tot = document.createElement("span");
+    tot.className = "list-group-item-action";
+    tot.innerText = "Total : " + total;    
+
+    var checkOut = document.createElement("button");
+    checkOut.className = "btn btn-primary ml-auto w-35";
+    checkOut.innerText = "checkOut";    
+
+    divtot.appendChild(tot);
+    divtot.appendChild(checkOut);
+    document.getElementById("totale").appendChild(divtot);
 }
 
 var trova = function () {   //function for the searchbar, used to recall APIs to search artists / albums / products and events
@@ -88,6 +112,8 @@ var removeFromCart = function (type, id) {     //calls to the API that permits t
         .then(function (response) {
             if (response.message) {
                 document.getElementById("cartList").innerHTML = "";
+                document.getElementById("totale").innerHTML = "";
+                total = 0;
                 getCartList();
                 alert(response.message);
             } else if (response.error) {
