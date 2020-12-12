@@ -208,6 +208,7 @@ paths:
               schema:
                 type: array
                 items:
+<<<<<<< HEAD
                   $ref: '#/components/schemas/User'
         '500':
           description: 'Request Error'
@@ -300,6 +301,11 @@ paths:
                       - "error getting events"
 
   /artists/:name:
+=======
+                  $ref: '#/components/schemas/Artist'
+  
+  /artists/{artist-name}:
+>>>>>>> UserStory-13
     get:
       description: >-
         Gets the artist specified.
@@ -313,12 +319,13 @@ paths:
           description: the artist's name
       responses:
         '200':
-          description: 'information about an artist with 5 albums, 5 merch and 5 events'
+          description: 'information about an artist'
           content:
             application/json:
               schema:
                 type: object
                 items:
+<<<<<<< HEAD
                   $ref: '#/components/schemas/User'
         '400':
           description: 'Request Error'
@@ -1677,6 +1684,30 @@ paths:
       description: >-
         Allows a user to unfollow an artist
       summary: Allows a user to unfollow an artist
+=======
+                  $ref: '#/components/schemas/Artist'
+
+  /events:
+    get:
+      description: >-
+        Gets the list of events.
+      summary: View all events
+      responses:
+        '200':
+          description: 'Collection of events'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+                  
+  /artists/{artist-name}/events:
+    get:
+      description: >-
+        Gets the list of events of an {artist-name}.
+      summary: View all events of an artist
+>>>>>>> UserStory-13
       parameters:
         - in: path
           name: name
@@ -1689,6 +1720,7 @@ paths:
           content:
             application/json:
               schema:
+<<<<<<< HEAD
                 type: object
                 properties:
                   message:
@@ -1884,10 +1916,36 @@ paths:
         Update an event from the artist's event list, one or more fields can be omitted
       summary: 
         Update event
+=======
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /merch:
+    get:
+      description: >-
+        Gets the list of merch.
+      summary: View all merch
+      responses:
+        '200':
+          description: 'Collection of merch'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Merch'
+          
+  /artists/{artist-name}/merch:
+    get:
+      description: >-
+        Gets the list of merch of an {artist-name}.
+      summary: View all merch of an artist
+>>>>>>> UserStory-13
       parameters:
         - in: path
           name: name
           required: true
+<<<<<<< HEAD
           schema:
             type: string
           description: the artist's name
@@ -2181,6 +2239,34 @@ components:
   schemas:
   
     User:
+=======
+          type: string
+      responses:
+        '200':
+          description: 'Collection of merch of an artist'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Merch'
+                  
+components:
+  schemas:
+    Student:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: integer
+          description: 'ID of the user'
+        email:
+          type: string
+          description: 'Email address of the user'
+    Artist:
+>>>>>>> UserStory-13
       type: object
       required:
         - username
@@ -2205,6 +2291,7 @@ components:
           type: string
           description: 'user/artist/moderator'
       example:
+<<<<<<< HEAD
         username: "system of a down"
         email: "SOAD@ofAdown.com"
         bio: "gruppo statunitense metal"
@@ -2252,29 +2339,30 @@ components:
         cost: 10.0
         owner: "Autechre"
 
+=======
+        name: "system of a down"
+        email: "fuckthesystem@ofAdown.com"
+        bio: "gruppo USA/Armenia che fanno musica metal pazzerella"
+        
+>>>>>>> UserStory-13
     Event:
       type: object
       required:
         - title
-        - ID
         - date
         - place
-        - description
-        - cost
-        - owner
+        - artist
       properties:
         title:
           type: string
           description: 'Title of the event'
-        ID:
-          type: string
-          description: 'ID of the event'
         date:
           type: string
           description: 'date of the event'
         place:
           type: string
           description: 'place of the event'
+<<<<<<< HEAD
         description:
           type: string
           description: 'description of the event'
@@ -2292,15 +2380,24 @@ components:
         cost: 35.0
         owner: "Autechre"
 
+=======
+        artist:
+          type: string
+          description: 'owner of the event'
+      example:
+        title: ""
+        date: ""
+        place: ""
+        artist: ""
+        
+>>>>>>> UserStory-13
     Merch:
       type: object
       required:
         - title
-        - ID
-        - description
-        - qty
+        - info
         - cost
-        - owner
+        - artist
       properties:
         title:
           type: string

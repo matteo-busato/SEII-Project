@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
+
 // get an instance of the express Router
 var router = express.Router();
 
@@ -22,6 +23,7 @@ const registration = require('./api/register.js');
 const events = require('./api/events.js');
 const manageAlbum = require('./api/manageAlbum.js');
 const manageMerch = require('./api/manageMerch.js');
+const manageInfo = require('./api/manageInfo.js');
 const follow = require('./api/follow.js');
 
 const tokenChecker = require('./api/tokenChecker.js');
@@ -70,6 +72,22 @@ const Product = require('./models/product.js');
 app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
 app.use('/', router);
+app.use(express.static('UI'));
+app.use("/UI_scripts", express.static('./UI_scripts/'));
+
+//################## connect to db #################
+
+mongoose.connect('mongodb://localhost/test', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("correctly connected to db");
+});
 
 //check token for this pages
 app.post('/api/v1/artists/:name/events', tokenChecker);
@@ -217,6 +235,18 @@ app.get('/deleteProduct', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteProduct.html'));
 });
 
+app.get('/addInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/addInfo.html'));
+});
+
+app.get('/deleteInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/deleteInfo.html'));
+});
+
+app.get('/changeInfo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/UI/changeInfo.html'));
+});
+
 //####################################### SET API USERSTORY#4 #################
 
 app.get('/api/v1/overview',userStory4.getOverview);
@@ -270,6 +300,13 @@ app.use('/api/v1/artists/:name/follow', tokenChecker);
 app.get('/api/v1/artists/:name/follow', follow.checkfollow);
 app.post('/api/v1/artists/:name/follow', follow.follow);
 app.delete('/api/v1/artists/:name/follow', follow.unfollow);
+
+//############# manageInfo part ################
+
+app.get('/api/v1/artists/:name', manageInfo.getInfo);
+app.post('/api/v1/artists/:name', manageInfo.addInfo);
+app.put('/api/v1/artists/:name', manageInfo.changeInfo);
+app.delete('/api/v1/artists/:name', manageInfo.deleteInfo);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
