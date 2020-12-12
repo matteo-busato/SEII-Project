@@ -29,6 +29,11 @@ const userSchema = new Schema({
       type: 'String',
       required: false,
       unique: false
+  },
+  followed:{
+      type: [String],
+      required: false,
+      unique: false
   }
 },{ collection: 'users' } );
 

@@ -2,32 +2,6 @@
 const { json } = require('body-parser');
 const mongoose = require('mongoose');
 const User = require("../models/user.js");
-const Album = require("../models/album.js");
-const Event = require("../models/event.js");
-const Product = require("../models/product.js");
-
-// ADD PRODUCT IN THE DB
-// let prova_product = new Product({
-//         title: "Hat",
-//         id: "12",
-//         description: "asdadsa",
-//         qty: "122",
-//         cost: "12",
-//         owner: "Pantera"
-//     });
-// prova_product.save();
-
-// ADD ALBUM IN THE DB
-// let prova_album = new Album({
-//         ismn: "12",
-//         title: "CFH",
-//         owner: "Pantera",
-//         year: "1992",
-//         genre: "Trash",
-//         tracklist: "1",
-//         cost: "12"
-//     });
-// prova_album.save();
 
 // ADD USER IN THE DB
 // let prova_user = new User({
@@ -38,18 +12,6 @@ const Product = require("../models/product.js");
         // bio: ""
 //     });
 //     prova_user.save();
-
-// ADD EVENT IN THE DB
-// let prova_event = new Event({
-//         id: "12",
-//         title: "CFH Fest",
-//         date: "12/01/2020",
-//         place: "Cosenza",
-//         description: "Trash Fest",
-//         cost: "12",
-//         owner: "Pantera"
-//     });
-// prova_event.save();
 
 const getInfo  = (req, res) => {
     console.log("new get artist info request from " + req.protocol + '://' + req.get('host') + req.originalUrl);

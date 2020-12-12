@@ -45,7 +45,7 @@ db.once('open', function () {
 
 //############# manageInfo part ################
 const path = require('path');
-const manageInfo = require('./lib/manageInfo.js');
+const manageInfo = require('./api/manageInfo.js');
 
 app.get('/addInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addInfo.html'));
