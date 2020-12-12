@@ -310,6 +310,7 @@ paths:
           required: true
           schema:
             type: string
+          description: the artist's name
       responses:
         '200':
           description: 'information about an artist with 5 albums, 5 merch and 5 events'
@@ -1980,6 +1981,201 @@ paths:
                     type: string
                     enum:
                       - "Error updating the db"
+                      
+  /cart/:
+    get:
+      description: >-
+        Gets the list of album/event/merch in the cart.
+      summary: Gets the content of the logged user's cart.
+      responses:
+        '200':
+          description: 'Collection of albums/events/merch'
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please login first"
+        '403':
+          description: 'Unauthorization issues'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'Failed to authenticate token'
+        '404':
+          description: 'Not find'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'The user "user" does not exist'
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Database errors"
+  
+  /cart/type/:type/id/:id:
+    post:
+      description: >-
+        Insert an album/event/product in the user's cart
+      summary: Insert an element in the logged user's cart.
+      responses:
+        '200':
+          description: 'you added "type" element with id "id"'
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: 'data error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'error: the id must be a non-empty number' 
+                      - 'error: this id is not present in the db, please check the id'
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please login first"
+        '403':
+          description: 'Unauthorization issues'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'Failed to authenticate token'
+        '404':
+          description: 'Not find'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'The user "user" does not exist'
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'server error on adding to cart this product, please retry'
+                      - 'server error searching for the id in the db, please retry'
+    delete:
+      description: >-
+        Delete an album/event/product from the user's cart
+      summary: Delete an element from the logged user's cart.
+      responses:
+        '200':
+          description: 'you deleted "type" element with id "id"'
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: 'data error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'error: the id must be a non-empty number' 
+                      - 'error: this id is not present in the db, please check the id'
+        '401':
+          description: 'Unauthorized User'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "Please login first"
+        '403':
+          description: 'Unauthorization issues'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'Failed to authenticate token'
+        '404':
+          description: 'Not find'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'The user "user" does not exist'
+        '500':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - 'server error on deleting from cart this product, please retry'
+                      - 'server error searching for the id in the db, please retry'
                     
 components:
   schemas:
