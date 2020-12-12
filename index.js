@@ -1,9 +1,16 @@
-const { json } = require('body-parser');
 var express = require('express');
+var bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+
+dotenv.config();
 
 // instantiate express
 const app = express();
 app.use(express.json());
+
+
 
 // set our port
 var port = process.env.PORT || 8080;
@@ -24,7 +31,6 @@ app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //################## connect to db #################
 
-const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -41,15 +47,15 @@ db.once('open', function () {
 const path = require('path');
 const manageInfo = require('./lib/manageInfo.js');
 
-app.get('addInfo', (req, res) => {
+app.get('/addInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/addInfo.html'));
 });
 
-app.get('deleteInfo', (req, res) => {
+app.get('/deleteInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/deleteInfo.html'));
 });
 
-app.get('changeInfo', (req, res) => {
+app.get('/changeInfo', (req, res) => {
     res.sendFile(path.join(__dirname + '/UI/changeInfo.html'));
 });
 
