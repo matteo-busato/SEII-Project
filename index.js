@@ -47,9 +47,10 @@ mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@
 });
 
 //connection to database
+/*
 const db = mongoose.connection;
 db.on('error', console.error.bind( console , 'connection error:' ) );
-
+*/
 /*
 mongoose.connect('mongodb://localhost:27017/SEII', {
     useNewUrlParser: true, 
@@ -76,7 +77,7 @@ app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //################## connect to db #################
-
+/*
 mongoose.connect('mongodb://localhost/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -88,6 +89,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log("correctly connected to db");
 });
+*/
 
 //check token for this pages
 app.post('/api/v1/artists/:name/events', tokenChecker);
