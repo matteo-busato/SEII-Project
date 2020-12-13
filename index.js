@@ -77,17 +77,7 @@ app.use("/UI_scripts", express.static('./UI_scripts/'));
 
 //################## connect to db #################
 
-mongoose.connect('mongodb://localhost/test', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-    console.log("correctly connected to db");
-});
+
 
 //check token for this pages
 app.post('/api/v1/artists/:name/events', tokenChecker);

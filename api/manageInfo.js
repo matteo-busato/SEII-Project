@@ -32,6 +32,21 @@ const getInfo  = (req, res) => {
 const addInfo = async function(req, res) {
     console.log("new post artist info request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artistName = req.params.name;
+
+    // if(!req.loggedUser){
+    //     res.status(401).json({error: "Please authenticate first"});
+    //     return;
+    // }
+
+    // if(req.loggedUser.userType != 'artist'){
+    //     res.status(401).json({error: "You must be an artist to access this page"});
+    //     return;
+    // }
+
+    // if(req.loggedUser.username != reqName){
+    //     res.status(401).json({error: "You can't add an product for this artist"});
+    //     return;
+    // }
      // verify identity of artits
      let artistIn = await User.findOne({'username':artistName, 'userType':'artist'}, (err) => {
         if(err) {
