@@ -1,6 +1,9 @@
+// ########## MODULE FOR USER STORY #14 ############
+// lets artits add new products, change data of existing products, deleting products
 const mongoose = require('mongoose');
 const Product = require("../models/product.js");
 const User = require("../models/user.js");
+
 /*
 let test_user = new User({
     email: "ale@ale.com",
@@ -11,8 +14,9 @@ let test_user = new User({
 });
 test_user.save();
 */
-//################ add new product ####################
 
+//################ add new product ####################
+// function for adding product to merch with post method
 const addNewProduct =async (req, res) => {
     console.log("new post product request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let reqName = req.params.name;
@@ -47,12 +51,13 @@ const addNewProduct =async (req, res) => {
         return;
     }
 
-    //check if a product with this id already exists
+    
     if (isNaN(reqId)) {
         res.status(400).json({ error: 'error: the product\'s id must be a non-empty number' });
         return;
     }
 
+    //check if a product with this id already exists
     let isIn = await Product.findOne({ id: reqId, owner: reqName }, function (err) {
         if (err) {
             res.status(500).json({ error: 'server error on the db, please retry'});
@@ -66,7 +71,7 @@ const addNewProduct =async (req, res) => {
      return;
     }
 
-     // check if input product data is valid
+     
      let product = ({
         title: req.body.title,
         id: parseInt(req.body.id),
@@ -76,6 +81,7 @@ const addNewProduct =async (req, res) => {
         owner: reqName
     });
 
+    // check if input product data is valid
     if (!product.title || typeof product.title != 'string') {
         res.status(400).json({ error: 'error: the product\'s title must be a non-empty string' });
         return;
@@ -106,6 +112,7 @@ const addNewProduct =async (req, res) => {
 };
 
 //################ delete product ####################
+// function for deleting product from merch with delete method
 const deleteProduct = async (req, res) => {
     console.log("new delete product request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let reqName = req.params.name;
@@ -165,6 +172,7 @@ const deleteProduct = async (req, res) => {
 };
 
 //################ change the product data ####################
+// function for changing product's data with put method
 const changeProductData = async (req, res) => {
     console.log("new put product request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let reqName = req.params.name;
@@ -214,7 +222,7 @@ const changeProductData = async (req, res) => {
         return;
     }
 
-    // check if input product data is valid
+    
     let newProduct = {
         title: req.body.title,
         description: req.body.description,
@@ -222,6 +230,7 @@ const changeProductData = async (req, res) => {
         cost: req.body.cost
     }
 
+    // check if input product data is valid
     if (newProduct.title != undefined && (!newProduct.title || typeof newProduct.title != 'string')) {
         res.status(400).json({ error: "The field 'title' must be a non-empty string" });
         return;
@@ -248,7 +257,7 @@ const changeProductData = async (req, res) => {
         }
     }
 
-    //Data insertion
+    //data insertion
     if (newProduct.title) {
         await Product.updateOne({ id: reqId, owner: reqName }, { $set: { 'title': newProduct.title} }, (err) => {
             if (err) {
@@ -290,6 +299,7 @@ const changeProductData = async (req, res) => {
 };
 
 // ######### get product data ##########
+// function for getting product data with get method
 const getProduct = async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.params.id);
