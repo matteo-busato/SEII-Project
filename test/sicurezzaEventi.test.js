@@ -3,7 +3,7 @@ const request = require('supertest');
 const index = require('../index.js');
 const events = require('../api/events.js');
 
-describe('test POST authorization to /api/v1/artists/:name/events', () => {
+describe('test authorization of /api/v1/artists/:name/events', () => {
 
     beforeAll(async () => {
         jest.setTimeout(8000);
@@ -53,10 +53,6 @@ describe('test POST authorization to /api/v1/artists/:name/events', () => {
         .expect(401, { error: 'You can\'t add an event for this artist' }, done);
     });
 
-});
-
-describe('test DELETE authorization to /api/v1/artists/:name/events/:id', () => {
-
     test('delete event with invalid token', async function (done) {
         request(index)
         .delete('/api/v1/artists/ale/events/1')
@@ -77,10 +73,6 @@ describe('test DELETE authorization to /api/v1/artists/:name/events/:id', () => 
         })
         .expect(401, { error: "You must be an artist to access this page" }, done);
     });
-
-});
-
-describe('test PUT authorization to /api/v1/artists/:name/events/:id', () => {
 
     test('change event data without token', async function (done) {
         request(index)
