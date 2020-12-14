@@ -1,16 +1,18 @@
+//get username / userType and token from the sessionStorage
 var username = window.sessionStorage.getItem("username");
 var userType = window.sessionStorage.getItem("userType");
+var token = window.sessionStorage.getItem("token");
 
 
-var getTrack = function(tracklist){     //return a string for the tracklist
+var getTrack = function (tracklist) {     //return a string for the tracklist
     var tmp = "";
-    for(var i=0; i<tracklist.length;i++){
+    for (var i = 0; i < tracklist.length; i++) {
         tmp += i + ": " + tracklist[i] + " ; ";
     }
     return tmp;
 }
 
-function findGetParameter(parameterName) { //return the query
+function findGetParameter(parameterName) { //return the query parameterName
     var result = null,
         tmp = [];
     var items = location.search.substr(1).split("&");
@@ -23,50 +25,52 @@ function findGetParameter(parameterName) { //return the query
 
 var query = findGetParameter("ismn");
 
+//calls to the server to retrieves data from the database
 var xhttp = new XMLHttpRequest();
 xhttp.responseType = "json";
 
-xhttp.onreadystatechange = function () {    
+xhttp.onreadystatechange = function () {
     if (this.readyState == 4) {
         var data = this.response;
-        
 
-        if(this.status == 200){
+
+        if (this.status == 200) { //The API calls returns OK state
             document.getElementById("error").innerText = "";
             document.getElementById("error").style = "display: none";
             //insert basic info
             document.getElementById("artista").innerText = data.owner;
             document.getElementById("dati").innerText = "Titolo: " + data.title + "\nIsmn:" + data.ismn +
                 "\nYear: " + data.year + "\nGenre: " + data.genre + "\nCost: " + data.cost + "\nTracklist: " + getTrack(data.tracklist);
-            
+
             var buttons = document.getElementById("buttons");
 
-            if(userType == "artist" && data.owner == username){ //proprietario pagina
+            if (userType == "artist" && data.owner == username) { //owner of the album
                 var button = document.createElement("button");
-                button.className="btn btn-primary ml-2 w-35";
-                button.onclick = function(){    //modify element button
-                    window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + query);
+                button.className = "btn btn-primary ml-2 w-35";
+                button.onclick = function () {    //modify element button
+                    window.location.assign("/changeAlbumData?username=" + username + "&ismn=" + query);
                 }
                 button.innerText = "modify";
                 buttons.appendChild(button);
 
                 var button1 = document.createElement("button");
-                button1.className="btn btn-primary ml-2 w-35";
-                button1.onclick = function(){    //modify element button
-                    window.location.assign("/deleteAlbum?username="+ username + "&ismn=" + query);
+                button1.className = "btn btn-primary ml-2 w-35";
+                button1.onclick = function () {    //delete element button
+                    window.location.assign("/deleteAlbum?username=" + username + "&ismn=" + query);
                 }
                 button1.innerText = "delete";
                 buttons.appendChild(button1);
-            }else{
+
+            } else if (username) {    //I'm a logged user
                 var button = document.createElement("button");
-                button.className="btn btn-primary ml-2 w-35";
-                button.onclick = function(){    //modify element button
-                    //window.location.assign("/changeAlbumData?username="+ username + "&ismn=" + query);
+                button.className = "btn btn-primary ml-2 w-35";
+                button.onclick = function () {    //add to cart element button                    
+                    addToCart("album", data.ismn);
                 }
                 button.innerText = "add to cart";
                 buttons.appendChild(button);
             }
-        }else{
+        } else {  //displays the errors on the html page
             document.getElementById("error").innerText = data.error;
             document.getElementById("error").style = "display: block";
         }
@@ -78,19 +82,36 @@ xhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
 xhttp.setRequestHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
 xhttp.send();
 
-var trova = function(){
+var trova = function () { //function for the searchbar, used to recall APIs to search artists / albums / products and events
     var type = $('#searchType').val();
     var query = $('#query').val();
     console.log(type);
     console.log(query);
 
-    if(type == 1){  //searching for artist
-        window.location.assign("/artist-mainpage?username="+ query);
-    }else if(type == 2){    //searching for album
-        window.location.assign("/artist-selected-album?ismn="+ query);
-    }else if(type == 3){    //searching for product
-        window.location.assign("/artist-selected-merch?id="+ query);
-    }else{      //searching for event
-        window.location.assign("/artist-selected-event?id="+ query);
+    if (type == 1) {  //searching for artist
+        window.location.assign("/artist-mainpage?username=" + query);
+    } else if (type == 2) {    //searching for album
+        window.location.assign("/artist-selected-album?ismn=" + query);
+    } else if (type == 3) {    //searching for product
+        window.location.assign("/artist-selected-merch?id=" + query);
+    } else {      //searching for event
+        window.location.assign("/artist-selected-event?id=" + query);
     }
+}
+
+var addToCart = function (type, ismn) {    //calls to the API that permits to include an element to the cart list
+    var url = '/api/v1/cart/type/' + type + '/id/' + ismn;
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+    })
+        .then(response => response.json())
+        .then(function (response) {
+            if (response.message) {
+                alert(response.message);
+            } else if (response.error) {
+                alert(response.error);
+            }
+        });
 }

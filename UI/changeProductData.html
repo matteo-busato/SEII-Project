@@ -3,7 +3,11 @@
 
 <head>
     <title>EasyMusic - Change_Product_Data</title>
-    <style>       
+    <style>
+    body{
+                margin-top: 1px;
+                background: #c2cad0 !important;
+            }      
         .navbar-nav.navbar-center {
            position: absolute;
             left: 50%;
@@ -17,12 +21,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
-    <script src="../UI_scripts/changeProductData-script.js"></script>
-    <script src="../UI_scripts/logout.script.js"></script>
+        <script src="../UI_scripts/changeProductData-script.js"></script>
 </head>
 
-<body style="background-color: linear-gradient(135deg, #F0FF00 10%, #58CFFB 100%);">
+<body>
     <nav class="navbar navbar-expand-sm sticky-top bg-dark navbar-dark">
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav">
@@ -79,7 +81,7 @@
                     <a class="nav-link" href="">Cart</a>
                 </li>
                 <li class="nav-item">
-                    <a id="authButton" class="nav-link" href="#">Login</a>
+                    <a class="nav-link" href="/login">Login</a>
                 </li>
             </ul>
         </div>

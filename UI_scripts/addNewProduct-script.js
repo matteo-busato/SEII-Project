@@ -1,7 +1,7 @@
 var artist;
 var url;
 
-function findGetParameter(parameterName) {  //return the query
+function findGetParameter(parameterName) {  //return the query parameterName
     var result = null,
         tmp = [];
     var items = location.search.substr(1).split("&");
@@ -40,7 +40,7 @@ function sendNewProduct() {
         });
 }
 
-var trova = function () {
+var trova = function () {   //function for the searchbar, used to recall APIs to search artists / albums / products and events
     var type = $('#searchType').val();
     var query = $('#query').val();
     console.log(type);

@@ -4,7 +4,7 @@ dotenv.config();
 
 const tokenChecker = function (req, res, next) {
     //retrieve token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];    
 
     //if there is no token return an error
     if (!token) {
