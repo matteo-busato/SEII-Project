@@ -1,6 +1,6 @@
 var artistName;
 var url;
-
+        
         function findGetParameter(parameterName) {  //return the query
             var result = null,
                 tmp = [];
@@ -13,6 +13,14 @@ var url;
         }
         
         artistName = findGetParameter("username");
+       
+        function sendChange(){
+            window.location.assign("/changeInfo?username=" + artistName);
+        }
+
+        function sendDelete(){
+            window.location.assign("/deleteInfo?username=" + artistName);
+        }
 
         function sendNewInfo() {
             url = "/api/v1/artists/" + artistName;
