@@ -1,5 +1,6 @@
 var artistName;
 var url;
+var token = window.sessionStorage.getItem('token');
 
         function findGetParameter(parameterName) {  //return the query
             var result = null,
@@ -19,6 +20,8 @@ var url;
             if ($("#imSure").prop("checked") != false) {
                 fetch(url, {
                     method: "DELETE",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token:  token })
                 })
                     .then(response => response.json())
                     .then(function (response) {

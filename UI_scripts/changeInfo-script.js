@@ -17,6 +17,7 @@ var url;
         function sendChange() {
             url = "/api/v1/artists/" + artistName;
             var newArtist = {
+                token: window.sessionStorage.getItem('token'),
                 newName: $("#newName").val(),
                 newPassword: $("#newPwd").val(),
                 newBio: $("#newBio").val(),

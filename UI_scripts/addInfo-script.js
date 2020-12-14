@@ -25,6 +25,7 @@ var url;
         function sendNewInfo() {
             url = "/api/v1/artists/" + artistName;
             var artist = {
+                token: window.sessionStorage.getItem('token'),
                 name: '',
                 password: '',
                 bio: $("#bio").val(),
