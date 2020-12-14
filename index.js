@@ -240,6 +240,13 @@ app.get('/cart', (req, res) => {
 
 //############# mainpage UI ################
 
+app.get('/', (req, res) => {
+    res.sendFile('UI/mainPage.html', { root: './' }, (err) => {
+        res.end();
+        if (err) throw (err);
+    });
+});
+
 app.get('/mainpage', (req, res) => {
     res.sendFile('UI/mainPage.html', { root: './' }, (err) => {
         res.end();
