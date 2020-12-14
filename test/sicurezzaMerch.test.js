@@ -51,6 +51,21 @@ describe("test security on apis", () => {
         .expect(401, {error: "You can't add an product for this artist"}, done)
     });
 
+    it('POST /api/v1/artists/:name/merch with the token of a user that is not an artist should return an error', async function(done) {
+        request(index)
+        .post('/api/v1/artists/gino/merch')
+        .send({
+            token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdpbm8iLCJ1c2VyVHlwZSI6InVzZXIiLCJpZCI6IjVmYjY5ZjY4ZjNkMjAwMzVmMDEyMzEyMCIsImlhdCI6MTYwNzE3MjE4MywiZXhwIjoxNjA3MjU4NTgzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvIn0.XAFvZO0irTWeZpfpKcms_mCNJE-EDrJuwUODJHzqhSI",
+            title: 'Test product 1',
+            id: 12,
+            description: 'Test product',
+            qty: 10,
+            cost: 20.00,
+            owner: 'gino'
+        })
+        .expect(401, {error: "You must be an artist to access this page"}, done)
+    });
+
     it('DELETE /api/v1/artists/:name/merch/:id with an invalid token should return an error', async function(done) {
         request(index)
         .delete('/api/v1/artists/ale/merch/11')
