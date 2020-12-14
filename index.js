@@ -75,10 +75,6 @@ app.use('/', router);
 app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
 
-//################## connect to db #################
-
-
-
 //check token for this pages
 app.post('/api/v1/artists/:name/events', tokenChecker);
 app.put('/api/v1/artists/:name/events', tokenChecker);
@@ -285,18 +281,19 @@ app.delete('/api/v1/artists/:name/merch/:id', manageMerch.deleteProduct);
 app.put('/api/v1/artists/:name/merch/:id', manageMerch.changeProductData);
 app.get('/api/v1/artists/:name/merch/:id', manageMerch.getProduct);
 
-//############# follow artists part ################
-app.use('/api/v1/artists/:name/follow', tokenChecker);
-app.get('/api/v1/artists/:name/follow', follow.checkfollow);
-app.post('/api/v1/artists/:name/follow', follow.follow);
-app.delete('/api/v1/artists/:name/follow', follow.unfollow);
-
 //############# manageInfo part ################
+app.use('/api/v1/artists/:name', tokenChecker);
 
 app.get('/api/v1/artists/:name', manageInfo.getInfo);
 app.post('/api/v1/artists/:name', manageInfo.addInfo);
 app.put('/api/v1/artists/:name', manageInfo.changeInfo);
 app.delete('/api/v1/artists/:name', manageInfo.deleteInfo);
+
+//############# follow artists part ################
+app.use('/api/v1/artists/:name/follow', tokenChecker);
+app.get('/api/v1/artists/:name/follow', follow.checkfollow);
+app.post('/api/v1/artists/:name/follow', follow.follow);
+app.delete('/api/v1/artists/:name/follow', follow.unfollow);
 
 // handle invalid requests and internal error
 app.use((req, res, next) => {
