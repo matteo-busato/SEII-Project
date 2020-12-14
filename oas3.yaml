@@ -371,7 +371,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
       responses:
-        '200':
+        '201':
           description: Informations posted with success
           content:
             application/json:
@@ -398,6 +398,29 @@ paths:
                 properties:
                   error:
                     type: string
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on posting artist information"
+        
     delete:
       description: >-
         Allows to delete artist informations
@@ -434,7 +457,7 @@ paths:
             type: string
           description: the artist's email
       responses:
-        '200':
+        '201':
           description: Artist informations deleted with success
           content:
             application/json:
@@ -452,6 +475,28 @@ paths:
                 properties:
                   error:
                     type: string
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on deleting artist information"
     put:
       description: >-
         Allows to change artist informations
@@ -495,7 +540,7 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        '200':
+        '201':
           description: Artist's data changed with success
           content:
             application/json:
@@ -513,6 +558,28 @@ paths:
                 properties:
                   error:
                     type: string   
+        '404':
+          description: 'Request Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "The artist :name does not exists"
+        '500':
+          description: 'service Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - "server error on posting artist information"
                     
   /albums/:ismn:
     get:
