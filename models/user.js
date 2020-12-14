@@ -34,6 +34,11 @@ const userSchema = new Schema({
       type: [String],
       required: false,
       unique: false
+  },
+  cart:{
+    type: [Object],
+    required:false,
+    unique: false
   }
 },{ collection: 'users' } );
 
