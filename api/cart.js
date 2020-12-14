@@ -105,7 +105,7 @@ const addToCart = async (req, res) => {
 
 
 
-    } else {      //the product is a merch
+    } else if(type=="merch") {      //the product is a merch
 
         //check if the product exists and get it's informations
         let product = await Merch.findOne({ id: parseInt(id) }, function (err) {
@@ -141,11 +141,9 @@ const addToCart = async (req, res) => {
                 return;
             }
         });
-
-        if (!userDB) {
-            res.status(404).json({ error: 'The user ' + user + ' does not exist' });
-            return;
-        }
+        
+    }else{
+        res.status(400).json({ error: 'error: this type is not present in the db, please check the type' });
     }
 }
 
@@ -247,7 +245,7 @@ const deleteFromCart = async (req, res) => {
             }
         });
 
-    } else {      //the product is a merch
+    } else if(type == "merch"){      //the product is a merch
 
         //check if the product exists and get it's informations
         let product = await Merch.findOne({ id: parseInt(id) }, function (err) {
@@ -282,12 +280,9 @@ const deleteFromCart = async (req, res) => {
                 res.status(200).json({ message: 'you deleted ' + type + ' with id: ' + id });
                 return;
             }
-        });
-
-        if (!userDB) {
-            res.status(404).json({ error: 'The user ' + user + ' does not exist' });
-            return;
-        }
+        });        
+    }else{
+        res.status(400).json({ error: 'error: this type is not present in the db, please check the type' });
     }
 }
 
