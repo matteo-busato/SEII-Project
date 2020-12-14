@@ -95,10 +95,12 @@ xhttp.onreadystatechange = function () {
                 document.getElementById("addAlbum").href = "/addNewAlbum?username=" + data.artist.username;
                 document.getElementById("addProduct").href = "/addNewProduct?username=" + data.artist.username;
                 document.getElementById("addEvent").href = "/addNewEvent?username=" + data.artist.username;
+                document.getElementById("manageInfo").href = "/addInfo?username=" + data.artist.username;
 
                 $('#addAlbum').show();
                 $('#addProduct').show();
                 $('#addEvent').show();
+                $('#manageInfo').show();
 
             } else { //utente semplice
                 //insert albums,merch,events

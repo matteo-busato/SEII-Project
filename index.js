@@ -36,19 +36,20 @@ router.get('/test', function (req, res) {
 //####################### connection to database ###############################
 //connect to db 
 
-mongoose.connect('mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@cluster0.hyvpx.mongodb.net/SEII?retryWrites=true&w=majority',
 {
-    useNewUrlParser: true, 
+    useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
 }).then(() => {
-    console.log('connected to db');    
+    console.log('connected to db');
 });
 
 //connection to database
+/*
 const db = mongoose.connection;
-db.on('error', console.error.bind( console , 'connection error:' ) );
+db.on('error', console.error.bind(console, 'connection error:'));
 
 /*
 mongoose.connect('mongodb://localhost:27017/SEII', {
@@ -74,20 +75,6 @@ app.use("/UI_scripts", express.static('./UI_scripts/'));
 app.use('/', router);
 app.use(express.static('UI'));
 app.use("/UI_scripts", express.static('./UI_scripts/'));
-
-//################## connect to db #################
-
-mongoose.connect('mongodb://localhost/test', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-    console.log("correctly connected to db");
-});
 
 //check token for this pages
 app.post('/api/v1/artists/:name/events', tokenChecker);
