@@ -31,7 +31,7 @@ xhttp.onreadystatechange = function () {
             //insert basic info
             document.getElementById("artista").innerText = data.owner;
             document.getElementById("dati").innerText = "Titolo: " + data.title + "\nId: " + data.id +
-                "\nDate: " + data.data + "\nDescription: " + data.description + "\nCost: " + data.cost;
+                "\nDate: " + data.date + "\nDescription: " + data.description + "\nCost: " + data.cost;
 
             var buttons = document.getElementById("buttons");
 
