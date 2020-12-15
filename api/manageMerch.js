@@ -22,11 +22,13 @@ const addNewProduct =async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.body.id);
 
+    //check if the user is logged
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
     }
 
+    //check the user's identity
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
@@ -37,7 +39,7 @@ const addNewProduct =async (req, res) => {
         return;
     }
 
-    // verify identity of artits
+    // check if the artist exists in the db
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
         if(err) {
             console.error(err);
@@ -51,7 +53,6 @@ const addNewProduct =async (req, res) => {
         return;
     }
 
-    
     if (isNaN(reqId)) {
         res.status(400).json({ error: 'error: the product\'s id must be a non-empty number' });
         return;
@@ -71,7 +72,7 @@ const addNewProduct =async (req, res) => {
      return;
     }
 
-     
+     //input new product data
      let product = ({
         title: req.body.title,
         id: parseInt(req.body.id),
@@ -102,6 +103,7 @@ const addNewProduct =async (req, res) => {
         return;
     }
 
+    //create and insert the new product
     let newProduct = new Product(product);
     newProduct = await newProduct.save(function (err, result) {
         if (err)
@@ -118,11 +120,13 @@ const deleteProduct = async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.params.id);
 
+    // check if the user is logged
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
     }
 
+    //check the user's identity
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
@@ -133,7 +137,7 @@ const deleteProduct = async (req, res) => {
         return;
     }
 
-    // verify identity of artits
+    //check if the artist exists in the db
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
         if(err) {
             console.error(err);
@@ -162,6 +166,7 @@ const deleteProduct = async (req, res) => {
         return;
     }
 
+    //delete the product
     await Product.deleteOne({ owner: reqName, id: reqId }, (err) => {
         if (err)
             res.status(500).json({ error: err });
@@ -178,11 +183,13 @@ const changeProductData = async (req, res) => {
     let reqName = req.params.name;
     let reqId = parseInt(req.params.id);
 
+    // check if the user is logged
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
     }
 
+    //check the user's identity
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
@@ -193,7 +200,7 @@ const changeProductData = async (req, res) => {
         return;
     }
 
-    // verify identity of artits
+    //check if the artist exists in the db
     let artistIn = await User.findOne({'username':reqName, 'userType':'artist'}, (err) => {
         if(err) {
             console.error(err);
@@ -222,7 +229,7 @@ const changeProductData = async (req, res) => {
         return;
     }
 
-    
+
     let newProduct = {
         title: req.body.title,
         description: req.body.description,
