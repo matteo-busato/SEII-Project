@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/user.js');
 
+/*
+    Check if the email is valid based on a regex
+*/
 function checkEmail(email) {
     re = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 
@@ -28,11 +31,13 @@ const postRegister = async (req, res) => {
         userType: "user"
     };
 
+    // check username
     if (!data.username || typeof data.username != 'string') {
         res.status(400).json({ error: "The field 'username' must be a non-empty string" });
         return;
     }
 
+    // check email
     if (!data.email || typeof data.email != 'string') {
         res.status(400).json({ error: "The field 'email' must be a non-empty string" });
         return;
@@ -43,11 +48,13 @@ const postRegister = async (req, res) => {
         return;
     }
 
+    // check password
     if (!data.password || typeof data.password != 'string') {
         res.status(400).json({ error: "The field 'password' must be a non-empty string" });
         return;
     }
 
+    // check if the email is already registered
     let alreadyIn = await User.findOne({email: data.email}, (err) => {
         if (err) {
             res.status(500).json({ error: err });
@@ -62,6 +69,7 @@ const postRegister = async (req, res) => {
 
     var user = new User(data);
 
+    // insert user in db
     await user.save((err, user) => {
         if (err){
             res.status(500).json(err);

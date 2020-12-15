@@ -1,10 +1,12 @@
 function submitForm(){
+    // get name email pass
     let data = {
         name: $("#name").val(),
         email: $("#email").val(),
         password: $("#password").val()
     }
 
+    // call register endpoint
     fetch('/api/v1/users', {
         method: 'POST',
         headers: {'Content-Type' : 'application/json'},
