@@ -13,6 +13,9 @@ const User = require("../models/user.js");
 //     });
 //     prova_user.save();
 
+
+//################ get info ####################
+// function for getting info an artist with get method
 const getInfo  = (req, res) => {
     console.log("new get artist info request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artistName = req.params.name;
@@ -29,6 +32,9 @@ const getInfo  = (req, res) => {
     });
 };
 
+
+//################ add new info ####################
+// function for bio for a logged artist with post method
 const addInfo = async function(req, res) {
     console.log("new post artist info request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artistName = req.params.name;
@@ -54,6 +60,7 @@ const addInfo = async function(req, res) {
             return;
         }
     });
+    // check if an artist already exists
     if(!artistIn){
         console.log(artistIn);
         res.status(404).json({ error: 'The artist ' + artistName + ' does not exist' });
@@ -81,7 +88,8 @@ const addInfo = async function(req, res) {
     });
 };
 
-
+//################ delete info ####################
+// function for deleting bio for an artist with delete methodz
 const deleteInfo = async function(req, res) {
     console.log("new delete info request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artistName = req.params.name;
@@ -107,6 +115,7 @@ const deleteInfo = async function(req, res) {
             return;
         }
     });
+    // check if an artist already exists
     if(!artistIn){
         res.status(404).json({ error: 'The artist ' + artistName + ' does not exist' });
         return;
@@ -123,6 +132,8 @@ const deleteInfo = async function(req, res) {
     });
 };
 
+//################ change info ####################
+// function for changing info for an artist with put method
 const changeInfo = async function(req, res) {
     let artistName = req.params.name;
     if(!req.loggedUser){
@@ -158,6 +169,7 @@ const changeInfo = async function(req, res) {
         userType: "artist",
         bio: req.body.newBio         
     }
+    // if the inserted field are empty kept the old one
     if(newArtistInfo.username == ''){
         newArtistInfo.username = artistIn.username;
     }
