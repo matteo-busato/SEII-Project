@@ -1,7 +1,13 @@
+// ########## MODULE FOR FOLLOW ############
+// lets user follow and unfollow other artists
+
 const User = require('../models/user.js');
 
+// ######### CHECK IF FOLLOW ##########
+// function for checking if user follows an artist
 const checkfollow = async function (req, res) {
 
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
@@ -10,6 +16,7 @@ const checkfollow = async function (req, res) {
     var user = req.loggedUser.username;
     var artist = req.params.name;
 
+    // search for the artist in db
     var artistIn = await User.findOne({ username: artist, userType: 'artist'}, (err) => {
         if(err){
             console.error(err);
@@ -22,6 +29,7 @@ const checkfollow = async function (req, res) {
         return;
     }
 
+    // search for user in the db
     var userIn = await User.findOne({ username: user}, (err) => {
         if(err){
             console.error(err);
@@ -34,6 +42,7 @@ const checkfollow = async function (req, res) {
         return;
     }
 
+    // check if follows
     var alreadyFollow = await User.findOne({ username: user, followed: { $in: [artist] } }, (err) => {
         if(err){
             console.error(err);
@@ -50,10 +59,11 @@ const checkfollow = async function (req, res) {
     }
 }
 
+// ######### FOLLOW ##########
+// function for following an artist
 const follow = async function (req, res) {
-    
-    //console.log('new follow request by user = '+user+' to follow artist = '+artist);
 
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
@@ -62,11 +72,13 @@ const follow = async function (req, res) {
     var user = req.loggedUser.username;
     var artist = req.params.name;
 
+    // check if following himself
     if(user == artist){
         res.status(400).json({ error: 'An artist cannot follow himself' });
         return;
     }
 
+    // search for artist in the db
     var artistIn = await User.findOne({ username: artist, userType: 'artist'}, (err) => {
         if(err){
             console.error(err);
@@ -79,6 +91,7 @@ const follow = async function (req, res) {
         return;
     }
 
+    // search for user in the db
     var userIn = await User.findOne({ username: user}, (err) => {
         if(err){
             console.error(err);
@@ -91,6 +104,7 @@ const follow = async function (req, res) {
         return;
     }
 
+    // check if already follows
     var alreadyFollow = await User.findOne({ username: user, followed: { $in: [artist] } }, (err) => {
         if(err){
             console.error(err);
@@ -103,6 +117,7 @@ const follow = async function (req, res) {
         return;
     }
 
+    // add follow
     User.findOneAndUpdate({ username: user}, { $push: { followed: artist} }, (err) => {
         if(err){
             console.error(err);
@@ -116,10 +131,13 @@ const follow = async function (req, res) {
 
 }
 
+// ######### UNFOLLOW ##########
+// function for unfollowing an artist
 const unfollow = async function (req, res) {
 
     //console.log('new follow request by user = '+user+' to follow artist = '+artist);
 
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
@@ -128,6 +146,7 @@ const unfollow = async function (req, res) {
     var user = req.loggedUser.username;
     var artist = req.params.name;
 
+    // search for artist in db
     var artistIn = await User.findOne({ username: artist, userType: 'artist'}, (err) => {
         if(err){
             console.error(err);
@@ -140,6 +159,7 @@ const unfollow = async function (req, res) {
         return;
     }
 
+    // search for user in db
     var userIn = await User.findOne({ username: user}, (err) => {
         if(err){
             console.error(err);
@@ -152,6 +172,7 @@ const unfollow = async function (req, res) {
         return;
     }
 
+    // check if already doesn't follow
     var alreadyUnfollow = await User.findOne({ username: user, followed: { $nin: [artist] } }, (err) => {
         if(err){
             console.error(err);
@@ -164,6 +185,7 @@ const unfollow = async function (req, res) {
         return;
     }
 
+    // delete follow
     User.findOneAndUpdate({ username: user}, { $pull: { followed: artist} }, (err) => {
         if(err){
             console.error(err);

@@ -1,10 +1,5 @@
 // ########## MODULE FOR USER STORY #15 ############
 // lets artits add new albums, change data of existing albums, deleting albums
-// problems: - needs proper way for dealing with errors (in backend and frontend)
-//           - needs testing of db parts
-//           - album operations must be accessible only to authenticated artists,
-//             sending post/put/delete request from outside the frontend can bypass this requirement
-//           - changing the ismn should reload the page to get the updated /v1/artists/:name/albums/:ismn
 
 const mongoose = require('mongoose');
 const Album = require("../models/album.js");
@@ -14,34 +9,24 @@ const getYear = function(){
     return new Date().getFullYear();
 }
 
-/*
-let prova_user = new User({
-    email: "ale@ale.com",
-    username: "ale",
-    password: "123",
-    userType: "artist",
-    bio: "the bomber"
-});
-prova_user.save();
-*/
-
-
 // ######### ADD NEW ALBUM ##########
 // function for adding album with post method
-// NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const addNewAlbum = async function (req, res) {
-    console.log("new post album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    //console.log("new post album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
 
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
     }
 
+    // user not an artist
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
     }
 
+    // search for artist in db
     let artist = req.params.name;
     let artistIn = await User.findOne({username: artist, userType: 'artist'}, (err) => {
         if(err) {
@@ -55,6 +40,7 @@ const addNewAlbum = async function (req, res) {
         return;
     }
 
+    // not owner
     if(req.loggedUser.username != artist){
         res.status(401).json({error: "You can't add an album for another artist"});
         return;
@@ -138,15 +124,16 @@ const addNewAlbum = async function (req, res) {
 
 // ######### DELETE ALBUM ##########
 // function for deleting album with delete method
-// NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const deleteAlbum = async function (req, res) {
-    console.log("new delete album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    //console.log("new delete album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
     }
 
+    // user not artist
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
@@ -154,6 +141,7 @@ const deleteAlbum = async function (req, res) {
     
     let artist = req.params.name;
 
+    // search for artist in the db
     let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -166,6 +154,7 @@ const deleteAlbum = async function (req, res) {
         return;
     }
 
+    // not owner
     if(req.loggedUser.username != artist){
         res.status(401).json({error: "You can't delete an album for another artist"});
         return;
@@ -173,6 +162,7 @@ const deleteAlbum = async function (req, res) {
 
     let ismn = parseInt(req.params.ismn);
 
+    // search for album to delete
     let albumIn = await Album.findOne({ismn: ismn, owner: artist}, (err) => {
         if(err){
             console.error(err);
@@ -185,8 +175,7 @@ const deleteAlbum = async function (req, res) {
         return;
     }
 
-    // search for album to delete
-    // (?) search only for ismn since it is unique?
+    // delete album
     Album.deleteOne({ owner: artist, ismn: ismn }, (err) => {
         if (err) {
             console.error(err);
@@ -204,8 +193,9 @@ const deleteAlbum = async function (req, res) {
 // function for changing album data with put method
 // NEEDS METHODS FOR CHECKING AUTHENTICATION (Sprint #2)
 const changeAlbumData = async function (req, res) {
-    console.log("new put album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    //console.log("new put album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     
+    // get user data from request
     if(!req.loggedUser){
         res.status(401).json({error: "Please authenticate first"});
         return;
@@ -213,11 +203,13 @@ const changeAlbumData = async function (req, res) {
 
     let artist = req.params.name;
 
+    // check if user is artist
     if(req.loggedUser.userType != 'artist'){
         res.status(401).json({error: "You must be an artist to access this page"});
         return;
     }
 
+    // check if artist is in db
     let artistIn = await User.findOne({'username':artist, 'userType':'artist'}, (err) => {
         if(err) {
             res.status(500).json({ error: err });
@@ -230,6 +222,7 @@ const changeAlbumData = async function (req, res) {
         return;
     }
 
+    // not owner
     if(req.loggedUser.username != artist){
         res.status(401).json({error: "You can't change the album data for another artist"});
         return;
@@ -299,6 +292,7 @@ const changeAlbumData = async function (req, res) {
         message = message + "\nNew tracklist is not valid (must be a collection of strings); ";
     }
 
+    // update data in db and send warnings
     let target = newData.ismn ? newData.ismn : oldIsmn;
     Album.findOneAndUpdate({owner: artist, ismn: oldIsmn}, newData, function (err, album) {
         if(err){
@@ -324,7 +318,7 @@ const changeAlbumData = async function (req, res) {
 // ######### GET ALBUM DATA ##########
 // function for getting album data with get method
 const getAlbum = function (req, res) {
-    console.log("new get album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
+    //console.log("new get album request from " + req.protocol + '://' + req.get('host') + req.originalUrl);
     let artist = req.params.name;
     let ismn = parseInt(req.params.ismn);
     Album.findOne({ owner: artist, ismn: ismn }, function (err, album) {
