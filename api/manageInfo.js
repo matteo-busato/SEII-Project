@@ -2,6 +2,8 @@
 const { json } = require('body-parser');
 const mongoose = require('mongoose');
 const User = require("../models/user.js");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // ADD USER IN THE DB
 // let prova_user = new User({
@@ -182,16 +184,23 @@ const changeInfo = async function(req, res) {
     if(newArtistInfo.bio == ''){
         newArtistInfo.bio = artistIn.bio;
     }
-    await User.updateOne({username: artistName}, {$set: { bio: newArtistInfo.bio, password: newArtistInfo.password, email: newArtistInfo.email }} , function(err) {
+    bcrypt.hash(newArtistInfo.password, saltRounds , async function(err, hash) {
         if (err) {
-            console.error("error changing artist info in the db: " + err);
-            res.status(500).json({ error: 'server error on changing infos in the db, please retry' });
-            return;
+          console.log('Error hashing password for user', artistName);
         } else {
-            res.status(201).json({ message: 'The artist info for ' + artistName + ' has been correctly changed in the db' });
-            return;
+          await User.updateOne({username: artistName}, {$set: { bio: newArtistInfo.bio, password: hash, email: newArtistInfo.email }} , function(err) {
+            if (err) {
+                console.error("error changing artist info in the db: " + err);
+                res.status(500).json({ error: 'server error on changing infos in the db, please retry' });
+                return;
+            } else {
+                res.status(201).json({ message: 'The artist info for ' + artistName + ' has been correctly changed in the db' });
+                return;
+            }
+        });  
         }
-    });  
+    });
+    
 };
 
 module.exports = {
