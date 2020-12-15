@@ -183,6 +183,28 @@ paths:
             application/json:
               schema:
                 type: object
+        '401':
+          description: Unauthorized request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: 
+                    type: string
+                    enum:
+                      - Please login first
+        '403':
+          description: Token not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: 
+                    type: string
+                    enum:
+                      - Failed to authenticate token
         '500':
           description: 'Request Error'
           content:
