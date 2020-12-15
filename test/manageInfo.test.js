@@ -107,7 +107,4 @@ it('insert info for an artist', async () => {
     var json = await response.json();
     expect(response.status).toEqual(201);
 });
-
-
-
 });
